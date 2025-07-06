@@ -1,283 +1,197 @@
-import React, { useState, useEffect, useContext } from "react";
-import { FiTruck, FiShield, FiGift, FiStar } from "react-icons/fi";
-import { HiOutlineShoppingBag } from "react-icons/hi2";
-import CategoryCard from "../components/CategoryCard";
-import ProductCard from "../components/ProductCard";
-import Toast from "../components/Toast";
-import { getProducts, getCategories } from "../api/products";
-import { CartContext } from "../contexts/CartContext";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import CategoriesSlide from "../components/CategoriesSlide";
+import PromoBanner from "../components/PromoBanner";
+import ProductSection from "../components/ProductSection";
 
-const whyShop = [
+// Dummy product data for demonstration
+const sampleProducts = [
   {
-    icon: <FiTruck size={28} className="text-emerald-500" />,
-    title: "Fast Delivery",
-    desc: "Groceries at your door in under 30 minutes.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=300&q=80",
+    name: "Fresh Apples",
+    weight: "1kg",
+    price: 120,
+    originalPrice: 150,
   },
   {
-    icon: <FiStar size={28} className="text-yellow-400" />,
-    title: "Top Quality",
-    desc: "Only the freshest, best products always.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=300&q=80",
+    name: "Organic Tomatoes",
+    weight: "500g",
+    price: 60,
+    originalPrice: 80,
   },
   {
-    icon: <FiShield size={28} className="text-blue-500" />,
-    title: "Secure",
-    desc: "Safe payments & data. Shop with confidence.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
+    name: "Whole Wheat Bread",
+    weight: "400g",
+    price: 45,
+    originalPrice: 55,
   },
   {
-    icon: <FiGift size={28} className="text-emerald-400" />,
-    title: "Exclusive Deals",
-    desc: "Premium offers for our valued customers.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    name: "Milk (Toned)",
+    weight: "1L",
+    price: 55,
+    originalPrice: 60,
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80",
+    name: "Potato Chips",
+    weight: "200g",
+    price: 40,
+    originalPrice: 50,
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+    name: "Dishwash Liquid",
+    weight: "750ml",
+    price: 99,
+    originalPrice: 120,
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=300&q=80",
+    name: "Eggs (Farm Fresh)",
+    weight: "12 pcs",
+    price: 85,
+    originalPrice: 100,
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    name: "Instant Noodles",
+    weight: "70g",
+    price: 15,
+    originalPrice: 20,
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80",
+    name: "Imported Chocolate",
+    weight: "100g",
+    price: 120,
+    originalPrice: 150,
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+    name: "Toilet Cleaner",
+    weight: "1L",
+    price: 110,
+    originalPrice: 130,
   },
 ];
 
-const HomePage = ({ navigate, searchQuery = "" }) => {
-  const { addToCart } = useContext(CartContext);
-  const [toast, setToast] = useState(null);
-  const [allProducts, setAllProducts] = useState([]);
+const CategorySkeleton = () => (
+  <section className="w-full py-6 px-2 sm:px-4 md:px-8">
+    <div className="flex items-center justify-between mb-4">
+      <div className="h-6 w-40 bg-green-100 rounded animate-pulse" />
+      <div className="flex gap-2">
+        <div className="h-8 w-8 bg-green-100 rounded-full animate-pulse" />
+        <div className="h-8 w-8 bg-green-100 rounded-full animate-pulse" />
+      </div>
+    </div>
+    <div className="flex gap-4 overflow-x-auto pb-2">
+      {[...Array(8)].map((_, i) => (
+        <div
+          key={i}
+          className="flex flex-col items-center min-w-[110px] bg-white rounded-xl p-4 shadow-md border border-green-100"
+        >
+          <div className="w-12 h-12 bg-green-100 rounded-full mb-2 animate-pulse" />
+          <div className="h-4 w-16 bg-green-100 rounded animate-pulse" />
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const showToast = (message, type) => {
-    setToast({ message, type });
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+    const fetchCategories = async () => {
       try {
-        const [productsData, categoriesData] = await Promise.all([
-          getProducts(searchQuery),
-          getCategories(),
-        ]);
-        setAllProducts(productsData);
-        setCategories(categoriesData);
+        setLoading(true);
+        setError(null);
+        const res = await axios.get("/api/products/categories");
+        setCategories(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
-        setError(
-          "Failed to load products or categories. Please try again later."
-        );
+        setError("Failed to load categories");
+        setCategories([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [searchQuery]);
-
-  const bestSellers = allProducts.filter((p) => p.isBestSeller);
-  const featuredItems = allProducts.filter((p) => p.isFeatured);
-  const otherProducts = allProducts.filter(
-    (p) => !p.isBestSeller && !p.isFeatured
-  );
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center font-inter text-gray-700 bg-white">
-        <HiOutlineShoppingBag
-          className="animate-bounce text-emerald-500"
-          size={40}
-        />
-        <p className="text-lg ml-4">Loading products...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen font-inter flex items-center justify-center bg-white">
-        <div className="bg-white rounded-xl shadow p-8 text-center max-w-md mx-auto border border-gray-100">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Oops!</h2>
-          <p className="text-gray-700 mb-6">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-all shadow"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+    fetchCategories();
+  }, []);
 
   return (
-    <div className="min-h-screen font-inter bg-white">
-      {/* Hero Section */}
-      <section className="w-full flex flex-col md:flex-row items-center justify-between px-6 py-14 md:py-20 gap-10">
-        <div className="flex-1 flex flex-col items-start text-left">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900 leading-tight">
-            Premium Groceries,{" "}
-            <span className="text-emerald-600">Delivered</span> Fast
-          </h1>
-          <p className="text-lg text-gray-600 mb-8 max-w-lg">
-            Everything you need, delivered to your door in minutes. Discover top
-            deals, fresh picks, and exclusive offers every day.
-          </p>
-          <button
-            onClick={() => navigate("categories")}
-            className="px-8 py-3 bg-emerald-600 text-white rounded-full font-semibold text-lg hover:bg-emerald-700 transition shadow"
-          >
-            Shop by Category
-          </button>
+    <div className="font-sans bg-green-50 min-h-screen pb-10">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8">
+        {/* Category Slide Section */}
+        {error && <div className="text-center text-red-600 py-6">{error}</div>}
+        {loading && <CategorySkeleton />}
+        {!loading && !error && categories.length > 0 && (
+          <CategoriesSlide categories={categories} />
+        )}
+        <div className="pt-6">
+          <PromoBanner />
         </div>
-        <div className="flex-1 flex justify-center items-center">
-          <img
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
-            alt="Minimal groceries"
-            className="w-full max-w-md rounded-2xl shadow border border-gray-100 object-cover"
-            style={{ minHeight: 260 }}
+        <div className="space-y-10 mt-6">
+          <ProductSection
+            title="Handpicked for You"
+            products={sampleProducts.slice(0, 4)}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
+          />
+          <ProductSection
+            title="Everyone's Favorite"
+            products={sampleProducts.slice(2, 6)}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
+          />
+          <ProductSection
+            title="Home Essentials Hub"
+            products={sampleProducts.slice(4, 8)}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
+          />
+          <ProductSection
+            title="From Farm to Your Fridge"
+            products={sampleProducts
+              .slice(0, 2)
+              .concat(sampleProducts.slice(6, 7))}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
+          />
+          <ProductSection
+            title="Just Landed!"
+            products={sampleProducts.slice(7, 9)}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
+          />
+          <ProductSection
+            title="Quick Grab Deals"
+            products={sampleProducts.slice(3, 7)}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
+          />
+          <ProductSection
+            title="Don't Miss These!"
+            products={sampleProducts.slice(1, 5)}
+            cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
+            titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
           />
         </div>
-      </section>
-
-      {/* Why Shop With Us */}
-      <section className="w-full grid grid-cols-2 sm:grid-cols-4 gap-6 rounded-2xl shadow p-8 mb-16 border border-gray-100 bg-white px-6">
-        {whyShop.map((item) => (
-          <div
-            key={item.title}
-            className="flex flex-col items-center text-center gap-2 p-2"
-          >
-            {item.icon}
-            <span className="font-bold text-base text-gray-800 mt-2">
-              {item.title}
-            </span>
-            <span className="text-gray-500 text-sm">{item.desc}</span>
-          </div>
-        ))}
-      </section>
-
-      <main className="w-full px-6 py-4">
-        {searchQuery && (
-          <h2 className="text-2xl font-bold text-emerald-700 mb-6 text-center">
-            Search Results for "{searchQuery}"
-          </h2>
-        )}
-
-        {/* Categories */}
-        <section className="mb-14">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Categories
-          </h2>
-          <div className="flex flex-wrap justify-center gap-5">
-            {categories.map((category) => (
-              <CategoryCard
-                key={category.id || category._id}
-                category={category}
-                navigate={navigate}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Bestsellers */}
-        {bestSellers.length > 0 && (
-          <section className="mb-14">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FiStar className="text-yellow-400" /> Bestsellers
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {bestSellers.map((product) => (
-                <ProductCard
-                  key={product.id || product._id}
-                  product={product}
-                  navigate={navigate}
-                  addToCart={addToCart}
-                  showToast={showToast}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Featured Items */}
-        {featuredItems.length > 0 && (
-          <section className="mb-14">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FiGift className="text-emerald-400" /> Featured
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {featuredItems.map((product) => (
-                <ProductCard
-                  key={product.id || product._id}
-                  product={product}
-                  navigate={navigate}
-                  addToCart={addToCart}
-                  showToast={showToast}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* More Products */}
-        {otherProducts.length > 0 && (
-          <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              More Products
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {otherProducts.map((product) => (
-                <ProductCard
-                  key={product.id || product._id}
-                  product={product}
-                  navigate={navigate}
-                  addToCart={addToCart}
-                  showToast={showToast}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-        {searchQuery && allProducts.length === 0 && (
-          <div className="text-center text-gray-500 text-lg mt-8">
-            No products found matching your search.
-          </div>
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="mt-20 py-8 border-t border-gray-100 bg-white w-full px-6">
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-1">
-            <span className="text-xl font-extrabold text-emerald-700">
-              SwiftCart
-            </span>
-            <span className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} All rights reserved.
-            </span>
-          </div>
-          <div className="flex gap-4 mt-2 md:mt-0">
-            <a
-              href="#"
-              className="text-gray-400 hover:text-blue-500 transition"
-              title="Twitter"
-            >
-              <FiStar size={22} />
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-pink-500 transition"
-              title="Instagram"
-            >
-              <FiGift size={22} />
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-emerald-600 transition"
-              title="LinkedIn"
-            >
-              <FiShield size={22} />
-            </a>
-          </div>
-        </div>
-      </footer>
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
+      </div>
     </div>
   );
 };
