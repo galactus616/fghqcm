@@ -21,8 +21,8 @@ const getAllProducts = async (req, res, next) => {
       id: p._id,
       name: p.name,
       category: typeof p.category === 'object' ? { id: p.category._id, name: p.category.name } : p.category,
-      price: p.price,
-      discountedPrice: p.discountedPrice,
+      // price: p.price, // Deprecated: use variants array
+      // discountedPrice: p.discountedPrice, // Deprecated: use variants array
       imageUrl: p.imageUrl,
       images: p.images,
       description: p.description,
@@ -50,8 +50,8 @@ const getProductById = async (req, res, next) => {
       id: product._id,
       name: product.name,
       category: typeof product.category === 'object' ? { id: product.category._id, name: product.category.name } : product.category,
-      price: product.price,
-      discountedPrice: product.discountedPrice,
+      // price: product.price, // Deprecated: use variants array
+      // discountedPrice: product.discountedPrice, // Deprecated: use variants array
       imageUrl: product.imageUrl,
       images: product.images,
       description: product.description,
@@ -88,8 +88,8 @@ const getProductsByCategoryId = async (req, res, next) => {
       id: p._id,
       name: p.name,
       category: typeof p.category === 'object' ? { id: p.category._id, name: p.category.name } : p.category,
-      price: p.price,
-      discountedPrice: p.discountedPrice,
+      // price: p.price, // Deprecated: use variants array
+      // discountedPrice: p.discountedPrice, // Deprecated: use variants array
       imageUrl: p.imageUrl,
       images: p.images,
       description: p.description,
