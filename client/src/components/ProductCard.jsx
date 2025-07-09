@@ -1,35 +1,24 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { isLoggedIn } from "../utils/auth";
-import { addToLocalCart } from "../utils/localCart";
+import useStore from '../store/useStore';
 
 const ProductCard = ({ product }) => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
-  const variant = product.variants?.[selectedVariantIdx] || product.variants?.[0] || {};
   const hasMultipleVariants = product.variants && product.variants.length > 1;
+  const variant = product.variants?.[selectedVariantIdx] || product.variants?.[0] || {};
+  const { isLoggedIn, addToCart } = useStore();
 
   const handleAddToCart = async () => {
-    if (isLoggedIn()) {
-      try {
-        await axios.post('/api/cart', {
-          productId: product.id || product._id,
-          variantIndex: selectedVariantIdx,
-          quantity: 1
-        });
-        toast.success('Added to cart!');
-      } catch (err) {
-        toast.error('Failed to add to cart');
-        console.error(err);
-      }
-    } else {
-      addToLocalCart({
+    try {
+      await addToCart({
         productId: product.id || product._id,
         variantIndex: selectedVariantIdx,
         quantity: 1
       });
       toast.success('Added to cart!');
+    } catch (err) {
+      toast.error('Failed to add to cart');
     }
   };
 

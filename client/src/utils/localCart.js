@@ -1,5 +1,3 @@
-// Utilities for guest cart in localStorage
-
 export const getLocalCart = () => {
   try {
     return JSON.parse(localStorage.getItem("guest_cart")) || [];
@@ -10,10 +8,12 @@ export const getLocalCart = () => {
 
 export const setLocalCart = (cart) => {
   localStorage.setItem("guest_cart", JSON.stringify(cart));
+  window.dispatchEvent(new Event('localCartChanged'));
 };
 
 export const clearLocalCart = () => {
   localStorage.removeItem("guest_cart");
+  window.dispatchEvent(new Event('localCartChanged'));
 };
 
 export const addToLocalCart = (item) => {

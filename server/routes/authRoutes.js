@@ -1,15 +1,20 @@
 const express = require("express");
 const {
-  login,
-  register,
+  sendOtp,
+  verifyOtp,
   getProfile,
   updateProfile,
+  logout,
 } = require("../controllers/authController");
 const authenticateToken = require("../middleware/authMiddleware");
+const { authLimiter } = require('../middleware/rateLimiters');
 const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
+// OTP-based authentication
+router.post("/send-otp", authLimiter, sendOtp);
+router.post("/verify-otp", authLimiter, verifyOtp);
+
+router.post("/logout", logout);
 router.get("/profile", authenticateToken, getProfile);
 router.put("/profile", authenticateToken, updateProfile);
 

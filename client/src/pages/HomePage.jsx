@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import CategoriesSlide from "../components/CategoriesSlide";
 import PromoBanner from "../components/PromoBanner";
 import ProductSection from "../components/ProductSection";
+import useStore from '../store/useStore';
 
 const CategorySkeleton = () => (
   <section className="w-full py-6 px-2 sm:px-4 md:px-8">
@@ -46,62 +46,33 @@ const ProductsSkeleton = () => (
 );
 
 const HomePage = () => {
-  const [categories, setCategories] = useState([]);
-  const [categoryProducts, setCategoryProducts] = useState({});
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [error, setError] = useState(null);
+  const {
+    categories,
+    categoryProducts,
+    loadingCategories,
+    loadingProducts,
+    productError,
+    fetchCategories,
+    fetchProductsForCategories,
+  } = useStore();
 
-  // Fetch categories on mount
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoadingCategories(true);
-        setError(null);
-        const res = await axios.get("/api/products/categories");
-        setCategories(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        setError("Failed to load categories");
-        setCategories([]);
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
     fetchCategories();
+    // eslint-disable-next-line
   }, []);
 
-  // Fetch products for each category
   useEffect(() => {
-    const fetchProductsForCategories = async () => {
-      if (categories.length === 0) {
-        setLoadingProducts(false);
-        return;
-      }
-      setLoadingProducts(true);
-      const productsMap = {};
-      await Promise.all(
-        categories.map(async (cat) => {
-          try {
-            const res = await axios.get(`/api/products/categories/${encodeURIComponent(cat.id)}/products`);
-            productsMap[cat.name] = res.data;
-          } catch {
-            productsMap[cat.name] = [];
-          }
-        })
-      );
-      setCategoryProducts(productsMap);
-      setLoadingProducts(false);
-    };
     fetchProductsForCategories();
+    // eslint-disable-next-line
   }, [categories]);
 
   return (
     <div className="font-sans bg-green-50 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8">
         {/* Category Slide Section */}
-        {error && <div className="text-center text-red-600 py-6">{error}</div>}
+        {productError && <div className="text-center text-red-600 py-6">{productError}</div>}
         {loadingCategories && <CategorySkeleton />}
-        {!loadingCategories && !error && categories.length > 0 && (
+        {!loadingCategories && !productError && categories.length > 0 && (
           <CategoriesSlide categories={categories} />
         )}
         <div className="pt-6">

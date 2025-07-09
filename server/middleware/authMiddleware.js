@@ -2,10 +2,14 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const authenticateToken = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  // Check for token in cookie first, then Authorization header
+  let token = req.cookies && req.cookies.token;
+  if (!token) {
+    const authHeader = req.headers["authorization"];
+    token = authHeader && authHeader.split(" ")[1];
+  }
 
-  if (token == null) {
+  if (!token) {
     const error = new Error("Authentication token required");
     error.statusCode = 401;
     return next(error);
