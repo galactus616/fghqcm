@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="border border-green-100 rounded-2xl p-5 shadow-md hover:shadow-xl hover:scale-[1.03] transition-all duration-200 flex flex-col justify-between w-56 bg-white group cursor-pointer">
+    <div className="border border-green-100 rounded-2xl p-5 shadow-md  transition-all duration-200 flex flex-col justify-between w-56 bg-white group cursor-pointer">
       {/* Product Image */}
       <div className="flex justify-center items-center mb-4 h-32 w-full bg-green-50 rounded-xl">
         <img
@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Add Button */}
-        <button className="flex items-center gap-1 text-white bg-green-600 px-4 py-2 rounded-lg text-sm font-bold shadow hover:bg-green-700 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <button className="flex items-center gap-1 text-white bg-green-600 px-4 py-2 rounded-lg text-sm font-bold shadow hover:bg-green-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500">
           <Plus className="w-4 h-4" />
           ADD
         </button>
