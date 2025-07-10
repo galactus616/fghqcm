@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const API_BASE = '/api/auth';
 
 export async function sendOtp(phone) {
