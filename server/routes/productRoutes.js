@@ -3,12 +3,12 @@ const {
   getAllProducts,
   getProductById,
   getAllCategories,
-  getProductsByCategory,
+  getProductsByCategoryId,
 } = require("../controllers/productController");
 const router = express.Router();
 
-router.get("/categories", getAllCategories); // Place before /:id
-router.get("/category/:categoryName", getProductsByCategory); // Place before /:id
+router.get("/categories", getAllCategories);
+router.get("/categories/:categoryId/products", getProductsByCategoryId);
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 
