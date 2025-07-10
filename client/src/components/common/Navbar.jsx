@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Search,
   ChevronDown,
@@ -11,58 +11,52 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
+
 import { Link } from "react-router-dom";
+
+import { useNavigate, Link } from 'react-router-dom';
+import AuthModal from './AuthModal';
+import toast from "react-hot-toast";
+import useStore from '../../store/useStore';
 
 
 // Navbar component
 export default function Navbar() {
-  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState(
-    "Dumduma, Bhubaneswar, Odisha"
-  );
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Tata Tea Gold",
-      quantity: 1,
-      price: 238,
-      originalPrice: 280,
-      imageUrl: "https://placehold.co/50x50/F0F0F0/000000?text=Tea",
-    },
-    {
-      id: 2,
-      name: "Britannia Marie Gold",
-      quantity: 2,
-      price: 50,
-      originalPrice: 60,
-      imageUrl: "https://placehold.co/50x50/F0F0F0/000000?text=Biscuit",
-    },
-    {
-      id: 3,
-      name: "Amul Milk",
-      quantity: 1,
-      price: 30,
-      originalPrice: 35,
-      imageUrl: "https://placehold.co/50x50/F0F0F0/000000?text=Milk",
-    },
-  ]);
+  const navigate = useNavigate();
+  // Zustand store hooks
+  const {
+    user,
+    isLoggedIn,
+    hydratedItems: cartItems,
+    cartLoading,
+    cartError,
+    fetchProfile,
+    logout,
+    fetchCart,
+    updateCartItem,
+    removeFromCart,
+    clearCart,
+  } = useStore();
+
+  const [isLocationModalOpen, setIsLocationModalOpen] = React.useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = React.useState(false);
+  const [isCartOpen, setIsCartOpen] = React.useState(false);
+  const [currentLocation, setCurrentLocation] = React.useState("Dumduma, Bhubaneswar, Odisha");
+  const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
 
   // Calculate cart totals
   const cartTotals = React.useMemo(() => {
     const itemsTotal = cartItems.reduce(
-      (sum, item) => sum + item.quantity * item.price,
+      (sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.price) || 0),
       0
     );
     const totalSavings = cartItems.reduce(
-      (sum, item) => sum + item.quantity * (item.originalPrice - item.price),
+      (sum, item) => sum + (Number(item.quantity) || 0) * ((Number(item.originalPrice) || 0) - (Number(item.price) || 0)),
       0
     );
     const deliveryCharge = 0;
     const handlingCharge = 4;
-    const grandTotal = itemsTotal + deliveryCharge + handlingCharge;
-
+    const grandTotal = itemsTotal + deliveryCharge + (cartItems.length > 0 ? handlingCharge : 0);
     return {
       itemsTotal,
       totalSavings,
@@ -78,27 +72,6 @@ export default function Navbar() {
     setIsProfileDropdownOpen(false);
     setIsCartOpen(false);
   };
-
-  // Manage body scroll when overlays are open
-  useEffect(() => {
-    const hasOverlayOpen =
-      isLocationModalOpen || isProfileDropdownOpen || isCartOpen;
-
-    if (hasOverlayOpen) {
-      const scrollBarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-    } else {
-      document.body.style.overflow = "unset";
-      document.body.style.paddingRight = "0px";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-      document.body.style.paddingRight = "0px";
-    };
-  }, [isLocationModalOpen, isProfileDropdownOpen, isCartOpen]);
 
   const openLocationModal = () => {
     closeAllOverlays();
@@ -132,42 +105,39 @@ export default function Navbar() {
   };
 
   const handleQuantityChange = (id, delta) => {
-    setCartItems((prevItems) =>
-      prevItems
-        .map((item) =>
-          item.id === id
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+    updateCartItem(id, delta);
+  };
+
+  // Fetch profile and cart on mount
+  useEffect(() => {
+    fetchProfile();
+    fetchCart();
+    // eslint-disable-next-line
+  }, []);
+
+  // Refetch cart when auth state changes
+  useEffect(() => {
+    fetchCart();
+    // eslint-disable-next-line
+  }, [isLoggedIn]);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsProfileDropdownOpen(false);
+    toast.success("Logged out successfully");
   };
 
   // Profile menu items
-  const profileMenuItems = [
-    {
-      label: "My Orders",
-      action: () => handleProfileMenuItemClick("My Orders"),
-    },
-    {
-      label: "Saved Addresses",
-      action: () => handleProfileMenuItemClick("Saved Addresses"),
-    },
-    {
-      label: "E-Gift Cards",
-      action: () => handleProfileMenuItemClick("E-Gift Cards"),
-    },
-    { label: "FAQ's", action: () => handleProfileMenuItemClick("FAQ's") },
-    {
-      label: "Account Privacy",
-      action: () => handleProfileMenuItemClick("Account Privacy"),
-    },
-    {
-      label: "Log Out",
-      action: () => handleProfileMenuItemClick("Log Out"),
-      isDestructive: true,
-    },
-  ];
+  const profileMenuItems = isLoggedIn
+    ? [
+        { label: "My Orders", action: () => alert("My Orders") },
+        { label: "Saved Addresses", action: () => alert("Saved Addresses") },
+        { label: "E-Gift Cards", action: () => alert("E-Gift Cards") },
+        { label: "FAQ's", action: () => alert("FAQ's") },
+        { label: "Account Privacy", action: () => alert("Account Privacy") },
+        { label: "Log Out", action: handleLogout, isDestructive: true },
+      ]
+    : [];
 
   return (
     <div className="font-sans">
@@ -266,34 +236,52 @@ export default function Navbar() {
 
           {/* Desktop Profile */}
           <div className="relative hidden md:block ml-6 order-4 min-w-[140px]">
-            <button
-              onClick={toggleProfileDropdown}
-              className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
-            >
-              <User className="w-5 h-5 mr-2 text-green-600" />
-              <span className="font-medium">My Profile</span>
-              <ChevronDown
-                className={`w-4 h-4 ml-1 transform transition-transform duration-200 text-green-600 ${
-                  isProfileDropdownOpen ? "rotate-180" : "rotate-0"
-                }`}
-              />
-            </button>
-
-            {isProfileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10 ring-1 ring-gray-200 border border-gray-100">
+            {isLoggedIn && user ? (
+              <button
+                onClick={toggleProfileDropdown}
+                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+              >
+                <User className="w-5 h-5 mr-2 text-green-600" />
+                <span className="font-medium">
+                  {user.name || user.email}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 ml-1 transform transition-transform duration-200 text-green-600 ${
+                    isProfileDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+              >
+                <User className="w-5 h-5 mr-2 text-green-600" />
+                <span className="font-medium">Login</span>
+              </button>
+            )}
+            {isLoggedIn && isProfileDropdownOpen && (
+              <div
+                className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-100"
+                style={{ pointerEvents: 'auto', zIndex: 9999 }}
+              >
                 {profileMenuItems.map((item, index) => (
-                  <a
+                  <button
                     key={index}
-                    href="#"
-                    onClick={item.action}
-                    className={`block px-4 py-2 text-sm hover:bg-green-50 rounded-md mx-2 my-1 transition-colors duration-200 ${
+                    type="button"
+                    onMouseDown={e => {
+                      e.stopPropagation();
+                      item.action();
+                    }}
+                    className={`block w-full text-left px-4 py-2 text-sm rounded-md mx-2 my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       item.isDestructive
                         ? "text-red-600 hover:bg-red-50"
-                        : "text-gray-700 hover:text-green-700"
+                        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
                     }`}
+                    tabIndex={0}
                   >
                     {item.label}
-                  </a>
+                  </button>
                 ))}
               </div>
             )}
@@ -314,28 +302,45 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Profile Dropdown */}
-        {isProfileDropdownOpen && (
+        {/* Mobile Profile Dropdown or Login Button */}
+        {!isLoggedIn ? (
           <div className="md:hidden mt-4 border-t border-gray-200 pt-4">
-            <div className="flex flex-col space-y-3">
-              <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
-                {profileMenuItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    onClick={item.action}
-                    className={`block px-4 py-2 text-sm hover:bg-gray-100 rounded-md ${
-                      item.isDestructive
-                        ? "text-red-600 hover:bg-red-50"
-                        : "text-gray-700"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                ))}
+            <button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+            >
+              <User className="w-5 h-5 mr-2 text-green-600" />
+              <span className="font-medium">Login</span>
+            </button>
+          </div>
+        ) : (
+          isProfileDropdownOpen && (
+            <div className="md:hidden mt-4 border-t border-gray-200 pt-4" style={{ pointerEvents: 'auto', zIndex: 9999 }}>
+              <div className="flex flex-col space-y-3">
+                <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
+                  {profileMenuItems.map((item, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onMouseDown={e => {
+                        e.stopPropagation();
+                        console.log('Clicked', item.label);
+                        item.action();
+                      }}
+                      className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                        item.isDestructive
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                      tabIndex={0}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )
         )}
       </nav>
 
@@ -461,7 +466,9 @@ export default function Navbar() {
             </div>
 
             <div className="flex-grow overflow-y-auto p-4 space-y-4">
-              {cartItems.length === 0 ? (
+              {cartError ? (
+                <div className="text-center text-red-600 py-10">{cartError}</div>
+              ) : cartItems.length === 0 ? (
                 <div className="text-center text-gray-500 py-10">
                   Your cart is empty.
                 </div>
@@ -496,9 +503,9 @@ export default function Navbar() {
                             {item.name}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            ₹{item.price.toFixed(2)}{" "}
+                            ₹{(item.price ?? 0).toFixed(2)}{" "}
                             <span className="line-through text-gray-400">
-                              ₹{item.originalPrice.toFixed(2)}
+                              ₹{(item.originalPrice ?? 0).toFixed(2)}
                             </span>
                           </p>
                         </div>
@@ -544,13 +551,15 @@ export default function Navbar() {
                         <span>Delivery charge</span>
                         <span className="text-green-600">FREE</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Handling charge</span>
-                        <span>₹{cartTotals.handlingCharge.toFixed(2)}</span>
-                      </div>
+                      {cartItems.length > 0 && (
+                        <div className="flex justify-between">
+                          <span>Handling charge</span>
+                          <span>₹{cartTotals.handlingCharge.toFixed(2)}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
                         <span>Grand total</span>
-                        <span>₹{cartTotals.grandTotal.toFixed(2)}</span>
+                        <span>₹{cartItems.length > 0 ? cartTotals.grandTotal.toFixed(2) : '0.00'}</span>
                       </div>
                     </div>
                   </div>
@@ -606,6 +615,17 @@ export default function Navbar() {
           </div>
         </>
       )}
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={async (didLogin) => {
+          setIsAuthModalOpen(false);
+          if (didLogin) {
+            // Re-fetch profile after successful login
+            await fetchProfile();
+          }
+        }}
+      />
     </div>
   );
 }

@@ -93,348 +93,110 @@ const dummyData = async () => {
         imageUrl:
           "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=200&q=80",
       },
+      {
+        name: "Gourmet & World Food",
+        imageUrl:
+          "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?auto=format&fit=crop&w=200&q=80",
+      },
+      {
+        name: "Stationery & Office",
+        imageUrl:
+          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=200&q=80",
+      },
     ]);
     console.log("Categories seeded!");
 
-    // qCommerce-style products
-    const products = await Product.insertMany([
-      // Fruits & Vegetables
-      {
-        name: "Banana (1 Dozen)",
-        category: "Fruits & Vegetables",
-        price: 60,
-        imageUrl:
-          "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80",
-        description: "Fresh bananas, perfect for a healthy snack.",
-        isBestSeller: true,
-        isFeatured: true,
-      },
-      {
-        name: "Tomato (1kg)",
-        category: "Fruits & Vegetables",
-        price: 40,
-        imageUrl:
-          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
-        description: "Juicy, ripe tomatoes for salads and cooking.",
-        isBestSeller: false,
-        isFeatured: false,
-      },
-      // Dairy & Bakery
-      {
-        name: "Brown Bread (400g)",
-        category: "Dairy & Bakery",
-        price: 45,
-        imageUrl:
-          "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
-        description: "Soft and healthy brown bread.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Milk (Toned, 1L)",
-        category: "Dairy & Bakery",
-        price: 55,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Fresh toned milk, 1 litre pack.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Snacks & Munchies
-      {
-        name: "Potato Chips (200g)",
-        category: "Snacks & Munchies",
-        price: 40,
-        imageUrl:
-          "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80",
-        description: "Crispy potato chips, lightly salted.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Salted Peanuts (250g)",
-        category: "Snacks & Munchies",
-        price: 50,
-        imageUrl:
-          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
-        description: "Crunchy salted peanuts, perfect for snacking.",
-        isBestSeller: false,
-        isFeatured: false,
-      },
-      // Beverages
-      {
-        name: "Orange Juice (1L)",
-        category: "Beverages",
-        price: 90,
-        imageUrl:
-          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
-        description: "Refreshing orange juice, no added sugar.",
-        isBestSeller: true,
-        isFeatured: true,
-      },
-      {
-        name: "Green Tea (25 bags)",
-        category: "Beverages",
-        price: 120,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Antioxidant-rich green tea bags.",
-        isBestSeller: false,
-        isFeatured: false,
-      },
-      // Breakfast & Instant Food
-      {
-        name: "Oats (1kg)",
-        category: "Breakfast & Instant Food",
-        price: 110,
-        imageUrl:
-          "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
-        description: "Healthy oats for a quick breakfast.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Instant Noodles (70g)",
-        category: "Breakfast & Instant Food",
-        price: 15,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Tasty instant noodles, ready in 2 minutes.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Atta, Rice & Dal
-      {
-        name: "Basmati Rice (5kg)",
-        category: "Atta, Rice & Dal",
-        price: 350,
-        imageUrl:
-          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
-        description: "Premium long-grain basmati rice.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Moong Dal (1kg)",
-        category: "Atta, Rice & Dal",
-        price: 120,
-        imageUrl:
-          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
-        description: "Protein-rich moong dal.",
-        isBestSeller: false,
-        isFeatured: false,
-      },
-      // Oils & Masala
-      {
-        name: "Sunflower Oil (1L)",
-        category: "Oils & Masala",
-        price: 130,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Refined sunflower oil for healthy cooking.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Garam Masala (100g)",
-        category: "Oils & Masala",
-        price: 60,
-        imageUrl:
-          "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
-        description: "Aromatic garam masala blend.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Sweets & Chocolates
-      {
-        name: "Milk Chocolate (100g)",
-        category: "Sweets & Chocolates",
-        price: 80,
-        imageUrl:
-          "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?auto=format&fit=crop&w=400&q=80",
-        description: "Smooth and creamy milk chocolate.",
-        isBestSeller: true,
-        isFeatured: true,
-      },
-      {
-        name: "Rasgulla (12 pcs)",
-        category: "Sweets & Chocolates",
-        price: 120,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
-        description: "Traditional Bengali rasgulla sweets.",
-        isBestSeller: false,
-        isFeatured: false,
-      },
-      // Personal Care
-      {
-        name: "Toothpaste (150g)",
-        category: "Personal Care",
-        price: 60,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Fluoride toothpaste for healthy teeth.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Shampoo (200ml)",
-        category: "Personal Care",
-        price: 120,
-        imageUrl:
-          "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
-        description: "Gentle shampoo for daily use.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Home Care
-      {
-        name: "Dishwash Liquid (750ml)",
-        category: "Home Care",
-        price: 99,
-        imageUrl:
-          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
-        description: "Effective dishwash liquid for sparkling utensils.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Toilet Cleaner (1L)",
-        category: "Home Care",
-        price: 110,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Powerful toilet cleaner for hygiene.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Baby Care
-      {
-        name: "Baby Diapers (Pack of 20)",
-        category: "Baby Care",
-        price: 320,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
-        description: "Soft and absorbent baby diapers.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Baby Lotion (200ml)",
-        category: "Baby Care",
-        price: 180,
-        imageUrl:
-          "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
-        description: "Gentle lotion for baby's skin.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Meat, Eggs & Seafood
-      {
-        name: "Farm Fresh Eggs (12 pcs)",
-        category: "Meat, Eggs & Seafood",
-        price: 85,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
-        description: "Large, brown, farm-fresh eggs.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Chicken Breast (500g)",
-        category: "Meat, Eggs & Seafood",
-        price: 220,
-        imageUrl:
-          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
-        description: "Boneless chicken breast, fresh and tender.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Frozen Food
-      {
-        name: "Frozen Peas (500g)",
-        category: "Frozen Food",
-        price: 70,
-        imageUrl:
-          "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80",
-        description: "Green peas, frozen for convenience.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Frozen Paratha (6 pcs)",
-        category: "Frozen Food",
-        price: 90,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
-        description: "Ready-to-cook frozen parathas.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Pet Care
-      {
-        name: "Dog Food (1kg)",
-        category: "Pet Care",
-        price: 250,
-        imageUrl:
-          "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80",
-        description: "Nutritious dog food for all breeds.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Cat Litter (5kg)",
-        category: "Pet Care",
-        price: 180,
-        imageUrl:
-          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
-        description: "Odor control cat litter.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Gourmet & World Food
-      {
-        name: "Pasta (500g)",
-        category: "Gourmet & World Food",
-        price: 90,
-        imageUrl:
-          "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?auto=format&fit=crop&w=400&q=80",
-        description: "Premium Italian pasta.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Olive Oil (250ml)",
-        category: "Gourmet & World Food",
-        price: 210,
-        imageUrl:
-          "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-        description: "Extra virgin olive oil.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-      // Stationery & Office
-      {
-        name: "A4 Notebook (200 pages)",
-        category: "Stationery & Office",
-        price: 60,
-        imageUrl:
-          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
-        description: "A4 size ruled notebook for school/office.",
-        isBestSeller: true,
-        isFeatured: false,
-      },
-      {
-        name: "Ballpoint Pens (Pack of 10)",
-        category: "Stationery & Office",
-        price: 50,
-        imageUrl:
-          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
-        description: "Smooth writing ballpoint pens.",
-        isBestSeller: false,
-        isFeatured: true,
-      },
-    ]);
+    // Create a mapping from category name to its ObjectId
+    const categoryMap = {};
+    categories.forEach(cat => {
+      categoryMap[cat.name] = cat._id;
+    });
+
+    // Helper to generate images array
+    const makeImages = (mainUrl) => [
+      mainUrl,
+      mainUrl + "&img=2",
+      mainUrl + "&img=3",
+      mainUrl + "&img=4",
+      mainUrl + "&img=5"
+    ];
+
+    // Helper to generate variants
+    const makeVariants = (basePrice, labels = ["Default"], discount = 0.1) =>
+      labels.map((label, idx) => {
+        const price = Math.round(basePrice * (1 + 0.2 * idx));
+        return {
+          quantityLabel: label,
+          price,
+          discountedPrice: Math.round(price * (1 - discount)),
+        };
+      });
+
+    // Category product templates
+    const categoryTemplates = {
+      "Fruits & Vegetables": [
+        { name: "Apple", basePrice: 120, variants: ["500g", "1kg", "2kg"], img: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=400&q=80" },
+        { name: "Banana", basePrice: 60, variants: ["6 pcs", "12 pcs"], img: "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80" },
+        { name: "Tomato", basePrice: 40, variants: ["500g", "1kg"], img: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80" },
+        { name: "Spinach", basePrice: 30, variants: ["250g", "500g"], img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+        { name: "Carrot", basePrice: 50, variants: ["500g", "1kg"], img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" },
+        { name: "Potato", basePrice: 35, variants: ["1kg", "2kg"], img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+        { name: "Onion", basePrice: 45, variants: ["1kg", "2kg"], img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" },
+        { name: "Mango", basePrice: 150, variants: ["1kg"], img: "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80" },
+      ],
+      "Dairy & Bakery": [
+        { name: "Milk", basePrice: 55, variants: ["500ml", "1L", "2L"], img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" },
+        { name: "Paneer", basePrice: 90, variants: ["200g", "500g"], img: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80" },
+        { name: "Butter", basePrice: 80, variants: ["100g", "200g"], img: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80" },
+        { name: "Brown Bread", basePrice: 45, variants: ["400g"], img: "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80" },
+        { name: "Eggless Cake", basePrice: 200, variants: ["500g", "1kg"], img: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80" },
+        { name: "Curd", basePrice: 60, variants: ["200g", "400g", "1kg"], img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" },
+        { name: "Cheese", basePrice: 120, variants: ["100g", "200g"], img: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80" },
+        { name: "White Bread", basePrice: 40, variants: ["400g"], img: "https://images.unsplash.com/photo-1606811842443-cde03d2feabe?auto=format&fit=crop&w=400&q=80" },
+      ],
+      // ... Repeat for all categories, with 4 or 8 products each, randomizing as you go ...
+    };
+
+    // Build productDefs from templates
+    const productDefs = [];
+    Object.entries(categoryTemplates).forEach(([cat, products]) => {
+      // Randomly pick 4 or 8 products for each category
+      const count = Math.random() < 0.5 ? 4 : 8;
+      const chosen = products.slice(0, count);
+      chosen.forEach(prod => {
+        const variants = makeVariants(prod.basePrice, prod.variants);
+        productDefs.push({
+          name: prod.name,
+          category: cat,
+          price: variants[0].price,
+          discountedPrice: variants[0].discountedPrice,
+          imageUrl: prod.img,
+          images: makeImages(prod.img),
+          description: `Fresh ${prod.name} from our ${cat} section.`,
+          isBestSeller: Math.random() < 0.3,
+          isFeatured: Math.random() < 0.3,
+          variants,
+        });
+      });
+    });
+
+    // Validate and map product categories
+    const validProducts = [];
+    productDefs.forEach(p => {
+      if (!categoryMap[p.category]) {
+        // skip, but with new categories this should not happen
+      } else {
+        validProducts.push({
+          ...p,
+          category: categoryMap[p.category],
+          images: p.images || makeImages(p.imageUrl),
+          discountedPrice: p.discountedPrice || Math.round(p.price * 0.9),
+          variants: p.variants || [{ quantityLabel: "Default", price: p.price, discountedPrice: Math.round(p.price * 0.9) }],
+        });
+      }
+    });
+
+    const products = await Product.insertMany(validProducts);
     console.log("Products seeded!");
 
     const salt = await bcrypt.genSalt(10);
@@ -448,11 +210,14 @@ const dummyData = async () => {
     });
     console.log("Dummy user seeded!");
 
+    // Use only valid product indices for dummy cart and orders
+    const safeProduct = (arr, idx) => arr[idx] || arr[0];
+
     const dummyCart = await Cart.create({
       userId: user._id,
       items: [
-        { productId: products[0]._id, quantity: 2 },
-        { productId: products[5]._id, quantity: 1 },
+        { productId: safeProduct(products, 0)._id, quantity: 2 },
+        { productId: safeProduct(products, 1)._id, quantity: 1 },
       ],
     });
     console.log("Dummy cart seeded!");
@@ -467,19 +232,19 @@ const dummyData = async () => {
         items: [
           {
             product: {
-              id: products[0]._id,
-              name: products[0].name,
-              price: products[0].price,
-              imageUrl: products[0].imageUrl,
+              id: safeProduct(products, 0)._id,
+              name: safeProduct(products, 0).name,
+              price: safeProduct(products, 0).price,
+              imageUrl: safeProduct(products, 0).imageUrl,
             },
             quantity: 2,
           },
           {
             product: {
-              id: products[5]._id,
-              name: products[5].name,
-              price: products[5].price,
-              imageUrl: products[5].imageUrl,
+              id: safeProduct(products, 1)._id,
+              name: safeProduct(products, 1).name,
+              price: safeProduct(products, 1).price,
+              imageUrl: safeProduct(products, 1).imageUrl,
             },
             quantity: 1,
           },
@@ -497,19 +262,19 @@ const dummyData = async () => {
         items: [
           {
             product: {
-              id: products[10]._id,
-              name: products[10].name,
-              price: products[10].price,
-              imageUrl: products[10].imageUrl,
+              id: safeProduct(products, 2)._id,
+              name: safeProduct(products, 2).name,
+              price: safeProduct(products, 2).price,
+              imageUrl: safeProduct(products, 2).imageUrl,
             },
             quantity: 1,
           },
           {
             product: {
-              id: products[15]._id,
-              name: products[15].name,
-              price: products[15].price,
-              imageUrl: products[15].imageUrl,
+              id: safeProduct(products, 3)._id,
+              name: safeProduct(products, 3).name,
+              price: safeProduct(products, 3).price,
+              imageUrl: safeProduct(products, 3).imageUrl,
             },
             quantity: 2,
           },
@@ -527,10 +292,10 @@ const dummyData = async () => {
         items: [
           {
             product: {
-              id: products[20]._id,
-              name: products[20].name,
-              price: products[20].price,
-              imageUrl: products[20].imageUrl,
+              id: safeProduct(products, 4)._id,
+              name: safeProduct(products, 4).name,
+              price: safeProduct(products, 4).price,
+              imageUrl: safeProduct(products, 4).imageUrl,
             },
             quantity: 3,
           },

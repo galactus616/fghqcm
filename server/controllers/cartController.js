@@ -4,25 +4,40 @@ const Product = require("../models/Product");
 const getCart = async (req, res, next) => {
   const userId = req.user._id;
   try {
-    let cart = await Cart.findOne({ userId }).populate("items.productId");
+    let cart = await Cart.findOne({ userId })
+      .populate({
+        path: "items.productId",
+        populate: { path: "category", select: "name" }
+      });
 
     if (!cart) {
       cart = await Cart.create({ userId, items: [] });
     }
 
-    const populatedCart = cart.items.map((item) => ({
-      product: {
-        id: item.productId._id,
-        name: item.productId.name,
-        category: item.productId.category,
-        price: item.productId.price,
-        imageUrl: item.productId.imageUrl,
-        description: item.productId.description,
-        isBestSeller: item.productId.isBestSeller,
-        isFeatured: item.productId.isFeatured,
-      },
-      quantity: item.quantity,
-    }));
+    const populatedCart = cart.items.map((item) => {
+      const product = item.productId;
+      const variant = product.variants?.[item.variantIndex] || {};
+      return {
+        product: {
+          id: product._id,
+          name: product.name,
+          category: typeof product.category === 'object' && product.category !== null
+            ? { id: product.category._id, name: product.category.name }
+            : product.category,
+          imageUrl: product.imageUrl,
+          description: product.description,
+          isBestSeller: product.isBestSeller,
+          isFeatured: product.isFeatured,
+          variant: {
+            index: item.variantIndex,
+            quantityLabel: variant.quantityLabel,
+            price: variant.price,
+            discountedPrice: variant.discountedPrice,
+          },
+        },
+        quantity: item.quantity,
+      };
+    });
 
     res.json(populatedCart);
   } catch (err) {
@@ -32,19 +47,24 @@ const getCart = async (req, res, next) => {
 
 const addToCart = async (req, res, next) => {
   const userId = req.user._id;
-  const { productId, quantity = 1 } = req.body;
+  const { productId, variantIndex, quantity = 1 } = req.body;
 
-  if (!productId) {
-    const error = new Error("Product ID is required");
+  if (!productId || typeof variantIndex !== 'number') {
+    const error = new Error("Product ID and variantIndex are required");
     error.statusCode = 400;
     return next(error);
   }
 
   try {
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate("category", "name");
     if (!product) {
       const error = new Error("Product not found");
       error.statusCode = 404;
+      return next(error);
+    }
+    if (!product.variants || !product.variants[variantIndex]) {
+      const error = new Error("Invalid variantIndex");
+      error.statusCode = 400;
       return next(error);
     }
 
@@ -55,34 +75,45 @@ const addToCart = async (req, res, next) => {
     }
 
     const existingItem = cart.items.find(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId && item.variantIndex === variantIndex
     );
 
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      cart.items.push({ productId, quantity });
+      cart.items.push({ productId, variantIndex, quantity });
     }
 
     await cart.save();
-    // Populate and map ids
-    await cart.populate("items.productId");
-    const populatedCart = cart.items.map((item) => ({
-      product: {
-        id: item.productId._id,
-        name: item.productId.name,
-        category: item.productId.category,
-        price: item.productId.price,
-        imageUrl: item.productId.imageUrl,
-        description: item.productId.description,
-        isBestSeller: item.productId.isBestSeller,
-        isFeatured: item.productId.isFeatured,
-      },
-      quantity: item.quantity,
-    }));
-    res
-      .status(200)
-      .json({ message: "Item added to cart", cart: populatedCart });
+    await cart.populate({
+      path: "items.productId",
+      populate: { path: "category", select: "name" }
+    });
+    const populatedCart = cart.items.map((item) => {
+      const product = item.productId;
+      const variant = product.variants?.[item.variantIndex] || {};
+      return {
+        product: {
+          id: product._id,
+          name: product.name,
+          category: typeof product.category === 'object' && product.category !== null
+            ? { id: product.category._id, name: product.category.name }
+            : product.category,
+          imageUrl: product.imageUrl,
+          description: product.description,
+          isBestSeller: product.isBestSeller,
+          isFeatured: product.isFeatured,
+          variant: {
+            index: item.variantIndex,
+            quantityLabel: variant.quantityLabel,
+            price: variant.price,
+            discountedPrice: variant.discountedPrice,
+          },
+        },
+        quantity: item.quantity,
+      };
+    });
+    res.status(200).json({ message: "Item added to cart", cart: populatedCart });
   } catch (err) {
     next(err);
   }
@@ -90,7 +121,7 @@ const addToCart = async (req, res, next) => {
 
 const updateCartItemQuantity = async (req, res, next) => {
   const userId = req.user._id;
-  const { productId } = req.params;
+  const { productId, variantIndex } = req.params;
   const { quantity } = req.body;
 
   if (typeof quantity !== "number" || quantity < 0) {
@@ -100,7 +131,11 @@ const updateCartItemQuantity = async (req, res, next) => {
   }
 
   try {
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    const cart = await Cart.findOne({ userId })
+      .populate({
+        path: "items.productId",
+        populate: { path: "category", select: "name" }
+      });
 
     if (!cart) {
       const error = new Error("Cart not found for this user");
@@ -109,7 +144,7 @@ const updateCartItemQuantity = async (req, res, next) => {
     }
 
     const itemIndex = cart.items.findIndex(
-      (item) => item.productId._id.toString() === productId
+      (item) => item.productId._id.toString() === productId && item.variantIndex === Number(variantIndex)
     );
 
     if (itemIndex === -1) {
@@ -125,20 +160,34 @@ const updateCartItemQuantity = async (req, res, next) => {
     }
 
     await cart.save();
-    await cart.populate("items.productId");
-    const populatedCart = cart.items.map((item) => ({
-      product: {
-        id: item.productId._id,
-        name: item.productId.name,
-        category: item.productId.category,
-        price: item.productId.price,
-        imageUrl: item.productId.imageUrl,
-        description: item.productId.description,
-        isBestSeller: item.productId.isBestSeller,
-        isFeatured: item.productId.isFeatured,
-      },
-      quantity: item.quantity,
-    }));
+    await cart.populate({
+      path: "items.productId",
+      populate: { path: "category", select: "name" }
+    });
+    const populatedCart = cart.items.map((item) => {
+      const product = item.productId;
+      const variant = product.variants?.[item.variantIndex] || {};
+      return {
+        product: {
+          id: product._id,
+          name: product.name,
+          category: typeof product.category === 'object' && product.category !== null
+            ? { id: product.category._id, name: product.category.name }
+            : product.category,
+          imageUrl: product.imageUrl,
+          description: product.description,
+          isBestSeller: product.isBestSeller,
+          isFeatured: product.isFeatured,
+          variant: {
+            index: item.variantIndex,
+            quantityLabel: variant.quantityLabel,
+            price: variant.price,
+            discountedPrice: variant.discountedPrice,
+          },
+        },
+        quantity: item.quantity,
+      };
+    });
     res.status(200).json({ message: "Cart updated", cart: populatedCart });
   } catch (err) {
     next(err);
@@ -147,10 +196,14 @@ const updateCartItemQuantity = async (req, res, next) => {
 
 const removeFromCart = async (req, res, next) => {
   const userId = req.user._id;
-  const { productId } = req.params;
+  const { productId, variantIndex } = req.params;
 
   try {
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    const cart = await Cart.findOne({ userId })
+      .populate({
+        path: "items.productId",
+        populate: { path: "category", select: "name" }
+      });
 
     if (!cart) {
       const error = new Error("Cart not found for this user");
@@ -160,7 +213,7 @@ const removeFromCart = async (req, res, next) => {
 
     const initialLength = cart.items.length;
     cart.items = cart.items.filter(
-      (item) => item.productId._id.toString() !== productId
+      (item) => !(item.productId._id.toString() === productId && item.variantIndex === Number(variantIndex))
     );
 
     if (cart.items.length === initialLength) {
@@ -170,23 +223,35 @@ const removeFromCart = async (req, res, next) => {
     }
 
     await cart.save();
-    await cart.populate("items.productId");
-    const populatedCart = cart.items.map((item) => ({
-      product: {
-        id: item.productId._id,
-        name: item.productId.name,
-        category: item.productId.category,
-        price: item.productId.price,
-        imageUrl: item.productId.imageUrl,
-        description: item.productId.description,
-        isBestSeller: item.productId.isBestSeller,
-        isFeatured: item.productId.isFeatured,
-      },
-      quantity: item.quantity,
-    }));
-    res
-      .status(200)
-      .json({ message: "Item removed from cart", cart: populatedCart });
+    await cart.populate({
+      path: "items.productId",
+      populate: { path: "category", select: "name" }
+    });
+    const populatedCart = cart.items.map((item) => {
+      const product = item.productId;
+      const variant = product.variants?.[item.variantIndex] || {};
+      return {
+        product: {
+          id: product._id,
+          name: product.name,
+          category: typeof product.category === 'object' && product.category !== null
+            ? { id: product.category._id, name: product.category.name }
+            : product.category,
+          imageUrl: product.imageUrl,
+          description: product.description,
+          isBestSeller: product.isBestSeller,
+          isFeatured: product.isFeatured,
+          variant: {
+            index: item.variantIndex,
+            quantityLabel: variant.quantityLabel,
+            price: variant.price,
+            discountedPrice: variant.discountedPrice,
+          },
+        },
+        quantity: item.quantity,
+      };
+    });
+    res.status(200).json({ message: "Item removed from cart", cart: populatedCart });
   } catch (err) {
     next(err);
   }
@@ -206,10 +271,78 @@ const clearCart = async (req, res, next) => {
   }
 };
 
+const mergeCart = async (req, res, next) => {
+  const userId = req.user._id;
+  const { items } = req.body; // [{productId, variantIndex, quantity}]
+
+  if (!Array.isArray(items)) {
+    return res.status(400).json({ message: "Items must be an array" });
+  }
+
+  try {
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      cart = await Cart.create({ userId, items: [] });
+    }
+
+    for (const guestItem of items) {
+      const { productId, variantIndex, quantity } = guestItem;
+      if (!productId || typeof variantIndex !== "number" || typeof quantity !== "number") continue;
+
+      const existingItem = cart.items.find(
+        (item) =>
+          item.productId.toString() === productId &&
+          item.variantIndex === variantIndex
+      );
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.items.push({ productId, variantIndex, quantity });
+      }
+    }
+
+    await cart.save();
+    await cart.populate({
+      path: "items.productId",
+      populate: { path: "category", select: "name" }
+    });
+
+    const populatedCart = cart.items.map((item) => {
+      const product = item.productId;
+      const variant = product.variants?.[item.variantIndex] || {};
+      return {
+        product: {
+          id: product._id,
+          name: product.name,
+          category: typeof product.category === 'object' && product.category !== null
+            ? { id: product.category._id, name: product.category.name }
+            : product.category,
+          imageUrl: product.imageUrl,
+          description: product.description,
+          isBestSeller: product.isBestSeller,
+          isFeatured: product.isFeatured,
+          variant: {
+            index: item.variantIndex,
+            quantityLabel: variant.quantityLabel,
+            price: variant.price,
+            discountedPrice: variant.discountedPrice,
+          },
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    res.status(200).json({ message: "Cart merged", cart: populatedCart });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getCart,
   addToCart,
   updateCartItemQuantity,
   removeFromCart,
   clearCart,
+  mergeCart,
 };
