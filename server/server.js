@@ -19,7 +19,7 @@ connectDB();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://swiftcart-asmy.onrender.com",
+    origin: "https://swiftcart-1-kioc.onrender.com",
     credentials: true,
   })
 );
