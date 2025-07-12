@@ -10,6 +10,12 @@ import {
   User,
   Plus,
   Minus,
+  Package,
+  Gift,
+  HelpCircle,
+  Shield,
+  LogOut,
+  Settings,
 } from "lucide-react";
 import { useNavigate, Link } from 'react-router-dom';
 import AuthModal from './AuthModal';
@@ -100,8 +106,16 @@ export default function Navbar() {
     setIsProfileDropdownOpen(false);
   };
 
-  const handleQuantityChange = (id, delta) => {
-    updateCartItem(id, delta);
+  const handleQuantityChange = (productId, variantIndex, delta) => {
+    const item = cartItems.find(item => item.productId === productId && item.variantIndex === variantIndex);
+    if (item) {
+      const newQuantity = item.quantity + delta;
+      if (newQuantity > 0) {
+        updateCartItem(productId, variantIndex, newQuantity);
+      } else {
+        removeFromCart(productId, variantIndex);
+      }
+    }
   };
 
   // Fetch profile and cart on mount
@@ -126,14 +140,29 @@ export default function Navbar() {
   // Profile menu items
   const profileMenuItems = isLoggedIn
     ? [
-        { label: "My Orders", action: () => alert("My Orders") },
-        { label: "Saved Addresses", action: () => alert("Saved Addresses") },
-        { label: "E-Gift Cards", action: () => alert("E-Gift Cards") },
-        { label: "FAQ's", action: () => alert("FAQ's") },
-        { label: "Account Privacy", action: () => alert("Account Privacy") },
-        { label: "Log Out", action: handleLogout, isDestructive: true },
+        { label: "My Orders", icon: Package, action: () => alert("My Orders") },
+        { label: "Saved Addresses", icon: MapPin, action: () => alert("Saved Addresses") },
+        { label: "E-Gift Cards", icon: Gift, action: () => alert("E-Gift Cards") },
+        { label: "FAQ's", icon: HelpCircle, action: () => alert("FAQ's") },
+        { label: "Account Privacy", icon: Shield, action: () => alert("Account Privacy") },
+        { label: "Settings", icon: Settings, action: () => alert("Settings") },
+        { label: "Log Out", icon: LogOut, action: handleLogout, isDestructive: true },
       ]
     : [];
+
+  // Helper to get user initial and short name
+  const getUserInitial = (user) => {
+    if (!user) return '';
+    if (user.name && user.name.length > 0) return user.name[0].toUpperCase();
+    if (user.email && user.email.length > 0) return user.email[0].toUpperCase();
+    return '';
+  };
+  const getUserShortName = (user) => {
+    if (!user) return '';
+    if (user.name && user.name.length > 0) return user.name.split(' ')[0];
+    if (user.email && user.email.length > 0) return user.email.split('@')[0];
+    return '';
+  };
 
   return (
     <div className="font-sans">
@@ -235,50 +264,58 @@ export default function Navbar() {
             {isLoggedIn && user ? (
               <button
                 onClick={toggleProfileDropdown}
-                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+                className={`flex items-center cursor-pointer p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-200 w-full justify-between bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
+                style={{ minHeight: 48 }}
               >
-                <User className="w-5 h-5 mr-2 text-green-600" />
-                <span className="font-medium">
-                  {user.name || user.email}
-                </span>
+                <div className="flex items-center flex-1 min-w-0">
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-sm mr-2">
+                    {getUserInitial(user)}
+                  </span>
+                  <div className="flex flex-col items-start flex-1 min-w-0">
+                    <span className="text-xs text-gray-500 leading-tight">Hi,</span>
+                    <span className="font-medium text-gray-800 truncate max-w-[80px] text-sm">{getUserShortName(user)}</span>
+                  </div>
+                </div>
                 <ChevronDown
-                  className={`w-4 h-4 ml-1 transform transition-transform duration-200 text-green-600 ${
-                    isProfileDropdownOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`w-4 h-4 ml-2 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                 />
               </button>
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-all duration-200 p-2 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
               >
-                <User className="w-5 h-5 mr-2 text-green-600" />
-                <span className="font-medium">Login</span>
+                <User className="w-4 h-4 mr-2 text-green-600" />
+                <span className="font-medium text-sm">Login</span>
               </button>
             )}
             {isLoggedIn && isProfileDropdownOpen && (
               <div
-                className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-100"
+                className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
                 style={{ pointerEvents: 'auto', zIndex: 9999 }}
               >
-                {profileMenuItems.map((item, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onMouseDown={e => {
-                      e.stopPropagation();
-                      item.action();
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm rounded-md mx-2 my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                      item.isDestructive
-                        ? "text-red-600 hover:bg-red-50"
-                        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-                    }`}
-                    tabIndex={0}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                {profileMenuItems.map((item, index) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onMouseDown={e => {
+                        e.stopPropagation();
+                        item.action();
+                      }}
+                      className={`flex items-center w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                        item.isDestructive
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`}
+                      tabIndex={0}
+                    >
+                      <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -303,36 +340,40 @@ export default function Navbar() {
           <div className="md:hidden mt-4 border-t border-gray-200 pt-4">
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+              className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-all duration-200 p-2 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
             >
-              <User className="w-5 h-5 mr-2 text-green-600" />
-              <span className="font-medium">Login</span>
+              <User className="w-4 h-4 mr-2 text-green-600" />
+              <span className="font-medium text-sm">Login</span>
             </button>
           </div>
         ) : (
           isProfileDropdownOpen && (
             <div className="md:hidden mt-4 border-t border-gray-200 pt-4" style={{ pointerEvents: 'auto', zIndex: 9999 }}>
-              <div className="flex flex-col space-y-3">
-                <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
-                  {profileMenuItems.map((item, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onMouseDown={e => {
-                        e.stopPropagation();
-                        console.log('Clicked', item.label);
-                        item.action();
-                      }}
-                      className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                        item.isDestructive
-                          ? "text-red-600 hover:bg-red-50"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                      tabIndex={0}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+              <div className="flex flex-col space-y-2">
+                <div className="pl-6 pb-2 space-y-1 border-l border-gray-200 ml-2">
+                  {profileMenuItems.map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onMouseDown={e => {
+                          e.stopPropagation();
+                          console.log('Clicked', item.label);
+                          item.action();
+                        }}
+                        className={`flex items-center w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200 ${
+                          item.isDestructive
+                            ? "text-red-600 hover:bg-red-50"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                        tabIndex={0}
+                      >
+                        <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -507,7 +548,7 @@ export default function Navbar() {
                         </div>
                         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                           <button
-                            onClick={() => handleQuantityChange(item.id, -1)}
+                            onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
                             className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
                             aria-label={`Decrease quantity of ${item.name}`}
                           >
@@ -517,7 +558,7 @@ export default function Navbar() {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => handleQuantityChange(item.id, 1)}
+                            onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
                             className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
                             aria-label={`Increase quantity of ${item.name}`}
                           >

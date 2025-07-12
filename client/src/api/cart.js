@@ -13,13 +13,12 @@ export async function addToCart(item) {
 }
 
 export async function updateCartItem(productId, variantIndex, quantity) {
-  const res = await axios.put(`${API_BASE}/item`, { productId, variantIndex, quantity }, { withCredentials: true });
+  const res = await axios.put(`${API_BASE}/${productId}?variantIndex=${variantIndex}`, { quantity }, { withCredentials: true });
   return res.data;
 }
 
 export async function removeFromCart(productId, variantIndex) {
-  const res = await axios.delete(`${API_BASE}/item`, {
-    data: { productId, variantIndex },
+  const res = await axios.delete(`${API_BASE}/${productId}?variantIndex=${variantIndex}`, {
     withCredentials: true,
   });
   return res.data;

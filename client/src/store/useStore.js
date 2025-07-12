@@ -29,8 +29,13 @@ const useStore = create((set, get) => ({
       // Merge guest cart if it exists
       const guestItems = getAllLocalCartItems();
       if (guestItems && guestItems.length > 0) {
-        await apiMergeCart(guestItems);
-        clearLocalCart();
+        try {
+          await apiMergeCart(guestItems);
+          clearLocalCart();
+        } catch (mergeError) {
+          console.error('Failed to merge cart:', mergeError);
+          // Continue with login even if merge fails
+        }
       }
       // Fetch the updated backend cart
       await get().fetchCart();
@@ -52,8 +57,11 @@ const useStore = create((set, get) => ({
     if (isLoggedIn) {
       try {
         const data = await apiGetCart();
-        set({ items: data.items || [], hydratedItems: data.items || [], cartLoading: false });
-      } catch {
+        // The API returns the cart items directly, not wrapped in an 'items' property
+        const cartItems = Array.isArray(data) ? data : [];
+        set({ items: cartItems, hydratedItems: cartItems, cartLoading: false });
+      } catch (error) {
+        console.error('Failed to fetch cart:', error);
         set({ items: [], hydratedItems: [], cartError: 'Failed to load cart', cartLoading: false });
       }
     } else {
@@ -107,18 +115,41 @@ const useStore = create((set, get) => ({
   async addToCart(item) {
     const { isLoggedIn } = get();
     if (isLoggedIn) {
-      await apiAddToCart(item);
-      await get().fetchCart();
+      try {
+        const response = await apiAddToCart(item);
+        // Update cart with the response data if it contains cart items
+        if (response && response.cart) {
+          set({ items: response.cart, hydratedItems: response.cart });
+        } else {
+          await get().fetchCart();
+        }
+      } catch (error) {
+        console.error('Failed to add to cart:', error);
+        await get().fetchCart();
+      }
     } else {
       addToLocalCart(item);
       await get().fetchCart();
     }
   },
   async updateCartItem(productId, variantIndex, quantity) {
+    console.log('updateCartItem called with:', { productId, variantIndex, quantity });
     const { isLoggedIn } = get();
     if (isLoggedIn) {
-      await apiUpdateCartItem(productId, variantIndex, quantity);
-      await get().fetchCart();
+      try {
+        const response = await apiUpdateCartItem(productId, variantIndex, quantity);
+        console.log('API response:', response);
+        if (response && response.cart) {
+          console.log('Updating cart with response data:', response.cart);
+          set({ items: response.cart, hydratedItems: response.cart });
+        } else {
+          console.log('No cart data in response, fetching cart...');
+          await get().fetchCart();
+        }
+      } catch (error) {
+        console.error('Failed to update cart item:', error);
+        await get().fetchCart();
+      }
     } else {
       const items = getAllLocalCartItems().map((item) =>
         item.productId === productId && item.variantIndex === variantIndex
@@ -132,8 +163,17 @@ const useStore = create((set, get) => ({
   async removeFromCart(productId, variantIndex) {
     const { isLoggedIn } = get();
     if (isLoggedIn) {
-      await apiRemoveFromCart(productId, variantIndex);
-      await get().fetchCart();
+      try {
+        const response = await apiRemoveFromCart(productId, variantIndex);
+        if (response && response.cart) {
+          set({ items: response.cart, hydratedItems: response.cart });
+        } else {
+          await get().fetchCart();
+        }
+      } catch (error) {
+        console.error('Failed to remove from cart:', error);
+        await get().fetchCart();
+      }
     } else {
       const items = getAllLocalCartItems().filter(
         (item) => !(item.productId === productId && item.variantIndex === variantIndex)

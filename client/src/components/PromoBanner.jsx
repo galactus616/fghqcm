@@ -9,7 +9,7 @@ const PromoBanner = () => {
     >
       {/* Background Image with performance optimizations */}
       <img
-        src="https://res.cloudinary.com/deepmitra/image/upload/v1751828653/top-view-hand-holding-yogurt-bot_gcjgqw.jpg"
+        src="https://res.cloudinary.com/deepmitra/image/upload/v1752308252/nrd-D6Tu_L3chLE-unsplash_pwr8ug.jpg"
         alt="Fresh groceries including fruits, vegetables, and yogurt"
         className="absolute inset-0 w-full h-full object-cover"
         loading="lazy"
@@ -17,7 +17,7 @@ const PromoBanner = () => {
       />
 
       {/* Enhanced gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/30 to-transparent backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-gradient-to-r to-transparent backdrop-blur-[2px]" />
 
       {/* Improved glassmorphic panel with better contrast */}
       <div className="relative z-10 h-full flex items-center px-6 md:px-12">

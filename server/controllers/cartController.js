@@ -14,28 +14,34 @@ const getCart = async (req, res, next) => {
       cart = await Cart.create({ userId, items: [] });
     }
 
-    const populatedCart = cart.items.map((item) => {
+    // Filter out items with null productId (products that no longer exist)
+    const validItems = cart.items.filter(item => item.productId !== null);
+    
+    // If there are invalid items, update the cart to remove them
+    if (validItems.length !== cart.items.length) {
+      cart.items = validItems;
+      await cart.save();
+    }
+
+    const populatedCart = validItems.map((item) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
-        product: {
-          id: product._id,
-          name: product.name,
-          category: typeof product.category === 'object' && product.category !== null
-            ? { id: product.category._id, name: product.category.name }
-            : product.category,
-          imageUrl: product.imageUrl,
-          description: product.description,
-          isBestSeller: product.isBestSeller,
-          isFeatured: product.isFeatured,
-          variant: {
-            index: item.variantIndex,
-            quantityLabel: variant.quantityLabel,
-            price: variant.price,
-            discountedPrice: variant.discountedPrice,
-          },
-        },
+        id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
+        productId: product._id,
+        variantIndex: item.variantIndex,
+        name: product.name,
+        imageUrl: product.imageUrl,
+        price: variant.discountedPrice || variant.price || 0,
+        originalPrice: variant.price || 0,
         quantity: item.quantity,
+        variantLabel: variant.quantityLabel || '',
+        category: typeof product.category === 'object' && product.category !== null
+          ? { id: product.category._id, name: product.category.name }
+          : product.category,
+        description: product.description,
+        isBestSeller: product.isBestSeller,
+        isFeatured: product.isFeatured,
       };
     });
 
@@ -89,28 +95,28 @@ const addToCart = async (req, res, next) => {
       path: "items.productId",
       populate: { path: "category", select: "name" }
     });
-    const populatedCart = cart.items.map((item) => {
+    
+    // Filter out items with null productId and map valid items
+    const validItems = cart.items.filter(item => item.productId !== null);
+    const populatedCart = validItems.map((item) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
-        product: {
-          id: product._id,
-          name: product.name,
-          category: typeof product.category === 'object' && product.category !== null
-            ? { id: product.category._id, name: product.category.name }
-            : product.category,
-          imageUrl: product.imageUrl,
-          description: product.description,
-          isBestSeller: product.isBestSeller,
-          isFeatured: product.isFeatured,
-          variant: {
-            index: item.variantIndex,
-            quantityLabel: variant.quantityLabel,
-            price: variant.price,
-            discountedPrice: variant.discountedPrice,
-          },
-        },
+        id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
+        productId: product._id,
+        variantIndex: item.variantIndex,
+        name: product.name,
+        imageUrl: product.imageUrl,
+        price: variant.discountedPrice || variant.price || 0,
+        originalPrice: variant.price || 0,
         quantity: item.quantity,
+        variantLabel: variant.quantityLabel || '',
+        category: typeof product.category === 'object' && product.category !== null
+          ? { id: product.category._id, name: product.category.name }
+          : product.category,
+        description: product.description,
+        isBestSeller: product.isBestSeller,
+        isFeatured: product.isFeatured,
       };
     });
     res.status(200).json({ message: "Item added to cart", cart: populatedCart });
@@ -164,28 +170,28 @@ const updateCartItemQuantity = async (req, res, next) => {
       path: "items.productId",
       populate: { path: "category", select: "name" }
     });
-    const populatedCart = cart.items.map((item) => {
+    
+    // Filter out items with null productId and map valid items
+    const validItems = cart.items.filter(item => item.productId !== null);
+    const populatedCart = validItems.map((item) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
-        product: {
-          id: product._id,
-          name: product.name,
-          category: typeof product.category === 'object' && product.category !== null
-            ? { id: product.category._id, name: product.category.name }
-            : product.category,
-          imageUrl: product.imageUrl,
-          description: product.description,
-          isBestSeller: product.isBestSeller,
-          isFeatured: product.isFeatured,
-          variant: {
-            index: item.variantIndex,
-            quantityLabel: variant.quantityLabel,
-            price: variant.price,
-            discountedPrice: variant.discountedPrice,
-          },
-        },
+        id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
+        productId: product._id,
+        variantIndex: item.variantIndex,
+        name: product.name,
+        imageUrl: product.imageUrl,
+        price: variant.discountedPrice || variant.price || 0,
+        originalPrice: variant.price || 0,
         quantity: item.quantity,
+        variantLabel: variant.quantityLabel || '',
+        category: typeof product.category === 'object' && product.category !== null
+          ? { id: product.category._id, name: product.category.name }
+          : product.category,
+        description: product.description,
+        isBestSeller: product.isBestSeller,
+        isFeatured: product.isFeatured,
       };
     });
     res.status(200).json({ message: "Cart updated", cart: populatedCart });
@@ -227,28 +233,28 @@ const removeFromCart = async (req, res, next) => {
       path: "items.productId",
       populate: { path: "category", select: "name" }
     });
-    const populatedCart = cart.items.map((item) => {
+    
+    // Filter out items with null productId and map valid items
+    const validItems = cart.items.filter(item => item.productId !== null);
+    const populatedCart = validItems.map((item) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
-        product: {
-          id: product._id,
-          name: product.name,
-          category: typeof product.category === 'object' && product.category !== null
-            ? { id: product.category._id, name: product.category.name }
-            : product.category,
-          imageUrl: product.imageUrl,
-          description: product.description,
-          isBestSeller: product.isBestSeller,
-          isFeatured: product.isFeatured,
-          variant: {
-            index: item.variantIndex,
-            quantityLabel: variant.quantityLabel,
-            price: variant.price,
-            discountedPrice: variant.discountedPrice,
-          },
-        },
+        id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
+        productId: product._id,
+        variantIndex: item.variantIndex,
+        name: product.name,
+        imageUrl: product.imageUrl,
+        price: variant.discountedPrice || variant.price || 0,
+        originalPrice: variant.price || 0,
         quantity: item.quantity,
+        variantLabel: variant.quantityLabel || '',
+        category: typeof product.category === 'object' && product.category !== null
+          ? { id: product.category._id, name: product.category.name }
+          : product.category,
+        description: product.description,
+        isBestSeller: product.isBestSeller,
+        isFeatured: product.isFeatured,
       };
     });
     res.status(200).json({ message: "Item removed from cart", cart: populatedCart });
@@ -307,28 +313,27 @@ const mergeCart = async (req, res, next) => {
       populate: { path: "category", select: "name" }
     });
 
-    const populatedCart = cart.items.map((item) => {
+    // Filter out items with null productId and map valid items
+    const validItems = cart.items.filter(item => item.productId !== null);
+    const populatedCart = validItems.map((item) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
-        product: {
-          id: product._id,
-          name: product.name,
-          category: typeof product.category === 'object' && product.category !== null
-            ? { id: product.category._id, name: product.category.name }
-            : product.category,
-          imageUrl: product.imageUrl,
-          description: product.description,
-          isBestSeller: product.isBestSeller,
-          isFeatured: product.isFeatured,
-          variant: {
-            index: item.variantIndex,
-            quantityLabel: variant.quantityLabel,
-            price: variant.price,
-            discountedPrice: variant.discountedPrice,
-          },
-        },
+        id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
+        productId: product._id,
+        variantIndex: item.variantIndex,
+        name: product.name,
+        imageUrl: product.imageUrl,
+        price: variant.discountedPrice || variant.price || 0,
+        originalPrice: variant.price || 0,
         quantity: item.quantity,
+        variantLabel: variant.quantityLabel || '',
+        category: typeof product.category === 'object' && product.category !== null
+          ? { id: product.category._id, name: product.category.name }
+          : product.category,
+        description: product.description,
+        isBestSeller: product.isBestSeller,
+        isFeatured: product.isFeatured,
       };
     });
 
