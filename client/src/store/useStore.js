@@ -119,7 +119,7 @@ const useStore = create((set, get) => ({
         const response = await apiAddToCart(item);
         // Update cart with the response data if it contains cart items
         if (response && response.cart) {
-          set({ items: response.cart, hydratedItems: response.cart });
+          set({ items: [...response.cart], hydratedItems: [...response.cart] });
         } else {
           await get().fetchCart();
         }
@@ -141,7 +141,7 @@ const useStore = create((set, get) => ({
         console.log('API response:', response);
         if (response && response.cart) {
           console.log('Updating cart with response data:', response.cart);
-          set({ items: response.cart, hydratedItems: response.cart });
+          set({ items: [...response.cart], hydratedItems: [...response.cart] });
         } else {
           console.log('No cart data in response, fetching cart...');
           await get().fetchCart();
@@ -166,7 +166,7 @@ const useStore = create((set, get) => ({
       try {
         const response = await apiRemoveFromCart(productId, variantIndex);
         if (response && response.cart) {
-          set({ items: response.cart, hydratedItems: response.cart });
+          set({ items: [...response.cart], hydratedItems: [...response.cart] });
         } else {
           await get().fetchCart();
         }

@@ -27,6 +27,7 @@ const getCart = async (req, res, next) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
+        _id: item._id, // <-- ensure stable id for React key
         id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
         productId: product._id,
         variantIndex: item.variantIndex,
@@ -102,6 +103,7 @@ const addToCart = async (req, res, next) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
+        _id: item._id, // <-- ensure stable id for React key
         id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
         productId: product._id,
         variantIndex: item.variantIndex,
@@ -127,7 +129,11 @@ const addToCart = async (req, res, next) => {
 
 const updateCartItemQuantity = async (req, res, next) => {
   const userId = req.user._id;
-  const { productId, variantIndex } = req.params;
+  let { productId, variantIndex } = req.params;
+  // Support variantIndex from query if not present in params
+  if (variantIndex === undefined) {
+    variantIndex = req.query.variantIndex;
+  }
   const { quantity } = req.body;
 
   if (typeof quantity !== "number" || quantity < 0) {
@@ -177,6 +183,7 @@ const updateCartItemQuantity = async (req, res, next) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
+        _id: item._id, // <-- ensure stable id for React key
         id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
         productId: product._id,
         variantIndex: item.variantIndex,
@@ -202,7 +209,11 @@ const updateCartItemQuantity = async (req, res, next) => {
 
 const removeFromCart = async (req, res, next) => {
   const userId = req.user._id;
-  const { productId, variantIndex } = req.params;
+  let { productId, variantIndex } = req.params;
+  // Support variantIndex from query if not present in params
+  if (variantIndex === undefined) {
+    variantIndex = req.query.variantIndex;
+  }
 
   try {
     const cart = await Cart.findOne({ userId })
@@ -240,6 +251,7 @@ const removeFromCart = async (req, res, next) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
+        _id: item._id, // <-- ensure stable id for React key
         id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
         productId: product._id,
         variantIndex: item.variantIndex,
@@ -271,7 +283,8 @@ const clearCart = async (req, res, next) => {
       cart.items = [];
       await cart.save();
     }
-    res.status(200).json({ message: "Cart cleared" });
+    // Return the updated (now empty) cart for consistency
+    res.status(200).json({ message: "Cart cleared", cart: [] });
   } catch (err) {
     next(err);
   }
@@ -319,6 +332,7 @@ const mergeCart = async (req, res, next) => {
       const product = item.productId;
       const variant = product.variants?.[item.variantIndex] || {};
       return {
+        _id: item._id, // <-- ensure stable id for React key
         id: `${product._id}-${item.variantIndex}-${item._id}`, // Unique ID for cart item
         productId: product._id,
         variantIndex: item.variantIndex,

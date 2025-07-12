@@ -283,7 +283,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Profile */}
-          <div className="relative hidden md:flex items-center ml-6 order-4 min-w-[140px] gap-2">
+          <div className="hidden md:flex items-center ml-6 order-4 min-w-[140px] gap-2">
             {/* Language Toggle for Desktop */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
@@ -292,64 +292,67 @@ export default function Navbar() {
             >
               {language === "en" ? "En" : "Bn"}
             </button>
-            {isLoggedIn && user ? (
-              <button
-                onClick={toggleProfileDropdown}
-                className={`flex items-center cursor-pointer p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-200 w-full justify-between bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
-                style={{ minHeight: 48 }}
-              >
-                <div className="flex items-center flex-1 min-w-0">
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-sm mr-2">
-                    {getUserInitial(user)}
-                  </span>
-                  <div className="flex flex-col items-start flex-1 min-w-0">
-                    <span className="text-xs text-gray-500 leading-tight">Hi,</span>
-                    <span className="font-medium text-gray-800 truncate max-w-[80px] text-sm">{getUserShortName(user)}</span>
+            {/* Profile Button + Dropdown Wrapper */}
+            <div className="relative">
+              {isLoggedIn && user ? (
+                <button
+                  onClick={toggleProfileDropdown}
+                  className={`flex items-center cursor-pointer p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-200 w-full justify-between bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
+                  style={{ minHeight: 48 }}
+                >
+                  <div className="flex items-center flex-1 min-w-0">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-sm mr-2">
+                      {getUserInitial(user)}
+                    </span>
+                    <div className="flex flex-col items-start flex-1 min-w-0">
+                      <span className="text-xs text-gray-500 leading-tight">Hi,</span>
+                      <span className="font-medium text-gray-800 truncate max-w-[80px] text-sm">{getUserShortName(user)}</span>
+                    </div>
                   </div>
-                </div>
-                <ChevronDown
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
-                />
-              </button>
-            ) : (
-              <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-all duration-200 p-2 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
-              >
-                <User className="w-4 h-4 mr-2 text-green-600" />
-                <span className="font-medium text-sm">Login</span>
-              </button>
-            )}
+                  <ChevronDown
+                    className={`w-4 h-4 ml-2 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                  />
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="flex items-center text-gray-700  cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+                >
+                  <User className="w-5 h-5 mr-2 text-green-600" />
+                  <span className="font-medium">Login</span>
+                </button>
+              )}
 
-            {isLoggedIn && isProfileDropdownOpen && (
-              <div
-                className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
-                style={{ pointerEvents: 'auto', zIndex: 9999 }}
-              >
-                {profileMenuItems.map((item, index) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <button
-                      key={index}
-                      type="button"
-                      onMouseDown={e => {
-                        e.stopPropagation();
-                        item.action();
-                      }}
-                      className={`flex items-center w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                        item.isDestructive
-                          ? "text-red-600 hover:bg-red-50"
-                          : "text-gray-700 hover:bg-gray-50"
-                      }`}
-                      tabIndex={0}
-                    >
-                      <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
-                      <span>{item.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+              {isLoggedIn && isProfileDropdownOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
+                  style={{ pointerEvents: 'auto', zIndex: 9999 }}
+                >
+                  {profileMenuItems.map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onMouseDown={e => {
+                          e.stopPropagation();
+                          item.action();
+                        }}
+                        className={`flex items-center w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                          item.isDestructive
+                            ? "text-red-600 hover:bg-red-50"
+                            : "text-gray-700 hover:bg-gray-50"
+                        }`}
+                        tabIndex={0}
+                      >
+                        <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
             {/* Desktop Cart Button */}
             <button
               onClick={toggleCart}
@@ -547,7 +550,7 @@ export default function Navbar() {
                   <div className="space-y-4">
                     {cartItems.map((item) => (
                       <div
-                        key={item.id}
+                        key={item._id || item.id}
                         className="flex items-center bg-gray-50 p-3 rounded-lg shadow-sm"
                       >
                         <img
