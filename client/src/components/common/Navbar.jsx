@@ -11,10 +11,10 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
-import { useNavigate, Link } from 'react-router-dom';
-import AuthModal from './AuthModal';
+import { useNavigate, Link } from "react-router-dom";
+import AuthModal from "./AuthModal";
 import toast from "react-hot-toast";
-import useStore from '../../store/useStore';
+import useStore from "../../store/useStore";
 
 // Navbar component
 export default function Navbar() {
@@ -35,24 +35,32 @@ export default function Navbar() {
   } = useStore();
 
   const [isLocationModalOpen, setIsLocationModalOpen] = React.useState(false);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = React.useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
+    React.useState(false);
   const [isCartOpen, setIsCartOpen] = React.useState(false);
-  const [currentLocation, setCurrentLocation] = React.useState("Dumdum, Kolkata");
+  const [currentLocation, setCurrentLocation] =
+    React.useState("Dumdum, Kolkata");
   const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
+  const [language, setLanguage] = React.useState("en");
 
   // Calculate cart totals
   const cartTotals = React.useMemo(() => {
     const itemsTotal = cartItems.reduce(
-      (sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.price) || 0),
+      (sum, item) =>
+        sum + (Number(item.quantity) || 0) * (Number(item.price) || 0),
       0
     );
     const totalSavings = cartItems.reduce(
-      (sum, item) => sum + (Number(item.quantity) || 0) * ((Number(item.originalPrice) || 0) - (Number(item.price) || 0)),
+      (sum, item) =>
+        sum +
+        (Number(item.quantity) || 0) *
+          ((Number(item.originalPrice) || 0) - (Number(item.price) || 0)),
       0
     );
     const deliveryCharge = 0;
     const handlingCharge = 4;
-    const grandTotal = itemsTotal + deliveryCharge + (cartItems.length > 0 ? handlingCharge : 0);
+    const grandTotal =
+      itemsTotal + deliveryCharge + (cartItems.length > 0 ? handlingCharge : 0);
     return {
       itemsTotal,
       totalSavings,
@@ -95,10 +103,10 @@ export default function Navbar() {
     setIsLocationModalOpen(false);
   };
 
-  const handleProfileMenuItemClick = (item) => {
-    alert(`Clicked: ${item}`);
-    setIsProfileDropdownOpen(false);
-  };
+  // const handleProfileMenuItemClick = (item) => {
+  //   alert(`Clicked: ${item}`);
+  //   setIsProfileDropdownOpen(false);
+  // };
 
   const handleQuantityChange = (id, delta) => {
     updateCartItem(id, delta);
@@ -169,9 +177,24 @@ export default function Navbar() {
 
           {/* Mobile Icons */}
           <div className="flex items-center space-x-3 md:hidden order-2">
+            {/* Language Toggle for Mobile */}
             <button
-              onClick={toggleProfileDropdown}
-              className="p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              onClick={() => setLanguage(language === "en" ? "bn" : "en")}
+              className="rounded  text-green-600 text-sm px-3 py-2 focus:outline-none bg-green-50 focus:ring-2 focus:ring-green-500"
+              aria-label="Toggle language"
+            >
+              {language === "en" ? "En" : "Bn"}
+            </button>
+            <button
+              onClick={() => {
+                closeAllOverlays();
+                if (isLoggedIn) {
+                  toggleProfileDropdown();
+                } else {
+                  setIsAuthModalOpen(true);
+                }
+              }}
+              className="cursor-pointer p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
               aria-label="Toggle profile menu"
             >
               <User className="w-6 h-6" />
@@ -179,7 +202,7 @@ export default function Navbar() {
 
             <button
               onClick={toggleCart}
-              className="relative p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              className="relative cursor-pointer p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
               aria-label="Open cart"
             >
               <ShoppingCart className="w-6 h-6" />
@@ -231,16 +254,22 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Profile */}
-          <div className="relative hidden md:block ml-6 order-4 min-w-[140px]">
+          <div className="relative hidden md:flex items-center ml-6 order-4 min-w-[140px] gap-2">
+            {/* Language Toggle for Desktop */}
+            <button
+              onClick={() => setLanguage(language === "en" ? "bn" : "en")}
+              className="ml-2 rounded text-green-600 text-sm px-4  p-3 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+              aria-label="Toggle language"
+            >
+              {language === "en" ? "En" : "Bn"}
+            </button>
             {isLoggedIn && user ? (
               <button
                 onClick={toggleProfileDropdown}
                 className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
               >
                 <User className="w-5 h-5 mr-2 text-green-600" />
-                <span className="font-medium">
-                  {user.name || user.email}
-                </span>
+                <span className="font-medium">{user.name || user.email}</span>
                 <ChevronDown
                   className={`w-4 h-4 ml-1 transform transition-transform duration-200 text-green-600 ${
                     isProfileDropdownOpen ? "rotate-180" : "rotate-0"
@@ -250,22 +279,23 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+                className="flex items-center text-gray-700  cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
               >
                 <User className="w-5 h-5 mr-2 text-green-600" />
                 <span className="font-medium">Login</span>
               </button>
             )}
+
             {isLoggedIn && isProfileDropdownOpen && (
               <div
                 className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-100"
-                style={{ pointerEvents: 'auto', zIndex: 9999 }}
+                style={{ pointerEvents: "auto", zIndex: 9999 }}
               >
                 {profileMenuItems.map((item, index) => (
                   <button
                     key={index}
                     type="button"
-                    onMouseDown={e => {
+                    onMouseDown={(e) => {
                       e.stopPropagation();
                       item.action();
                     }}
@@ -281,62 +311,52 @@ export default function Navbar() {
                 ))}
               </div>
             )}
+            {/* Desktop Cart Button */}
+            <button
+              onClick={toggleCart}
+              className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[140px] justify-center"
+            >
+              <ShoppingCart className="w-5 h-5 mr-2" />
+              <span className="font-medium">My Cart</span>
+              {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm">
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
           </div>
-
-          {/* Desktop Cart Button */}
-          <button
-            onClick={toggleCart}
-            className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ml-6 order-5 min-w-[140px] justify-center"
-          >
-            <ShoppingCart className="w-5 h-5 mr-2" />
-            <span className="font-medium">My Cart</span>
-            {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm">
-                {cartItems.length}
-              </span>
-            )}
-          </button>
         </div>
 
         {/* Mobile Profile Dropdown or Login Button */}
-        {!isLoggedIn ? (
-          <div className="md:hidden mt-4 border-t border-gray-200 pt-4">
-            <button
-              onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
-            >
-              <User className="w-5 h-5 mr-2 text-green-600" />
-              <span className="font-medium">Login</span>
-            </button>
-          </div>
-        ) : (
-          isProfileDropdownOpen && (
-            <div className="md:hidden mt-4 border-t border-gray-200 pt-4" style={{ pointerEvents: 'auto', zIndex: 9999 }}>
-              <div className="flex flex-col space-y-3">
-                <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
-                  {profileMenuItems.map((item, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onMouseDown={e => {
-                        e.stopPropagation();
-                        console.log('Clicked', item.label);
-                        item.action();
-                      }}
-                      className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                        item.isDestructive
-                          ? "text-red-600 hover:bg-red-50"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                      tabIndex={0}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+        {isLoggedIn && isProfileDropdownOpen && (
+          <div
+            className="md:hidden mt-4 border-t border-gray-200 pt-4"
+            style={{ pointerEvents: "auto", zIndex: 9999 }}
+          >
+            <div className="flex flex-col space-y-3">
+              <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
+                {profileMenuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      console.log("Clicked", item.label);
+                      item.action();
+                    }}
+                    className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                      item.isDestructive
+                        ? "text-red-600 hover:bg-red-50"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                    tabIndex={0}
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </div>
             </div>
-          )
+          </div>
         )}
       </nav>
 
@@ -463,7 +483,9 @@ export default function Navbar() {
 
             <div className="flex-grow overflow-y-auto p-4 space-y-4">
               {cartError ? (
-                <div className="text-center text-red-600 py-10">{cartError}</div>
+                <div className="text-center text-red-600 py-10">
+                  {cartError}
+                </div>
               ) : cartItems.length === 0 ? (
                 <div className="text-center text-gray-500 py-10">
                   Your cart is empty.
@@ -555,7 +577,12 @@ export default function Navbar() {
                       )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
                         <span>Grand total</span>
-                        <span>₹{cartItems.length > 0 ? cartTotals.grandTotal.toFixed(2) : '0.00'}</span>
+                        <span>
+                          ₹
+                          {cartItems.length > 0
+                            ? cartTotals.grandTotal.toFixed(2)
+                            : "0.00"}
+                        </span>
                       </div>
                     </div>
                   </div>
