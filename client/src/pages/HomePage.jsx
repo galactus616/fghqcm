@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import CategoriesSlide from "../components/CategoriesSlide";
 import PromoBanner from "../components/PromoBanner";
-import ProductSection from "../components/ProductSection";
 import useStore from '../store/useStore';
+import ProductSection from "../components/ProductSection";
 
 const CategorySkeleton = () => (
   <section className="w-full py-6 px-2 sm:px-4 md:px-8">

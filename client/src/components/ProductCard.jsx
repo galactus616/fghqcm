@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const hasMultipleVariants = product.variants && product.variants.length > 1;
   const variant = product.variants?.[selectedVariantIdx] || product.variants?.[0] || {};
-  const { isLoggedIn, addToCart } = useStore();
+  const { addToCart } = useStore();
 
   const handleAddToCart = async () => {
     try {
@@ -17,56 +17,58 @@ const ProductCard = ({ product }) => {
         quantity: 1
       });
       toast.success('Added to cart!');
-    } catch (err) {
+    } catch {
       toast.error('Failed to add to cart');
     }
   };
 
   return (
-    <div className="relative border border-gray-100 rounded-xl p-4 flex flex-col w-56 bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
+    <div className="border border-gray-100 rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56  bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
+      <div className="relative">
+      
       {/* Badges */}
-      <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
+      <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1 z-10">
         {product.isBestSeller ? (
-          <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+          <span className="bg-amber-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
             BESTSELLER
           </span>
         ) : product.isFeatured ? (
-          <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+          <span className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
             FEATURED
           </span>
         ) : null}
       </div>
 
       {/* Product Image */}
-      <div className="flex justify-center items-center h-36 object-fill w-full bg-gray-50 rounded-lg overflow-hidden">
+      <div className="flex justify-center items-center h-24 sm:h-28 md:h-32 lg:h-36 object-fill w-full bg-gray-50 rounded-lg overflow-hidden">
         <img
           src={product.images?.[0] || product.imageUrl}
           alt={product.name}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain md:object-cover"
         />
       </div>
 
       {/* Product Info */}
-      <div className="mt-3 flex flex-col flex-1">
+      <div className="mt-2 sm:mt-3 flex flex-col flex-1">
         {/* Category */}
-        <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+        <span className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider">
           {typeof product.category === 'object' ? product.category.name : product.category}
         </span>
         
         {/* Product Name */}
-        <h2 className="text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-2 line-clamp-2">
+        <h2 className="text-[13px] sm:text-[14px] md:text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-1 sm:mb-2 line-clamp-2">
           {product.name}
         </h2>
 
         {/* Variant Selector - Always rendered but with conditional spacing */}
-        <div className={hasMultipleVariants ? 'mb-3' : 'mb-1'}>
+        <div className={hasMultipleVariants ? 'mb-1 sm:mb-3' : 'mb-1 sm:mb-3'}>
           {hasMultipleVariants ? (
-            <div className="flex gap-1.5 flex-nowrap overflow-x-auto pb-1">
+            <div className="flex gap-1 sm:gap-1.5 flex-nowrap overflow-x-auto pb-1">
               {product.variants.map((v, idx) => (
                 <button
                   key={idx}
                   type="button"
-                  className={`px-3 py-1 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap ${
+                  className={`px-2 sm:px-3 py-1 rounded-lg border text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap ${
                     selectedVariantIdx === idx
                       ? 'bg-green-600 text-white border-green-600'
                       : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
@@ -79,7 +81,7 @@ const ProductCard = ({ product }) => {
             </div>
           ) : (
             product.variants && (
-              <span className="inline-block bg-green-600 text-white text-xs font-medium px-3 py-1 rounded-lg border border-green-600">
+              <span className="inline-block bg-green-600 text-white text-[10px] sm:text-xs font-medium px-2 sm:px-3 py-1 rounded-lg border border-green-600">
                 {product.variants[0].quantityLabel}
               </span>
             )
@@ -89,25 +91,26 @@ const ProductCard = ({ product }) => {
         {/* Price and Add Button Section - horizontal layout at the bottom */}
         <div className="flex items-center justify-between mt-auto pt-1">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="text-[18px] font-bold text-green-700">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="text-[14px] sm:text-[16px] md:text-[18px] font-bold text-green-700">
                 ₹{variant.discountedPrice ?? variant.price}
               </span>
               {variant.discountedPrice && (
-                <span className="text-xs text-gray-400 line-through">
+                <span className="text-[10px] sm:text-xs text-gray-400 line-through">
                   ₹{variant.price}
                 </span>
               )}
             </div>
           </div>
           <button
-            className="flex items-center gap-1 text-white bg-green-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
+            className="flex items-center gap-1 text-white bg-green-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:bg-green-700 transition-colors"
             onClick={handleAddToCart}
-            >
-            <Plus className="w-4 h-4" />
-            <span>ADD</span>
+          >
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="inline">ADD</span>
           </button>
         </div>
+      </div>
       </div>
     </div>
   );
