@@ -265,6 +265,21 @@ const useStore = create((set, get) => ({
   setProductError(error) {
     set({ productError: error });
   },
+
+  // Orders slice
+  orders: [],
+  ordersLoading: false,
+  ordersError: null,
+  async fetchOrders() {
+    set({ ordersLoading: true, ordersError: null });
+    try {
+      const res = await fetch('/api/orders', { credentials: 'include' });
+      const data = await res.json();
+      set({ orders: data.orders || [], ordersLoading: false });
+    } catch (error) {
+      set({ orders: [], ordersLoading: false, ordersError: 'Failed to load orders' });
+    }
+  },
 }));
 
 export default useStore; 
