@@ -569,6 +569,16 @@ export default function Navbar() {
                             </span>
                           </p>
                         </div>
+
+
+
+
+
+
+
+
+
+                        
                         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
