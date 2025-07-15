@@ -4,56 +4,12 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
 import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../api/user';
-
-function LocationModal({ isOpen, onClose, onSave }) {
-  const [input, setInput] = useState('');
-  const handleDetect = () => {
-    setInput('Your Detected Location');
-    toast.success('Location detected!');
-  };
-  if (!isOpen) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 relative">
-        <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <h2 className="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
-          <MapPin className="w-5 h-5" /> Use Current Location
-        </h2>
-        <input
-          type="text"
-          className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400 mb-4"
-          placeholder="Enter your address or use detect"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-        />
-        <div className="flex gap-2">
-          <button
-            className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition"
-            onClick={handleDetect}
-          >Detect Location</button>
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-            onClick={() => { if (input.trim()) { onSave(input.trim()); onClose(); } else { toast.error('Enter or detect an address'); } }}
-          >Save</button>
-          <button
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition ml-auto"
-            onClick={onClose}
-          >Cancel</button>
-        </div>
-      </div>
-    </div>
-  );
-}
+import LocationModal from '../components/common/LocationModal';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
+  const { currentLocation, setLocationModalOpen, setCurrentLocation } = useStore();
   const [addresses, setAddresses] = React.useState([]);
   const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(0);
   const [expanded, setExpanded] = React.useState(false);
@@ -65,6 +21,33 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = React.useState('cod');
   const [placingOrder, setPlacingOrder] = React.useState(false);
   const [coupon, setCoupon] = React.useState('');
+
+  // Add temporary current location address if detected
+  React.useEffect(() => {
+    if (currentLocation && currentLocation !== 'Select location') {
+      // Check if already in addresses
+      const exists = addresses.some(addr => addr.label === 'Current Location' && addr.address === currentLocation);
+      if (!exists) {
+        setAddresses(prev => [
+          { _id: 'current-location', label: 'Current Location', address: currentLocation, isTemporary: true },
+          ...prev
+        ]);
+        setSelectedAddressIdx(0);
+      }
+    }
+    // Remove temporary address if currentLocation is reset
+    if (!currentLocation || currentLocation === 'Select location') {
+      setAddresses(prev => prev.filter(addr => !addr.isTemporary));
+      if (selectedAddressIdx === 0) setSelectedAddressIdx(1); // fallback to next address
+    }
+    // eslint-disable-next-line
+  }, [currentLocation]);
+
+  // Remove temporary address on mount if not selected
+  React.useEffect(() => {
+    setAddresses(prev => prev.filter(addr => !addr.isTemporary || selectedAddressIdx === 0));
+    // eslint-disable-next-line
+  }, []);
 
   // Fetch addresses from backend
   React.useEffect(() => {
@@ -152,13 +135,34 @@ const CheckoutPage = () => {
     };
   }, [cartItems]);
 
+  // Remove address handler
+  const handleRemoveAddress = (addressId, idx) => {
+    setAddresses(prev => prev.filter((_, i) => i !== idx));
+    if (selectedAddressIdx === idx) setSelectedAddressIdx(0);
+    // If removing the temporary current location, reset global state
+    const addr = addresses[idx];
+    if (addr && addr.isTemporary) {
+      setCurrentLocation('Select location');
+    }
+  };
+
+  // On place order, if selected address is temporary, save it permanently
   const handlePlaceOrder = async () => {
-    if (!addresses[selectedAddressIdx] || !phone) {
+    const selectedAddress = addresses[selectedAddressIdx];
+    if (!selectedAddress || !phone) {
       toast.error('Please provide delivery address and phone number.');
       return;
     }
     setPlacingOrder(true);
     try {
+      let addressToUse = selectedAddress;
+      if (selectedAddress.isTemporary) {
+        // Save to backend
+        const data = await addAddress({ label: 'Recent Address', address: selectedAddress.address });
+        setAddresses(data);
+        addressToUse = data[data.length - 1];
+        setSelectedAddressIdx(data.length - 1);
+      }
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: {
@@ -166,7 +170,7 @@ const CheckoutPage = () => {
         },
         credentials: 'include',
         body: JSON.stringify({
-          deliveryAddress: addresses[selectedAddressIdx],
+          deliveryAddress: addressToUse,
           phone,
           paymentMethod,
         }),
@@ -201,7 +205,7 @@ const CheckoutPage = () => {
 
   return (
     <div className="font-sans bg-green-50 min-h-screen pb-10">
-      <LocationModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} onSave={handleSaveLocation} />
+      <LocationModal />
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <button
@@ -276,48 +280,52 @@ const CheckoutPage = () => {
                   <MapPin className="w-5 h-5 text-green-600" />
                   <span className="font-semibold text-green-700 text-lg">Delivery Address</span>
                 </div>
-                <div className="bg-green-50 border border-green-100 rounded-xl p-3 mb-3">
+                <div className="bg-white border border-gray-100 rounded-xl p-4 mb-4">
                   <div className="flex flex-col gap-2">
                     {(expanded ? addresses : addresses.slice(0, 3)).map((addr, idx) => {
                       const isSelected = selectedAddressIdx === idx;
                       return (
                         <label
                           key={addr._id}
-                          className={`flex gap-3 items-start cursor-pointer rounded-lg px-3 py-3 border transition-all duration-150
-                            ${isSelected ? 'border-green-600 bg-green-50 shadow-md' : 'border-green-200 bg-white'}
-                            ${addr.isDefault ? 'ring-2 ring-green-400' : ''}
+                          className={`flex items-center gap-3 cursor-pointer rounded-lg px-3 py-2 border transition-all duration-150
+                            ${isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white'}
                             hover:border-green-400`}
                           htmlFor={`address-radio-${idx}`}
-                          style={{ position: 'relative' }}
+                          style={{ position: 'relative', minHeight: 48 }}
                         >
+                          <span className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${isSelected ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'} transition-all`}>
+                            {isSelected && <span className="w-2.5 h-2.5 bg-white rounded-full block" />}
+                          </span>
                           <input
                             id={`address-radio-${idx}`}
                             type="radio"
                             name="address"
                             checked={isSelected}
                             onChange={() => setSelectedAddressIdx(idx)}
-                            className="accent-green-600 mt-1"
+                            className="hidden"
                           />
                           <div className="flex flex-col flex-1 min-w-0">
-                            <span className="block text-gray-800 text-sm break-words whitespace-normal w-full">
-                              <span className="font-semibold text-green-700 mr-2">{addr.label}:</span> {addr.address}
+                            <span className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                              {addr.label === 'Current Location' ? <MapPin className="w-4 h-4 text-blue-500" /> : <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" /></svg>}
+                              <span className={`font-semibold ${addr.label === 'Current Location' ? 'text-blue-600' : 'text-gray-700'}`}>{addr.label}</span>
                             </span>
-                            <div className="flex items-center gap-2 mt-1">
-                              {addr.isDefault ? (
-                                <span className="text-xs text-green-600 font-bold bg-green-100 px-2 py-0.5 rounded">Default</span>
-                              ) : (
+                            <span className="block text-xs text-gray-500 mt-0.5 truncate max-w-xs">{addr.address}</span>
+                            <div className="flex items-center gap-2 mt-1 text-xs">
+                              {addr.isDefault && !addr.isTemporary ? (
+                                <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded">Default</span>
+                              ) : !addr.isTemporary ? (
                                 <button
                                   type="button"
-                                  className="text-xs text-green-700 hover:underline"
+                                  className="text-green-600 hover:underline bg-transparent border-none p-0"
                                   onClick={e => { e.stopPropagation(); handleSetDefault(addr._id); }}
                                 >
                                   Set Default
                                 </button>
-                              )}
+                              ) : null}
                               <button
                                 type="button"
-                                className="text-xs text-red-500 hover:underline ml-2"
-                                onClick={e => { e.stopPropagation(); handleDeleteAddress(addr._id, idx); }}
+                                className="text-red-400 hover:underline bg-transparent border-none p-0"
+                                onClick={e => { e.stopPropagation(); handleRemoveAddress(addr._id, idx); }}
                               >
                                 Remove
                               </button>
@@ -335,8 +343,27 @@ const CheckoutPage = () => {
                       </button>
                     )}
                   </div>
-                  {showNewAddress ? (
-                    <div className="flex flex-col gap-2 mt-3">
+                  {/* Modern button row */}
+                  <div className="flex flex-row gap-2 mt-4">
+                    <button
+                      className="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
+                      onClick={() => setShowNewAddress(true)}
+                      style={{ minWidth: 0 }}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                      Add Address
+                    </button>
+                    <button
+                      className="flex-1 flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 border border-blue-200"
+                      onClick={() => setLocationModalOpen(true)}
+                      style={{ minWidth: 0 }}
+                    >
+                      <MapPin className="w-4 h-4" />
+                      Use Location
+                    </button>
+                  </div>
+                  {showNewAddress && (
+                    <div className="flex flex-col gap-2 mt-4 bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-inner">
                       <input
                         type="text"
                         className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
@@ -351,7 +378,7 @@ const CheckoutPage = () => {
                         value={newLabel}
                         onChange={e => setNewLabel(e.target.value)}
                       />
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 mt-2">
                         <button
                           className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
                           onClick={handleAddAddress}
@@ -361,17 +388,6 @@ const CheckoutPage = () => {
                           onClick={() => { setShowNewAddress(false); setNewAddress(''); setNewLabel('Home'); }}
                         >Cancel</button>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col sm:flex-row gap-2 mt-3">
-                      <button
-                        className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition"
-                        onClick={() => setShowNewAddress(true)}
-                      >+ Add New Address</button>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
-                        onClick={() => setShowLocationModal(true)}
-                      >+ Use Current Location</button>
                     </div>
                   )}
                 </div>

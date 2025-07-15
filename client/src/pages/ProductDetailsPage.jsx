@@ -101,7 +101,7 @@ const ProductDetailsPage = () => {
       </ul>
     );
   };
-console.log(product)
+// console.log(product)
 
   return (
     // DESIGN CHANGE: Removed main container background/shadow for a cleaner page feel.
