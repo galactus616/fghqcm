@@ -95,10 +95,10 @@ const dummyData = async () => {
     // Helper to generate images array
     const makeImages = (mainUrl) => [
       mainUrl,
-      mainUrl + "&img=2",
-      mainUrl + "&img=3",
-      mainUrl + "&img=4",
-      mainUrl + "&img=5"
+      mainUrl,
+      mainUrl,
+      mainUrl,
+      mainUrl
     ];
 
     // Helper to generate variants
