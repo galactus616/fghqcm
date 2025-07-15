@@ -86,7 +86,8 @@ const HomePage = () => {
               <ProductSection
                 key={cat.id}
                 title={cat.name}
-                products={categoryProducts[cat.name] || []}
+                products={(categoryProducts[cat.name] || []).slice(0, 6)}
+                categoryId={cat.id}
                 cardClassName="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-100"
                 titleClassName="text-green-800 font-bold text-xl md:text-2xl mb-4"
               />

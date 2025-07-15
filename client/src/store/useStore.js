@@ -15,8 +15,13 @@ const useStore = create((set, get) => ({
     try {
       const res = await getProfile();
       set({ user: res.data.user, isLoggedIn: true });
-    } catch {
+    } catch (err) {
+      // Silently handle 401 Unauthorized (not logged in)
       set({ user: null, isLoggedIn: false });
+      // Optionally, only log unexpected errors
+      if (err?.response?.status !== 401) {
+        console.error('Failed to fetch profile:', err);
+      }
     }
   },
   async logout() {

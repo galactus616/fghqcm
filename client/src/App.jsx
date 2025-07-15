@@ -3,7 +3,11 @@ import UserLayout from "./components/Layouts/UserLayout";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import CategoryPage from "./pages/CategoryPage";
+import SearchResultPage from './pages/SearchResultPage';
 import OrdersPage from "./pages/OrdersPage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 function App() {
   return (
@@ -12,7 +16,11 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="cart" element={<CartPage />} />
+        <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="category/:categoryId" element={<CategoryPage />} />
+        <Route path="/search" element={<SearchResultPage />} />
         <Route path="orders" element={<OrdersPage />} />
+        <Route path="product/:id" element={<ProductDetailsPage />} />
       </Route>
     </Routes>
   );

@@ -7,3 +7,20 @@ body, html {
 body::-webkit-scrollbar, html::-webkit-scrollbar {
   display: none;
 }
+
+/* Prevent caret/cursor on buttons and clickable elements */
+button, [role="button"], .cursor-pointer {
+  user-select: none;
+  caret-color: transparent;
+}
+
+/* Prevent caret/cursor on all non-input elements globally */
+:where(body, html, *, *:before, *:after):not(input):not(textarea):not([contenteditable="true"]) {
+  caret-color: transparent;
+  user-select: none;
+}
+
+input, textarea, [contenteditable="true"] {
+  caret-color: auto;
+  user-select: text;
+}
