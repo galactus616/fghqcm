@@ -128,8 +128,12 @@ export default function Navbar() {
 
   // Fetch profile and cart on mount
   useEffect(() => {
-    fetchProfile();
-    fetchCart();
+    const fetchAll = async () => {
+      await fetchProfile();
+      // fetchCart will use the updated isLoggedIn value
+      await fetchCart();
+    };
+    fetchAll();
     // eslint-disable-next-line
   }, []);
 
@@ -278,6 +282,11 @@ export default function Navbar() {
                 type="text"
                 placeholder="Search for products, brands and more..."
                 className="w-full py-3 pl-10 pr-4 bg-transparent text-gray-800 placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm"
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && e.target.value.trim()) {
+                    navigate(`/search?q=${encodeURIComponent(e.target.value.trim())}`);
+                  }
+                }}
               />
             </div>
           </div>
@@ -667,12 +676,19 @@ export default function Navbar() {
             </div>
 
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 left-0 right-0 shadow-lg">
-              <button className="w-full bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              <button
+                className="w-full bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                onClick={() => {
+                  toggleCart();
+                  navigate('/checkout');
+                }}
+                disabled={cartItems.length === 0}
+              >
                 <span className="font-bold text-lg">
                   ₹{cartTotals.grandTotal.toFixed(2)}
                 </span>
                 <span className="flex items-center">
-                  Proceed{" "}
+                  Proceed{' '}
                   <ChevronDown className="w-5 h-5 ml-2 rotate-[-90deg]" />
                 </span>
               </button>
