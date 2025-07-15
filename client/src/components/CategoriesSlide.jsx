@@ -1,8 +1,10 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from 'react-router-dom';
 
 const CategoriesSlide = ({ categories }) => {
   const scrollRef = useRef(null);
+  const navigate = useNavigate();
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -76,6 +78,7 @@ const CategoriesSlide = ({ categories }) => {
           <div
             key={idx}
             className="flex flex-col items-center min-w-[110px] bg-white rounded-xl p-4 shadow-md hover:shadow-lg border border-green-100 transition-all duration-200 cursor-pointer group"
+            onClick={() => navigate(`/category/${cat.id || cat._id || cat.name}`)}
           >
             {cat.imageUrl ? (
               <img

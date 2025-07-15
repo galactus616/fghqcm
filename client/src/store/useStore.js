@@ -15,8 +15,13 @@ const useStore = create((set, get) => ({
     try {
       const res = await getProfile();
       set({ user: res.data.user, isLoggedIn: true });
-    } catch {
+    } catch (err) {
+      // Silently handle 401 Unauthorized (not logged in)
       set({ user: null, isLoggedIn: false });
+      // Optionally, only log unexpected errors
+      if (err?.response?.status !== 401) {
+        console.error('Failed to fetch profile:', err);
+      }
     }
   },
   async logout() {
@@ -264,6 +269,21 @@ const useStore = create((set, get) => ({
   },
   setProductError(error) {
     set({ productError: error });
+  },
+
+  // Orders slice
+  orders: [],
+  ordersLoading: false,
+  ordersError: null,
+  async fetchOrders() {
+    set({ ordersLoading: true, ordersError: null });
+    try {
+      const res = await fetch('/api/orders', { credentials: 'include' });
+      const data = await res.json();
+      set({ orders: data.orders || [], ordersLoading: false });
+    } catch (error) {
+      set({ orders: [], ordersLoading: false, ordersError: 'Failed to load orders' });
+    }
   },
 }));
 

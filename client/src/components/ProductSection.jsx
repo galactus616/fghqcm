@@ -1,13 +1,23 @@
 import React from "react";
 import ProductCard from './ProductCard';
+import { useNavigate } from 'react-router-dom';
 
-const ProductSection = ({ title, products, isLoggedIn }) => {
+const ProductSection = ({ title, products, isLoggedIn, categoryId }) => {
+  const navigate = useNavigate();
   return (
     <section className="my-6 px-4">
-      <h2 className="text-xl md:text-2xl font-bold text-green-800 mb-4">
-        {title}
-      </h2>
-      <div className="overflow-x-auto flex items-center justify-between md:gap-0 gap-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl md:text-2xl font-bold text-green-800">
+          {title}
+        </h2>
+        <button
+          className="text-green-700 hover:text-green-900 font-semibold text-sm md:text-base px-3 py-1 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 transition"
+          onClick={() => navigate(`/category/${categoryId}`)}
+        >
+          See All
+        </button>
+      </div>
+      <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
         {products.map((product, idx) => (
           <div key={idx} className="flex-shrink-0 flex-none">
             <ProductCard product={product} isLoggedIn={isLoggedIn} />
@@ -17,5 +27,18 @@ const ProductSection = ({ title, products, isLoggedIn }) => {
     </section>
   );
 };
+
+// Hide scrollbar utility
+const style = document.createElement("style");
+style.innerHTML = `
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+`;
+document.head.appendChild(style);
 
 export default ProductSection;

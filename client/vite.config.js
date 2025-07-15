@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      "/api": "https://swiftcart-asmy.onrender.com",
+      '/api': 'http://localhost:5000',
+      // '/api': 'https://swiftcart-asmy.onrender.com',
     },
   },
 });
