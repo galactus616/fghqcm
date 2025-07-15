@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = '/api/products';
-// const API_BASE = 'https://swiftcart-asmy.onrender.com/api/products';
+// const API_BASE = '/api/products';
+const API_BASE = 'https://swiftcart-asmy.onrender.com/api/products';
 
 export async function getAllProducts() {
   const res = await axios.get(API_BASE, { withCredentials: true });

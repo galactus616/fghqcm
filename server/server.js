@@ -19,7 +19,8 @@ connectDB();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://swiftcart-1-kioc.onrender.com",
     credentials: true,
   })
 );
