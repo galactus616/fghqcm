@@ -152,7 +152,7 @@ export default function Navbar() {
   // Profile menu items
   const profileMenuItems = isLoggedIn
     ? [
-        { label: "My Orders", icon: Package, action: () => alert("My Orders") },
+        { label: "My Orders", icon: Package, action: () => navigate('/orders') },
         { label: "Saved Addresses", icon: MapPin, action: () => alert("Saved Addresses") },
         { label: "E-Gift Cards", icon: Gift, action: () => alert("E-Gift Cards") },
         { label: "FAQ's", icon: HelpCircle, action: () => alert("FAQ's") },
@@ -578,6 +578,16 @@ export default function Navbar() {
                             </span>
                           </p>
                         </div>
+
+
+
+
+
+
+
+
+
+                        
                         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}

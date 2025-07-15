@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Minus } from "lucide-react";
 import toast from "react-hot-toast";
 import useStore from '../store/useStore';
 
@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const hasMultipleVariants = product.variants && product.variants.length > 1;
   const variant = product.variants?.[selectedVariantIdx] || product.variants?.[0] || {};
-  const { addToCart } = useStore();
+  const { addToCart, hydratedItems: cartItems, updateCartItem, removeFromCart } = useStore();
 
   const handleAddToCart = async () => {
     try {
@@ -19,6 +19,31 @@ const ProductCard = ({ product }) => {
       toast.success('Added to cart!');
     } catch {
       toast.error('Failed to add to cart');
+    }
+  };
+
+  // Find cart item for this product and selected variant
+  const cartItem = cartItems.find(
+    (item) =>
+      (item.productId === (product.id || product._id)) &&
+      item.variantIndex === selectedVariantIdx
+  );
+
+  const handleIncrease = async () => {
+    if (cartItem) {
+      updateCartItem(cartItem.productId, cartItem.variantIndex, cartItem.quantity + 1);
+    } else {
+      await handleAddToCart();
+    }
+  };
+
+  const handleDecrease = () => {
+    if (cartItem) {
+      if (cartItem.quantity > 1) {
+        updateCartItem(cartItem.productId, cartItem.variantIndex, cartItem.quantity - 1);
+      } else {
+        removeFromCart(cartItem.productId, cartItem.variantIndex);
+      }
     }
   };
 
@@ -102,13 +127,35 @@ const ProductCard = ({ product }) => {
               )}
             </div>
           </div>
-          <button
-            className="flex items-center gap-1 text-white bg-green-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:bg-green-700 transition-colors"
-            onClick={handleAddToCart}
-          >
-            <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="inline">ADD</span>
-          </button>
+          {cartItem ? (
+            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden ">
+              <button
+                onClick={handleDecrease}
+                className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+                aria-label="Decrease quantity"
+              >
+                <Minus className="w-4 h-4 text-gray-700" />
+              </button>
+              <span className="px-3 text-gray-800">
+                {cartItem.quantity}
+              </span>
+              <button
+                onClick={handleIncrease}
+                className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
+                aria-label="Increase quantity"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <button
+              className="flex items-center gap-1 text-white bg-green-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:bg-green-700 transition-colors"
+              onClick={handleAddToCart}
+            >
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="inline">ADD</span>
+            </button>
+          )}
         </div>
       </div>
       </div>
@@ -117,3 +164,7 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
+
+
+
+

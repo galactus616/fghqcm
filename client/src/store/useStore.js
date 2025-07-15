@@ -5,6 +5,7 @@ import { getProductById } from '../api/products';
 import { getAllLocalCartItems, addToLocalCart, setLocalCart, clearLocalCart } from '../utils/localCart';
 import { getCategories as apiGetCategories } from '../api/categories';
 import { getProductsByCategory as apiGetProductsByCategory } from '../api/products';
+import debounce from 'lodash.debounce';
 
 const useStore = create((set, get) => ({
   // Auth slice
@@ -120,41 +121,78 @@ const useStore = create((set, get) => ({
   async addToCart(item) {
     const { isLoggedIn } = get();
     if (isLoggedIn) {
+      // Optimistic UI: update cart immediately
+      const prevCart = get().items;
+      let found = false;
+      const newCart = prevCart.map(cartItem => {
+        if (cartItem.productId === item.productId && cartItem.variantIndex === item.variantIndex) {
+          found = true;
+          return { ...cartItem, quantity: cartItem.quantity + (item.quantity || 1) };
+        }
+        return cartItem;
+      });
+      const optimisticCart = found ? newCart : [...prevCart, { ...item }];
+      set({ items: optimisticCart, hydratedItems: optimisticCart });
       try {
         const response = await apiAddToCart(item);
-        // Update cart with the response data if it contains cart items
         if (response && response.cart) {
           set({ items: [...response.cart], hydratedItems: [...response.cart] });
         } else {
           await get().fetchCart();
         }
       } catch (error) {
+        set({ items: prevCart, hydratedItems: prevCart });
         console.error('Failed to add to cart:', error);
-        await get().fetchCart();
+        toast.error('Failed to add to cart. Please try again.');
       }
     } else {
       addToLocalCart(item);
       await get().fetchCart();
     }
   },
-  async updateCartItem(productId, variantIndex, quantity) {
-    console.log('updateCartItem called with:', { productId, variantIndex, quantity });
-    const { isLoggedIn } = get();
-    if (isLoggedIn) {
-      try {
-        const response = await apiUpdateCartItem(productId, variantIndex, quantity);
-        console.log('API response:', response);
-        if (response && response.cart) {
-          console.log('Updating cart with response data:', response.cart);
-          set({ items: [...response.cart], hydratedItems: [...response.cart] });
-        } else {
-          console.log('No cart data in response, fetching cart...');
-          await get().fetchCart();
-        }
-      } catch (error) {
-        console.error('Failed to update cart item:', error);
+
+  // --- Optimistic UI helpers ---
+  _debouncedUpdateCartItem: debounce(async (productId, variantIndex, quantity, prevCart) => {
+    try {
+      const response = await apiUpdateCartItem(productId, variantIndex, quantity);
+      if (response && response.cart) {
+        set({ items: [...response.cart], hydratedItems: [...response.cart] });
+      } else {
         await get().fetchCart();
       }
+    } catch (error) {
+      set({ items: prevCart, hydratedItems: prevCart });
+      toast.error('Failed to update cart. Please try again.');
+    }
+  }, 300),
+
+  _debouncedRemoveFromCart: debounce(async (productId, variantIndex, prevCart) => {
+    try {
+      const response = await apiRemoveFromCart(productId, variantIndex);
+      if (response && response.cart) {
+        set({ items: [...response.cart], hydratedItems: [...response.cart] });
+      } else {
+        await get().fetchCart();
+      }
+    } catch (error) {
+      set({ items: prevCart, hydratedItems: prevCart });
+      toast.error('Failed to remove from cart. Please try again.');
+    }
+  }, 300),
+
+  updateCartItem(productId, variantIndex, quantity) {
+    const { isLoggedIn } = get();
+    if (isLoggedIn) {
+      // Optimistic UI: update cart immediately
+      const prevCart = get().items;
+      const newCart = prevCart.map(item =>
+        item.productId === productId && item.variantIndex === variantIndex
+          ? { ...item, quantity }
+          : item
+      );
+      set({ items: newCart, hydratedItems: newCart });
+      // Debounced API call
+      get()._debouncedUpdateCartItem(productId, variantIndex, quantity, prevCart);
     } else {
       const items = getAllLocalCartItems().map((item) =>
         item.productId === productId && item.variantIndex === variantIndex
@@ -162,29 +200,25 @@ const useStore = create((set, get) => ({
           : item
       ).filter((item) => item.quantity > 0);
       setLocalCart(items);
-      await get().fetchCart();
+      get().fetchCart();
     }
   },
-  async removeFromCart(productId, variantIndex) {
+
+  removeFromCart(productId, variantIndex) {
     const { isLoggedIn } = get();
     if (isLoggedIn) {
-      try {
-        const response = await apiRemoveFromCart(productId, variantIndex);
-        if (response && response.cart) {
-          set({ items: [...response.cart], hydratedItems: [...response.cart] });
-        } else {
-          await get().fetchCart();
-        }
-      } catch (error) {
-        console.error('Failed to remove from cart:', error);
-        await get().fetchCart();
-      }
+      // Optimistic UI: update cart immediately
+      const prevCart = get().items;
+      const newCart = prevCart.filter(item => !(item.productId === productId && item.variantIndex === variantIndex));
+      set({ items: newCart, hydratedItems: newCart });
+      // Debounced API call
+      get()._debouncedRemoveFromCart(productId, variantIndex, prevCart);
     } else {
       const items = getAllLocalCartItems().filter(
         (item) => !(item.productId === productId && item.variantIndex === variantIndex)
       );
       setLocalCart(items);
-      await get().fetchCart();
+      get().fetchCart();
     }
   },
   async clearCart() {
@@ -235,6 +269,21 @@ const useStore = create((set, get) => ({
   },
   setProductError(error) {
     set({ productError: error });
+  },
+
+  // Orders slice
+  orders: [],
+  ordersLoading: false,
+  ordersError: null,
+  async fetchOrders() {
+    set({ ordersLoading: true, ordersError: null });
+    try {
+      const res = await fetch('/api/orders', { credentials: 'include' });
+      const data = await res.json();
+      set({ orders: data.orders || [], ordersLoading: false });
+    } catch (error) {
+      set({ orders: [], ordersLoading: false, ordersError: 'Failed to load orders' });
+    }
   },
 }));
 
