@@ -16,10 +16,13 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  address: {
-    type: String,
-    default: "",
-  },
+  addresses: [
+    {
+      label: { type: String, default: "Home" },
+      address: { type: String, required: true },
+      isDefault: { type: Boolean, default: false },
+    }
+  ],
   // OTP fields for authentication
   otp: {
     type: String,

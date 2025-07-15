@@ -3,6 +3,7 @@ import useStore from '../store/useStore';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
+import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../api/user';
 
 function LocationModal({ isOpen, onClose, onSave }) {
   const [input, setInput] = useState('');
@@ -53,28 +54,80 @@ function LocationModal({ isOpen, onClose, onSave }) {
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
-  const initialAddresses = [user?.address].filter(Boolean);
-  const [addresses, setAddresses] = useState(initialAddresses);
-  const [selectedAddressIdx, setSelectedAddressIdx] = useState(0);
-  const [newAddress, setNewAddress] = useState('');
-  const [showNewAddress, setShowNewAddress] = useState(false);
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [phone, setPhone] = useState(user?.phone || '');
-  const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [placingOrder, setPlacingOrder] = useState(false);
-  const [coupon, setCoupon] = useState('');
+  const [addresses, setAddresses] = React.useState([]);
+  const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(0);
+  const [expanded, setExpanded] = React.useState(false);
+  const [newAddress, setNewAddress] = React.useState('');
+  const [newLabel, setNewLabel] = React.useState('Home');
+  const [showNewAddress, setShowNewAddress] = React.useState(false);
+  const [showLocationModal, setShowLocationModal] = React.useState(false);
+  const [phone, setPhone] = React.useState(user?.phone || '');
+  const [paymentMethod, setPaymentMethod] = React.useState('cod');
+  const [placingOrder, setPlacingOrder] = React.useState(false);
+  const [coupon, setCoupon] = React.useState('');
 
-  const handleSaveLocation = (loc) => {
-    setAddresses(prev => [...prev, loc]);
-    setSelectedAddressIdx(addresses.length);
-  };
+  // Fetch addresses from backend
+  React.useEffect(() => {
+    async function fetchAddresses() {
+      try {
+        const data = await getAddresses();
+        setAddresses(data);
+        // Select default address if exists
+        const defaultIdx = data.findIndex(a => a.isDefault);
+        setSelectedAddressIdx(defaultIdx !== -1 ? defaultIdx : 0);
+      } catch {
+        setAddresses([]);
+      }
+    }
+    fetchAddresses();
+  }, []);
 
-  const handleAddAddress = () => {
-    if (newAddress.trim()) {
-      setAddresses(prev => [...prev, newAddress.trim()]);
+  const handleAddAddress = async () => {
+    if (!newAddress.trim()) return toast.error('Enter address');
+    try {
+      const data = await addAddress({ label: newLabel, address: newAddress, isDefault: addresses.length === 0 });
+      setAddresses(data);
       setShowNewAddress(false);
       setNewAddress('');
-      setSelectedAddressIdx(addresses.length);
+      setNewLabel('Home');
+      setSelectedAddressIdx(data.length - 1);
+      toast.success('Address added');
+    } catch (err) {
+      toast.error('Failed to add address');
+    }
+  };
+
+  const handleDeleteAddress = async (addressId, idx) => {
+    try {
+      const data = await deleteAddress(addressId);
+      setAddresses(data);
+      if (selectedAddressIdx === idx) setSelectedAddressIdx(0);
+      toast.success('Address deleted');
+    } catch {
+      toast.error('Failed to delete address');
+    }
+  };
+
+  const handleSetDefault = async (addressId) => {
+    try {
+      const data = await setDefaultAddress(addressId);
+      setAddresses(data);
+      const defaultIdx = data.findIndex(a => a.isDefault);
+      setSelectedAddressIdx(defaultIdx !== -1 ? defaultIdx : 0);
+      toast.success('Default address set');
+    } catch {
+      toast.error('Failed to set default');
+    }
+  };
+
+  const handleSaveLocation = async (loc) => {
+    try {
+      const data = await addAddress({ label: 'Current Location', address: loc });
+      setAddresses(data);
+      setSelectedAddressIdx(data.length - 1);
+      toast.success('Location address added');
+    } catch {
+      toast.error('Failed to add location address');
     }
   };
 
@@ -122,7 +175,7 @@ const CheckoutPage = () => {
       if (res.ok) {
         toast.success('Order placed successfully!');
         clearCart();
-        navigate('/');
+        navigate(`/order-success?orderId=${encodeURIComponent(data.orderId || data.id || '')}`);
       } else {
         toast.error(data.message || 'Failed to place order');
       }
@@ -225,37 +278,62 @@ const CheckoutPage = () => {
                 </div>
                 <div className="bg-green-50 border border-green-100 rounded-xl p-3 mb-3">
                   <div className="flex flex-col gap-2">
-                    {addresses.map((addr, idx) => (
-                      <label
-                        key={idx}
-                        className={`flex items-center gap-3 cursor-pointer rounded-lg px-3 py-3 border transition-all duration-150 ${selectedAddressIdx === idx ? 'border-green-500 bg-white shadow-sm' : 'border-transparent hover:border-green-200'}`}
-                        htmlFor={`address-radio-${idx}`}
+                    {(expanded ? addresses : addresses.slice(0, 3)).map((addr, idx) => {
+                      const isSelected = selectedAddressIdx === idx;
+                      return (
+                        <label
+                          key={addr._id}
+                          className={`flex gap-3 items-start cursor-pointer rounded-lg px-3 py-3 border transition-all duration-150
+                            ${isSelected ? 'border-green-600 bg-green-50 shadow-md' : 'border-green-200 bg-white'}
+                            ${addr.isDefault ? 'ring-2 ring-green-400' : ''}
+                            hover:border-green-400`}
+                          htmlFor={`address-radio-${idx}`}
+                          style={{ position: 'relative' }}
+                        >
+                          <input
+                            id={`address-radio-${idx}`}
+                            type="radio"
+                            name="address"
+                            checked={isSelected}
+                            onChange={() => setSelectedAddressIdx(idx)}
+                            className="accent-green-600 mt-1"
+                          />
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <span className="block text-gray-800 text-sm break-words whitespace-normal w-full">
+                              <span className="font-semibold text-green-700 mr-2">{addr.label}:</span> {addr.address}
+                            </span>
+                            <div className="flex items-center gap-2 mt-1">
+                              {addr.isDefault ? (
+                                <span className="text-xs text-green-600 font-bold bg-green-100 px-2 py-0.5 rounded">Default</span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="text-xs text-green-700 hover:underline"
+                                  onClick={e => { e.stopPropagation(); handleSetDefault(addr._id); }}
+                                >
+                                  Set Default
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                className="text-xs text-red-500 hover:underline ml-2"
+                                onClick={e => { e.stopPropagation(); handleDeleteAddress(addr._id, idx); }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                    {addresses.length > 3 && (
+                      <button
+                        className="text-green-700 text-xs mt-1 hover:underline self-start"
+                        onClick={() => setExpanded(e => !e)}
                       >
-                        <input
-                          id={`address-radio-${idx}`}
-                          type="radio"
-                          name="address"
-                          checked={selectedAddressIdx === idx}
-                          onChange={() => setSelectedAddressIdx(idx)}
-                          className="accent-green-600"
-                        />
-                        <span className="text-gray-800 text-sm flex-1">{addr}</span>
-                        {selectedAddressIdx === idx && (
-                          <CheckCircle className="w-5 h-5 text-green-600" />
-                        )}
-                        {addresses.length > 1 && (
-                          <button
-                            type="button"
-                            className="ml-2 text-xs text-red-500 hover:underline"
-                            onClick={e => {
-                              e.stopPropagation();
-                              setAddresses(addresses.filter((_, i) => i !== idx));
-                              if (selectedAddressIdx === idx) setSelectedAddressIdx(0);
-                            }}
-                          >Remove</button>
-                        )}
-                      </label>
-                    ))}
+                        {expanded ? 'Show less' : `Show all addresses (${addresses.length})`}
+                      </button>
+                    )}
                   </div>
                   {showNewAddress ? (
                     <div className="flex flex-col gap-2 mt-3">
@@ -266,6 +344,13 @@ const CheckoutPage = () => {
                         value={newAddress}
                         onChange={e => setNewAddress(e.target.value)}
                       />
+                      <input
+                        type="text"
+                        className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+                        placeholder="Label (e.g. Home, Work)"
+                        value={newLabel}
+                        onChange={e => setNewLabel(e.target.value)}
+                      />
                       <div className="flex gap-2">
                         <button
                           className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
@@ -273,18 +358,18 @@ const CheckoutPage = () => {
                         >Save</button>
                         <button
                           className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
-                          onClick={() => { setShowNewAddress(false); setNewAddress(''); }}
+                          onClick={() => { setShowNewAddress(false); setNewAddress(''); setNewLabel('Home'); }}
                         >Cancel</button>
                       </div>
                     </div>
                   ) : (
                     <div className="flex flex-col sm:flex-row gap-2 mt-3">
                       <button
-                        className="bg-green-100 text-green-700 px-4 py-2 rounded-lg font-semibold hover:bg-green-200 transition"
+                        className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition"
                         onClick={() => setShowNewAddress(true)}
                       >+ Add New Address</button>
                       <button
-                        className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
                         onClick={() => setShowLocationModal(true)}
                       >+ Use Current Location</button>
                     </div>

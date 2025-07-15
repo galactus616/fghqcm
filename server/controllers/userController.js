@@ -1,0 +1,85 @@
+const User = require('../models/User');
+
+// Get all addresses for the logged-in user
+exports.getAddresses = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user.addresses || []);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Add a new address
+exports.addAddress = async (req, res, next) => {
+  try {
+    const { label = 'Home', address, isDefault = false } = req.body;
+    if (!address) return res.status(400).json({ message: 'Address is required' });
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    // Limit max addresses (e.g., 10)
+    if (user.addresses.length >= 10) return res.status(400).json({ message: 'Maximum 10 addresses allowed' });
+    if (isDefault) {
+      user.addresses.forEach(addr => addr.isDefault = false);
+    }
+    user.addresses.push({ label, address, isDefault });
+    await user.save();
+    res.status(201).json(user.addresses);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Update an address
+exports.updateAddress = async (req, res, next) => {
+  try {
+    const { addressId } = req.params;
+    const { label, address, isDefault } = req.body;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    const addr = user.addresses.id(addressId);
+    if (!addr) return res.status(404).json({ message: 'Address not found' });
+    if (label !== undefined) addr.label = label;
+    if (address !== undefined) addr.address = address;
+    if (isDefault !== undefined && isDefault) {
+      user.addresses.forEach(a => a.isDefault = false);
+      addr.isDefault = true;
+    }
+    await user.save();
+    res.json(user.addresses);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Delete an address
+exports.deleteAddress = async (req, res, next) => {
+  try {
+    const { addressId } = req.params;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    user.addresses.id(addressId).remove();
+    await user.save();
+    res.json(user.addresses);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Set an address as default
+exports.setDefaultAddress = async (req, res, next) => {
+  try {
+    const { addressId } = req.params;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    user.addresses.forEach(addr => addr.isDefault = false);
+    const addr = user.addresses.id(addressId);
+    if (!addr) return res.status(404).json({ message: 'Address not found' });
+    addr.isDefault = true;
+    await user.save();
+    res.json(user.addresses);
+  } catch (err) {
+    next(err);
+  }
+}; 

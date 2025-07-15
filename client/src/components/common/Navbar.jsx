@@ -182,8 +182,8 @@ export default function Navbar() {
         <div className="w-full flex flex-wrap items-center justify-between md:flex-nowrap">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 order-1">
-            <div className="flex items-center space-x-3">
-              <div className="bg-green-600 p-2 rounded-lg shadow-sm">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="bg-green-600 p-2 rounded-lg shadow-sm group-hover:bg-green-700 transition-colors">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="currentColor"
@@ -198,14 +198,14 @@ export default function Navbar() {
                 </svg>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-green-700">
+                <span className="text-xl font-bold text-green-700 group-hover:text-green-800 transition-colors">
                   SwiftCart
                 </span>
-                <span className="text-xs text-green-600 font-medium">
+                <span className="text-xs text-green-600 font-medium group-hover:text-green-700 transition-colors">
                   Quick & Fresh
                 </span>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Mobile Icons */}
