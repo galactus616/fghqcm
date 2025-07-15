@@ -9,6 +9,7 @@ import SearchResultPage from './pages/SearchResultPage';
 import OrdersPage from "./pages/OrdersPage";
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import ScrollToTop from './components/ScrollToTop';
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 function App() {
   return (
