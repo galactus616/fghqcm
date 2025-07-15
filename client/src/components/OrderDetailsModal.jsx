@@ -40,7 +40,7 @@ const OrderStatusTracker = ({ currentStatus }) => {
 };
 
 const OrderDetailsModal = ({ order, onClose }) => {
-      console.log(order)
+      // console.log(order)
   if (!order) return null;
 
   // Dummy/fallback data

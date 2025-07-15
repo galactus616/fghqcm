@@ -47,7 +47,7 @@ const ProductCard = ({ product }) => {
       }
     }
   };
-console.log(product)
+// console.log(product)
   return (
     <div className="border border-gray-100 rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56  bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
       <div className="relative">
@@ -71,7 +71,7 @@ console.log(product)
         <img
           src={product.images?.[0] || product.imageUrl}
           alt={product.name}
-          className="h-full w-full object-contain md:object-cover"
+          className="h-36 w-full object-contain"
         />
         </Link>
       </div>
