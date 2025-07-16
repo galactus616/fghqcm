@@ -3,79 +3,114 @@ import useStore from '../store/useStore';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
-
-function LocationModal({ isOpen, onClose, onSave }) {
-  const [input, setInput] = useState('');
-  const handleDetect = () => {
-    setInput('Your Detected Location');
-    toast.success('Location detected!');
-  };
-  if (!isOpen) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 relative">
-        <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <h2 className="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
-          <MapPin className="w-5 h-5" /> Use Current Location
-        </h2>
-        <input
-          type="text"
-          className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400 mb-4"
-          placeholder="Enter your address or use detect"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-        />
-        <div className="flex gap-2">
-          <button
-            className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition"
-            onClick={handleDetect}
-          >Detect Location</button>
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-            onClick={() => { if (input.trim()) { onSave(input.trim()); onClose(); } else { toast.error('Enter or detect an address'); } }}
-          >Save</button>
-          <button
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition ml-auto"
-            onClick={onClose}
-          >Cancel</button>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../api/user';
+import LocationModal from '../components/common/LocationModal';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
-  const initialAddresses = [user?.address].filter(Boolean);
-  const [addresses, setAddresses] = useState(initialAddresses);
-  const [selectedAddressIdx, setSelectedAddressIdx] = useState(0);
-  const [newAddress, setNewAddress] = useState('');
-  const [showNewAddress, setShowNewAddress] = useState(false);
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [phone, setPhone] = useState(user?.phone || '');
-  const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [placingOrder, setPlacingOrder] = useState(false);
-  const [coupon, setCoupon] = useState('');
+  const { currentLocation, setLocationModalOpen, setCurrentLocation } = useStore();
+  const [addresses, setAddresses] = React.useState([]);
+  const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(0);
+  const [expanded, setExpanded] = React.useState(false);
+  const [newAddress, setNewAddress] = React.useState('');
+  const [newLabel, setNewLabel] = React.useState('Home');
+  const [showNewAddress, setShowNewAddress] = React.useState(false);
+  const [showLocationModal, setShowLocationModal] = React.useState(false);
+  const [phone, setPhone] = React.useState(user?.phone || '');
+  const [paymentMethod, setPaymentMethod] = React.useState('cod');
+  const [placingOrder, setPlacingOrder] = React.useState(false);
+  const [coupon, setCoupon] = React.useState('');
 
-  const handleSaveLocation = (loc) => {
-    setAddresses(prev => [...prev, loc]);
-    setSelectedAddressIdx(addresses.length);
-  };
+  // Add temporary current location address if detected
+  React.useEffect(() => {
+    if (currentLocation && currentLocation !== 'Select location') {
+      // Check if already in addresses
+      const exists = addresses.some(addr => addr.label === 'Current Location' && addr.address === currentLocation);
+      if (!exists) {
+        setAddresses(prev => [
+          { _id: 'current-location', label: 'Current Location', address: currentLocation, isTemporary: true },
+          ...prev
+        ]);
+        setSelectedAddressIdx(0);
+      }
+    }
+    // Remove temporary address if currentLocation is reset
+    if (!currentLocation || currentLocation === 'Select location') {
+      setAddresses(prev => prev.filter(addr => !addr.isTemporary));
+      if (selectedAddressIdx === 0) setSelectedAddressIdx(1); // fallback to next address
+    }
+    // eslint-disable-next-line
+  }, [currentLocation]);
 
-  const handleAddAddress = () => {
-    if (newAddress.trim()) {
-      setAddresses(prev => [...prev, newAddress.trim()]);
+  // Remove temporary address on mount if not selected
+  React.useEffect(() => {
+    setAddresses(prev => prev.filter(addr => !addr.isTemporary || selectedAddressIdx === 0));
+    // eslint-disable-next-line
+  }, []);
+
+  // Fetch addresses from backend
+  React.useEffect(() => {
+    async function fetchAddresses() {
+      try {
+        const data = await getAddresses();
+        setAddresses(data);
+        // Select default address if exists
+        const defaultIdx = data.findIndex(a => a.isDefault);
+        setSelectedAddressIdx(defaultIdx !== -1 ? defaultIdx : 0);
+      } catch {
+        setAddresses([]);
+      }
+    }
+    fetchAddresses();
+  }, []);
+
+  const handleAddAddress = async () => {
+    if (!newAddress.trim()) return toast.error('Enter address');
+    try {
+      const data = await addAddress({ label: newLabel, address: newAddress, isDefault: addresses.length === 0 });
+      setAddresses(data);
       setShowNewAddress(false);
       setNewAddress('');
-      setSelectedAddressIdx(addresses.length);
+      setNewLabel('Home');
+      setSelectedAddressIdx(data.length - 1);
+      toast.success('Address added');
+    } catch (err) {
+      toast.error('Failed to add address');
     }
+  };
+
+  const handleDeleteAddress = async (addressId, idx) => {
+    try {
+      const data = await deleteAddress(addressId);
+      setAddresses(data);
+      if (selectedAddressIdx === idx) setSelectedAddressIdx(0);
+      toast.success('Address deleted');
+    } catch {
+      toast.error('Failed to delete address');
+    }
+  };
+
+  const handleSetDefault = async (addressId) => {
+    try {
+      const data = await setDefaultAddress(addressId);
+      setAddresses(data);
+      const defaultIdx = data.findIndex(a => a.isDefault);
+      setSelectedAddressIdx(defaultIdx !== -1 ? defaultIdx : 0);
+      toast.success('Default address set');
+    } catch {
+      toast.error('Failed to set default');
+    }
+  };
+
+  const handleSaveLocation = async (loc) => {
+    // Only add to local state, do not save to backend
+    setAddresses(prev => [
+      { _id: 'current-location', label: 'Current Location', address: loc, isTemporary: true },
+      ...prev.filter(addr => !addr.isTemporary)
+    ]);
+    setSelectedAddressIdx(0);
+    toast.success('Location detected!');
   };
 
   const cartTotals = React.useMemo(() => {
@@ -99,13 +134,29 @@ const CheckoutPage = () => {
     };
   }, [cartItems]);
 
+  // Remove address handler
+  const handleRemoveAddress = (addressId, idx) => {
+    setAddresses(prev => prev.filter((_, i) => i !== idx));
+    if (selectedAddressIdx === idx) setSelectedAddressIdx(0);
+    // If removing the temporary current location, reset global state
+    const addr = addresses[idx];
+    if (addr && addr.isTemporary) {
+      setCurrentLocation('Select location');
+    }
+  };
+
+  // On place order, if selected address is temporary, save it permanently
   const handlePlaceOrder = async () => {
-    if (!addresses[selectedAddressIdx] || !phone) {
+    const selectedAddress = addresses[selectedAddressIdx];
+    if (!selectedAddress || !phone) {
       toast.error('Please provide delivery address and phone number.');
       return;
     }
     setPlacingOrder(true);
     try {
+      let addressToUse = selectedAddress;
+      // If temporary, do NOT save to backend, just use for order
+      // If not temporary, use as is
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: {
@@ -113,7 +164,7 @@ const CheckoutPage = () => {
         },
         credentials: 'include',
         body: JSON.stringify({
-          deliveryAddress: addresses[selectedAddressIdx],
+          deliveryAddress: addressToUse,
           phone,
           paymentMethod,
         }),
@@ -122,7 +173,7 @@ const CheckoutPage = () => {
       if (res.ok) {
         toast.success('Order placed successfully!');
         clearCart();
-        navigate('/');
+        navigate(`/order-success?orderId=${encodeURIComponent(data.order?.orderId || data.order?.id || '')}`);
       } else {
         toast.error(data.message || 'Failed to place order');
       }
@@ -148,7 +199,7 @@ const CheckoutPage = () => {
 
   return (
     <div className="font-sans bg-green-50 min-h-screen pb-10">
-      <LocationModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} onSave={handleSaveLocation} />
+      <LocationModal />
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <button
@@ -223,42 +274,90 @@ const CheckoutPage = () => {
                   <MapPin className="w-5 h-5 text-green-600" />
                   <span className="font-semibold text-green-700 text-lg">Delivery Address</span>
                 </div>
-                <div className="bg-green-50 border border-green-100 rounded-xl p-3 mb-3">
+                <div className="bg-white border border-gray-100 rounded-xl p-4 mb-4">
                   <div className="flex flex-col gap-2">
-                    {addresses.map((addr, idx) => (
-                      <label
-                        key={idx}
-                        className={`flex items-center gap-3 cursor-pointer rounded-lg px-3 py-3 border transition-all duration-150 ${selectedAddressIdx === idx ? 'border-green-500 bg-white shadow-sm' : 'border-transparent hover:border-green-200'}`}
-                        htmlFor={`address-radio-${idx}`}
+                    {(expanded ? addresses : addresses.slice(0, 3)).map((addr, idx) => {
+                      const isSelected = selectedAddressIdx === idx;
+                      return (
+                        <label
+                          key={addr._id}
+                          className={`flex items-center gap-3 cursor-pointer rounded-lg px-3 py-2 border transition-all duration-150
+                            ${isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white'}
+                            hover:border-green-400`}
+                          htmlFor={`address-radio-${idx}`}
+                          style={{ position: 'relative', minHeight: 48 }}
+                        >
+                          <span className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${isSelected ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'} transition-all`}>
+                            {isSelected && <span className="w-2.5 h-2.5 bg-white rounded-full block" />}
+                          </span>
+                          <input
+                            id={`address-radio-${idx}`}
+                            type="radio"
+                            name="address"
+                            checked={isSelected}
+                            onChange={() => setSelectedAddressIdx(idx)}
+                            className="hidden"
+                          />
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <span className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                              {addr.label === 'Current Location' ? <MapPin className="w-4 h-4 text-blue-500" /> : <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" /></svg>}
+                              <span className={`font-semibold ${addr.label === 'Current Location' ? 'text-blue-600' : 'text-gray-700'}`}>{addr.label}</span>
+                            </span>
+                            <span className="block text-xs text-gray-500 mt-0.5 truncate max-w-xs">{addr.address}</span>
+                            <div className="flex items-center gap-2 mt-1 text-xs">
+                              {addr.isDefault && !addr.isTemporary ? (
+                                <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded">Default</span>
+                              ) : !addr.isTemporary ? (
+                                <button
+                                  type="button"
+                                  className="text-green-600 hover:underline bg-transparent border-none p-0"
+                                  onClick={e => { e.stopPropagation(); handleSetDefault(addr._id); }}
+                                >
+                                  Set Default
+                                </button>
+                              ) : null}
+                              <button
+                                type="button"
+                                className="text-red-400 hover:underline bg-transparent border-none p-0"
+                                onClick={e => { e.stopPropagation(); handleRemoveAddress(addr._id, idx); }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                    {addresses.length > 3 && (
+                      <button
+                        className="text-green-700 text-xs mt-1 hover:underline self-start"
+                        onClick={() => setExpanded(e => !e)}
                       >
-                        <input
-                          id={`address-radio-${idx}`}
-                          type="radio"
-                          name="address"
-                          checked={selectedAddressIdx === idx}
-                          onChange={() => setSelectedAddressIdx(idx)}
-                          className="accent-green-600"
-                        />
-                        <span className="text-gray-800 text-sm flex-1">{addr}</span>
-                        {selectedAddressIdx === idx && (
-                          <CheckCircle className="w-5 h-5 text-green-600" />
-                        )}
-                        {addresses.length > 1 && (
-                          <button
-                            type="button"
-                            className="ml-2 text-xs text-red-500 hover:underline"
-                            onClick={e => {
-                              e.stopPropagation();
-                              setAddresses(addresses.filter((_, i) => i !== idx));
-                              if (selectedAddressIdx === idx) setSelectedAddressIdx(0);
-                            }}
-                          >Remove</button>
-                        )}
-                      </label>
-                    ))}
+                        {expanded ? 'Show less' : `Show all addresses (${addresses.length})`}
+                      </button>
+                    )}
                   </div>
-                  {showNewAddress ? (
-                    <div className="flex flex-col gap-2 mt-3">
+                  {/* Modern button row */}
+                  <div className="flex flex-row gap-2 mt-4">
+                    <button
+                      className="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
+                      onClick={() => setShowNewAddress(true)}
+                      style={{ minWidth: 0 }}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                      Add Address
+                    </button>
+                    <button
+                      className="flex-1 flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 border border-blue-200"
+                      onClick={() => setLocationModalOpen(true)}
+                      style={{ minWidth: 0 }}
+                    >
+                      <MapPin className="w-4 h-4" />
+                      Use Location
+                    </button>
+                  </div>
+                  {showNewAddress && (
+                    <div className="flex flex-col gap-2 mt-4 bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-inner">
                       <input
                         type="text"
                         className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
@@ -266,27 +365,23 @@ const CheckoutPage = () => {
                         value={newAddress}
                         onChange={e => setNewAddress(e.target.value)}
                       />
-                      <div className="flex gap-2">
+                      <input
+                        type="text"
+                        className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+                        placeholder="Label (e.g. Home, Work)"
+                        value={newLabel}
+                        onChange={e => setNewLabel(e.target.value)}
+                      />
+                      <div className="flex gap-2 mt-2">
                         <button
                           className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
                           onClick={handleAddAddress}
                         >Save</button>
                         <button
                           className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
-                          onClick={() => { setShowNewAddress(false); setNewAddress(''); }}
+                          onClick={() => { setShowNewAddress(false); setNewAddress(''); setNewLabel('Home'); }}
                         >Cancel</button>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col sm:flex-row gap-2 mt-3">
-                      <button
-                        className="bg-green-100 text-green-700 px-4 py-2 rounded-lg font-semibold hover:bg-green-200 transition"
-                        onClick={() => setShowNewAddress(true)}
-                      >+ Add New Address</button>
-                      <button
-                        className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition"
-                        onClick={() => setShowLocationModal(true)}
-                      >+ Use Current Location</button>
                     </div>
                   )}
                 </div>

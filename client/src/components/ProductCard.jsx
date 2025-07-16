@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import toast from "react-hot-toast";
 import useStore from '../store/useStore';
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
@@ -46,7 +47,6 @@ const ProductCard = ({ product }) => {
       }
     }
   };
-
   return (
     <div className="border border-gray-100 rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56  bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
       <div className="relative">
@@ -66,11 +66,13 @@ const ProductCard = ({ product }) => {
 
       {/* Product Image */}
       <div className="flex justify-center items-center h-24 sm:h-28 md:h-32 lg:h-36 object-fill w-full bg-gray-50 rounded-lg overflow-hidden">
+        <Link to={`/product/${product.id || product._id}`}>
         <img
           src={product.images?.[0] || product.imageUrl}
           alt={product.name}
-          className="h-full w-full object-contain md:object-cover"
+          className="h-36 w-full object-contain"
         />
+        </Link>
       </div>
 
       {/* Product Info */}
@@ -81,9 +83,9 @@ const ProductCard = ({ product }) => {
         </span>
         
         {/* Product Name */}
-        <h2 className="text-[13px] sm:text-[14px] md:text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-1 sm:mb-2 line-clamp-2">
+        <Link to={`/product/${product.id || product._id}`} className="text-[13px] sm:text-[14px] md:text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-1 sm:mb-2 line-clamp-2">
           {product.name}
-        </h2>
+        </Link>
 
         {/* Variant Selector - Always rendered but with conditional spacing */}
         <div className={hasMultipleVariants ? 'mb-1 sm:mb-3' : 'mb-1 sm:mb-3'}>

@@ -285,6 +285,12 @@ const useStore = create((set, get) => ({
       set({ orders: [], ordersLoading: false, ordersError: 'Failed to load orders' });
     }
   },
+
+  // Global location state
+  currentLocation: 'Select location',
+  setCurrentLocation: (location) => set({ currentLocation: location }),
+  isLocationModalOpen: false,
+  setLocationModalOpen: (isOpen) => set({ isLocationModalOpen: isOpen }),
 }));
 
 export default useStore; 
