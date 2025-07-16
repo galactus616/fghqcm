@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import UserLayout from "./components/Layouts/UserLayout";
 import HomePage from "./pages/HomePage";
-import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import CategoryPage from "./pages/CategoryPage";
@@ -10,6 +9,7 @@ import OrdersPage from "./pages/OrdersPage";
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import ScrollToTop from './components/ScrollToTop';
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
   return (
@@ -18,13 +18,21 @@ function App() {
       <Routes>
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="products" element={<ProductsPage />} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="checkout" element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          } />
           <Route path="category/:categoryId" element={<CategoryPage />} />
           <Route path="/search" element={<SearchResultPage />} />
-          <Route path="orders" element={<OrdersPage />} />
+          <Route path="orders" element={
+            <ProtectedRoute>
+              <OrdersPage />
+            </ProtectedRoute>
+          } />
           <Route path="/order-success" element={<OrderSuccessPage />} />
+          <Route path="product/:productId" element={<ProductDetailsPage />} />
         </Route>
       </Routes>
     </>

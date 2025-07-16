@@ -49,6 +49,7 @@ export default function Navbar() {
     React.useState(false);
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
+  const [authMessage, setAuthMessage] = React.useState("");
   const [language, setLanguage] = React.useState("en");
 
   // Calculate cart totals
@@ -642,9 +643,14 @@ export default function Navbar() {
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 left-0 right-0 shadow-lg">
               <button
                 className="w-full bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                onClick={() => {
+                onClick={async () => {
+                  if (!isLoggedIn) {
+                    setAuthMessage("You need to login to proceed to checkout.");
+                    setIsAuthModalOpen(true);
+                  } else {
                   toggleCart();
                   navigate('/checkout');
+                  }
                 }}
                 disabled={cartItems.length === 0}
               >
@@ -668,9 +674,15 @@ export default function Navbar() {
           if (didLogin) {
             // Re-fetch profile after successful login
             await fetchProfile();
+            navigate('/checkout');
           }
+          // If not logged in, do nothing (stay on cart)
         }}
-      />
+      >
+        {authMessage && (
+          <div className="text-center text-red-600 font-medium mb-4">{authMessage}</div>
+        )}
+      </AuthModal>
     </div>
   );
 }

@@ -104,14 +104,13 @@ const CheckoutPage = () => {
   };
 
   const handleSaveLocation = async (loc) => {
-    try {
-      const data = await addAddress({ label: 'Current Location', address: loc });
-      setAddresses(data);
-      setSelectedAddressIdx(data.length - 1);
-      toast.success('Location address added');
-    } catch {
-      toast.error('Failed to add location address');
-    }
+    // Only add to local state, do not save to backend
+    setAddresses(prev => [
+      { _id: 'current-location', label: 'Current Location', address: loc, isTemporary: true },
+      ...prev.filter(addr => !addr.isTemporary)
+    ]);
+    setSelectedAddressIdx(0);
+    toast.success('Location detected!');
   };
 
   const cartTotals = React.useMemo(() => {
@@ -156,13 +155,8 @@ const CheckoutPage = () => {
     setPlacingOrder(true);
     try {
       let addressToUse = selectedAddress;
-      if (selectedAddress.isTemporary) {
-        // Save to backend
-        const data = await addAddress({ label: 'Recent Address', address: selectedAddress.address });
-        setAddresses(data);
-        addressToUse = data[data.length - 1];
-        setSelectedAddressIdx(data.length - 1);
-      }
+      // If temporary, do NOT save to backend, just use for order
+      // If not temporary, use as is
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: {
@@ -179,7 +173,7 @@ const CheckoutPage = () => {
       if (res.ok) {
         toast.success('Order placed successfully!');
         clearCart();
-        navigate(`/order-success?orderId=${encodeURIComponent(data.orderId || data.id || '')}`);
+        navigate(`/order-success?orderId=${encodeURIComponent(data.order?.orderId || data.order?.id || '')}`);
       } else {
         toast.error(data.message || 'Failed to place order');
       }

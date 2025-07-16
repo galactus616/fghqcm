@@ -5,7 +5,7 @@ import { CheckCircle } from "lucide-react";
 const OrderSuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [countdown, setCountdown] = useState(100);
+  const [countdown, setCountdown] = useState(15);
 
   // Extract orderId from query params
   const query = new URLSearchParams(location.search);
