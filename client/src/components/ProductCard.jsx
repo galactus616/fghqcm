@@ -70,7 +70,7 @@ const ProductCard = ({ product }) => {
         <img
           src={product.images?.[0] || product.imageUrl}
           alt={product.name}
-          className="h-full w-full object-contain md:object-cover"
+          className="h-36 w-full object-contain"
         />
         </Link>
       </div>
