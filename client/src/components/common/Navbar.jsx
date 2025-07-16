@@ -51,6 +51,7 @@ export default function Navbar() {
   const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
   const [authMessage, setAuthMessage] = React.useState("");
   const [language, setLanguage] = React.useState("en");
+  const [loginRedirect, setLoginRedirect] = React.useState(null);
 
   // Calculate cart totals
   const cartTotals = React.useMemo(() => {
@@ -200,15 +201,11 @@ export default function Navbar() {
     toast.success("Logged out successfully");
   };
 
-  // Profile menu items
-  const profileMenuItems = isLoggedIn
+  // Minimal profile menu items
+  const minimalProfileMenuItems = isLoggedIn
     ? [
         { label: "My Orders", icon: Package, action: () => navigate('/orders') },
-        { label: "Saved Addresses", icon: MapPin, action: () => alert("Saved Addresses") },
-        { label: "E-Gift Cards", icon: Gift, action: () => alert("E-Gift Cards") },
-        { label: "FAQ's", icon: HelpCircle, action: () => alert("FAQ's") },
-        { label: "Account Privacy", icon: Shield, action: () => alert("Account Privacy") },
-        { label: "Settings", icon: Settings, action: () => alert("Settings") },
+        { label: "Account", icon: Settings, action: () => navigate('/account') },
         { label: "Log Out", icon: LogOut, action: handleLogout, isDestructive: true },
       ]
     : [];
@@ -221,10 +218,10 @@ export default function Navbar() {
     return '';
   };
   const getUserShortName = (user) => {
-    if (!user) return '';
+    if (!user) return 'Guest';
     if (user.name && user.name.length > 0) return user.name.split(' ')[0];
     if (user.email && user.email.length > 0) return user.email.split('@')[0];
-    return '';
+    return 'Guest';
   };
 
   return (
@@ -250,7 +247,7 @@ export default function Navbar() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-green-700 group-hover:text-green-800 transition-colors">
-                  SwiftCart
+                  ArSaCart
                 </span>
                 <span className="text-xs text-green-600 font-medium group-hover:text-green-700 transition-colors">
                   Quick & Fresh
@@ -275,6 +272,7 @@ export default function Navbar() {
                 if (isLoggedIn) {
                   toggleProfileDropdown();
                 } else {
+                  setLoginRedirect(null);
                   setIsAuthModalOpen(true);
                 }
               }}
@@ -357,38 +355,31 @@ export default function Navbar() {
               {isLoggedIn && user ? (
                 <button
                   onClick={toggleProfileDropdown}
-                  className={`flex items-center cursor-pointer p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-200 w-full justify-between bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
-                  style={{ minHeight: 48 }}
+                  className={`flex items-center cursor-pointer p-2 rounded-full border border-gray-200 hover:border-green-300 transition-all duration-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
+                  style={{ minHeight: 40, minWidth: 40 }}
                 >
-                  <div className="flex items-center flex-1 min-w-0">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-sm mr-2">
-                      {getUserInitial(user)}
-                    </span>
-                    <div className="flex flex-col items-start flex-1 min-w-0">
-                      <span className="text-xs text-gray-500 leading-tight">Hi,</span>
-                      <span className="font-medium text-gray-800 truncate max-w-[80px] text-sm">{getUserShortName(user)}</span>
-                    </div>
-                  </div>
-                  <ChevronDown
-                    className={`w-4 h-4 ml-2 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
-                  />
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-base border border-green-200 shadow-sm">
+                    {getUserInitial(user) || <User className="w-4 h-4 text-green-400" />}
+                  </span>
+                  <span className="ml-2 font-medium text-gray-900 truncate max-w-[70px] text-sm">{getUserShortName(user)}</span>
+                  <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
                 </button>
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="flex items-center text-gray-700  cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
+                  className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-2 rounded-full hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 border border-gray-200 hover:border-green-200 bg-white"
+                  style={{ minHeight: 40, minWidth: 40 }}
                 >
-                  <User className="w-5 h-5 mr-2 text-green-600" />
-                  <span className="font-medium">Login</span>
+                  <User className="w-5 h-5 text-green-400" />
+                  <span className="ml-2 font-medium text-gray-900 truncate max-w-[70px] text-sm">Login</span>
                 </button>
               )}
-
               {isLoggedIn && isProfileDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
+                  className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
                   style={{ pointerEvents: 'auto', zIndex: 9999 }}
                 >
-                  {profileMenuItems.map((item, index) => {
+                  {minimalProfileMenuItems.map((item, index) => {
                     const IconComponent = item.icon;
                     return (
                       <button
@@ -405,7 +396,7 @@ export default function Navbar() {
                         }`}
                         tabIndex={0}
                       >
-                        <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
+                        <IconComponent className={`w-4 h-4 mr-2 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
                         <span>{item.label}</span>
                       </button>
                     );
@@ -416,7 +407,7 @@ export default function Navbar() {
             {/* Desktop Cart Button */}
             <button
               onClick={toggleCart}
-              className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[140px] justify-center"
+              className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[100px] justify-center"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               <span className="font-medium">My Cart</span>
@@ -437,13 +428,12 @@ export default function Navbar() {
           >
             <div className="flex flex-col space-y-3">
               <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
-                {profileMenuItems.map((item, index) => (
+                {minimalProfileMenuItems.map((item, index) => (
                   <button
                     key={index}
                     type="button"
                     onMouseDown={(e) => {
                       e.stopPropagation();
-                      console.log("Clicked", item.label);
                       item.action();
                     }}
                     className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
@@ -646,10 +636,11 @@ export default function Navbar() {
                 onClick={async () => {
                   if (!isLoggedIn) {
                     setAuthMessage("You need to login to proceed to checkout.");
+                    setLoginRedirect("/checkout");
                     setIsAuthModalOpen(true);
                   } else {
-                  toggleCart();
-                  navigate('/checkout');
+                    toggleCart();
+                    navigate('/checkout');
                   }
                 }}
                 disabled={cartItems.length === 0}
@@ -672,11 +663,12 @@ export default function Navbar() {
         onClose={async (didLogin) => {
           setIsAuthModalOpen(false);
           if (didLogin) {
-            // Re-fetch profile after successful login
             await fetchProfile();
-            navigate('/checkout');
+            if (loginRedirect) {
+              navigate(loginRedirect);
+              setLoginRedirect(null);
+            }
           }
-          // If not logged in, do nothing (stay on cart)
         }}
       >
         {authMessage && (

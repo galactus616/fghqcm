@@ -6,11 +6,15 @@ const getAllProducts = async (req, res, next) => {
   let query = {};
 
   if (search) {
+    // Find matching categories by name
+    const categories = await Category.find({ name: { $regex: search, $options: "i" } });
+    const categoryIds = categories.map(c => c._id);
+
     query = {
       $or: [
         { name: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
-        { category: { $regex: search, $options: "i" } },
+        { category: { $in: categoryIds } }
       ],
     };
   }

@@ -10,8 +10,16 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import ScrollToTop from './components/ScrollToTop';
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import AccountPage from "./pages/AccountPage";
+import React, { useEffect } from "react";
+import useStore from "./store/useStore";
 
 function App() {
+  const { fetchProfile } = useStore();
+  useEffect(() => {
+    fetchProfile();
+    // eslint-disable-next-line
+  }, []);
   return (
     <>
       <ScrollToTop />
@@ -33,6 +41,11 @@ function App() {
           } />
           <Route path="/order-success" element={<OrderSuccessPage />} />
           <Route path="product/:productId" element={<ProductDetailsPage />} />
+          <Route path="account" element={
+            <ProtectedRoute>
+              <AccountPage />
+            </ProtectedRoute>
+          } />
         </Route>
       </Routes>
     </>

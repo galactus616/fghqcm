@@ -6,18 +6,21 @@ import { getAllLocalCartItems, addToLocalCart, setLocalCart, clearLocalCart } fr
 import { getCategories as apiGetCategories } from '../api/categories';
 import { getProductsByCategory as apiGetProductsByCategory } from '../api/products';
 import debounce from 'lodash.debounce';
+import { updateProfile as apiUpdateProfile } from '../api/user';
 
 const useStore = create((set, get) => ({
   // Auth slice
   user: null,
   isLoggedIn: false,
+  isAuthLoading: false,
   async fetchProfile() {
+    set({ isAuthLoading: true });
     try {
       const res = await getProfile();
-      set({ user: res.data.user, isLoggedIn: true });
+      set({ user: res.data.user, isLoggedIn: true, isAuthLoading: false });
     } catch (err) {
       // Silently handle 401 Unauthorized (not logged in)
-      set({ user: null, isLoggedIn: false });
+      set({ user: null, isLoggedIn: false, isAuthLoading: false });
       // Optionally, only log unexpected errors
       if (err?.response?.status !== 401) {
         console.error('Failed to fetch profile:', err);
@@ -48,6 +51,17 @@ const useStore = create((set, get) => ({
       return data;
     } catch (err) {
       set({ user: null, isLoggedIn: false });
+      throw err;
+    }
+  },
+  async updateProfile(profileObj) {
+    try {
+      const res = await apiUpdateProfile(profileObj);
+      if (res.user) {
+        set({ user: res.user });
+      }
+      return res;
+    } catch (err) {
       throw err;
     }
   },

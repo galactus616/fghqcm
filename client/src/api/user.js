@@ -25,4 +25,10 @@ export async function deleteAddress(addressId) {
 export async function setDefaultAddress(addressId) {
   const res = await axios.patch(`${API_BASE}/${addressId}/default`, {}, { withCredentials: true });
   return res.data;
-} 
+}
+
+// Update user profile
+export async function updateProfile(profileObj) {
+  const res = await axios.put('/api/auth/profile', profileObj, { withCredentials: true });
+  return res.data;
+}
