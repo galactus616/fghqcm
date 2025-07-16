@@ -22,6 +22,7 @@ import AuthModal from "./AuthModal";
 import toast from "react-hot-toast";
 import useStore from "../../store/useStore";
 import LocationModal from "./LocationModal";
+import { useTranslation } from "react-i18next";
 
 // Navbar component
 export default function Navbar() {
@@ -43,13 +44,15 @@ export default function Navbar() {
     setCurrentLocation,
     isLocationModalOpen,
     setLocationModalOpen,
+    language,
+    setLanguage,
   } = useStore();
+  const { t, i18n } = useTranslation();
 
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
     React.useState(false);
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
-  const [language, setLanguage] = React.useState("en");
 
   // Calculate cart totals
   const cartTotals = React.useMemo(() => {
@@ -225,7 +228,6 @@ export default function Navbar() {
     if (user.email && user.email.length > 0) return user.email.split('@')[0];
     return '';
   };
-
   return (
     <div className="font-sans">
       <nav className="bg-white border-b border-gray-100 py-4 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
@@ -302,7 +304,7 @@ export default function Navbar() {
             className="hidden md:flex flex-col text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 ml-6 order-2 min-w-[200px] p-2 rounded-lg"
             onClick={openLocationModal}
           >
-            <span className="font-medium text-green-700">Location</span>
+            <span className="font-medium text-green-700">{t("location")}</span>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-1 text-green-600" />
               <span className="font-medium text-gray-800">
@@ -330,7 +332,7 @@ export default function Navbar() {
               <Search className="absolute left-3 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search for products, brands and more..."
+                placeholder={t("search_placeholder")}
                 className="w-full py-3 pl-10 pr-4 bg-transparent text-gray-800 placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm"
                 onKeyDown={e => {
                   if (e.key === 'Enter' && e.target.value.trim()) {
@@ -378,7 +380,7 @@ export default function Navbar() {
                   className="flex items-center text-gray-700  cursor-pointer hover:bg-green-50 transition-colors duration-200 p-3 rounded-lg hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 w-full justify-center border border-gray-200 hover:border-green-200"
                 >
                   <User className="w-5 h-5 mr-2 text-green-600" />
-                  <span className="font-medium">Login</span>
+                  <span className="font-medium">{t("login")}</span>
                 </button>
               )}
 
@@ -405,7 +407,7 @@ export default function Navbar() {
                         tabIndex={0}
                       >
                         <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
-                        <span>{item.label}</span>
+                        <span>{t(item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
                       </button>
                     );
                   })}
@@ -418,7 +420,7 @@ export default function Navbar() {
               className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[140px] justify-center"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
-              <span className="font-medium">My Cart</span>
+              <span className="font-medium">{t("my_cart")}</span>
               {cartItems.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm">
                   {cartItems.length}
@@ -486,7 +488,7 @@ export default function Navbar() {
             }`}
           >
             <div className="flex items-center justify-between p-4 border-b border-gray-200 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-800">My Cart</h2>
+              <h2 className="text-xl font-semibold text-gray-800">{t("my_cart")}</h2>
               <button
                 onClick={toggleCart}
                 className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
@@ -508,7 +510,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <div className="bg-green-50 bg-opacity-80 text-green-700 font-medium p-3 rounded-lg flex justify-between items-center text-sm">
-                    <span>Your total savings</span>
+                    <span>{t("your_total_savings") || "Your total savings"}</span>
                     <span>₹{cartTotals.totalSavings.toFixed(2)}</span>
                   </div>
 
@@ -523,20 +525,20 @@ export default function Navbar() {
                   <div className="space-y-4">
                     {cartItems.map((item) => (
                       <div
-                        key={item._id || item.id}
+                        key={item._id || item.id || `${item.productId}-${item.variantIndex}`}
                         className="flex items-center bg-gray-50 p-3 rounded-lg shadow-sm"
                       >
                         <img
-                          src={item.imageUrl}
-                          alt={item.name}
+                          src={item.imageUrl || '/vite.svg'}
+                          alt={item.name || 'Unavailable'}
                           className="w-16 h-16 object-cover rounded-md mr-4"
                         />
                         <div className="flex-grow">
                           <h3 className="font-medium text-gray-800">
-                            {item.name}
+                            {item.name || 'Unavailable'}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            ₹{(item.price ?? 0).toFixed(2)}{" "}
+                            ₹{(item.price ?? 0).toFixed(2)}{' '}
                             <span className="line-through text-gray-400">
                               ₹{(item.originalPrice ?? 0).toFixed(2)}
                             </span>
@@ -546,17 +548,17 @@ export default function Navbar() {
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
                             className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
-                            aria-label={`Decrease quantity of ${item.name}`}
+                            aria-label={`Decrease quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Minus className="w-4 h-4 text-gray-700" />
                           </button>
                           <span className="px-3 text-gray-800">
-                            {item.quantity}
+                            {item.quantity ?? 1}
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
                             className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
-                            aria-label={`Increase quantity of ${item.name}`}
+                            aria-label={`Increase quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -566,32 +568,30 @@ export default function Navbar() {
                   </div>
 
                   <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
-                    <h3 className="font-semibold text-gray-800 mb-3">
-                      Bill details
-                    </h3>
+                    <h3 className="font-semibold text-gray-800 mb-3">{t("bill_details")}</h3>
                     <div className="space-y-2 text-sm text-gray-700">
                       <div className="flex justify-between">
-                        <span>Items total</span>
+                        <span>{t("items_total")}</span>
                         <span>₹{cartTotals.itemsTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Saved</span>
+                        <span>{t("saved")}</span>
                         <span className="text-green-600">
                           ₹{cartTotals.totalSavings.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Delivery charge</span>
+                        <span>{t("delivery_charge")}</span>
                         <span className="text-green-600">FREE</span>
                       </div>
                       {cartItems.length > 0 && (
                         <div className="flex justify-between">
-                          <span>Handling charge</span>
+                          <span>{t("handling_charge")}</span>
                           <span>₹{cartTotals.handlingCharge.toFixed(2)}</span>
                         </div>
                       )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
-                        <span>Grand total</span>
+                        <span>{t("grand_total")}</span>
                         <span>
                           ₹
                           {cartItems.length > 0
@@ -604,7 +604,7 @@ export default function Navbar() {
 
                   <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
                     <h3 className="font-semibold text-gray-800 mb-3">
-                      Tip your delivery partner
+                      {t("tip_your_delivery_partner")}
                     </h3>
                     <p className="text-sm text-gray-600 mb-4">
                       Your kindness means a lot! 100% of your tip will go
@@ -627,7 +627,7 @@ export default function Navbar() {
 
                   <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
                     <h3 className="font-semibold text-gray-800 mb-3">
-                      Cancellation Policy
+                      {t("cancellation_policy")}
                     </h3>
                     <p className="text-sm text-gray-600">
                       Orders cannot be cancelled once packed for delivery. In

@@ -4,6 +4,7 @@ import { getProductById, getProductsByCategory } from "../api/products";
 import { Plus, Minus } from "lucide-react";
 import toast from "react-hot-toast";
 import useStore from '../store/useStore';
+import { useTranslation } from "react-i18next";
 // Note: react-image-magnify is not used in the final design to keep it clean, but can be re-added if needed.
 
 const RelatedProducts = ({ products }) => (
@@ -29,7 +30,8 @@ const ProductDetailsPage = () => {
   const [related, setRelated] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const { addToCart, hydratedItems: cartItems, updateCartItem, removeFromCart } = useStore();
-
+  const { t } = useTranslation();
+console.log(product)
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -45,11 +47,11 @@ const ProductDetailsPage = () => {
           });
         }
       })
-      .catch(() => setError("Product not found"))
+      .catch(() => setError(t('product_not_found')))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, t]);
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+  if (loading) return <div className="p-8 text-center text-gray-500">{t('loading')}</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!product) return null;
 
@@ -65,9 +67,9 @@ const ProductDetailsPage = () => {
         variantIndex: selectedVariantIdx,
         quantity: 1
       });
-      toast.success('Added to cart!');
+      toast.success(t('added_to_cart'));
     } catch {
-      toast.error('Failed to add to cart');
+      toast.error(t('failed_to_add_to_cart'));
     }
   };
 
@@ -106,7 +108,7 @@ const ProductDetailsPage = () => {
   return (
     // DESIGN CHANGE: Removed main container background/shadow for a cleaner page feel.
     <div className="max-w-6xl mx-auto p-4 md:p-6">
-      <div className="text-sm text-gray-700 mb-6">Delivery in 10 minutes<br />123, Anywhere, state- pincode</div>
+      <div className="text-sm text-gray-700 mb-6">{t('delivery_time')}<br />123, Anywhere, state- pincode</div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
         {/* Left Column: Product Image Gallery */}
@@ -137,10 +139,10 @@ const ProductDetailsPage = () => {
         {/* Right Column: Product Info & Actions */}
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-          <p className="text-md text-gray-500 mb-4">Product Details</p>
+          <p className="text-md text-gray-500 mb-4">{t('product_details')}</p>
 
           <div className="mb-6">
-            <label className="font-semibold text-gray-800 mb-3 block">Select Unit</label>
+            <label className="font-semibold text-gray-800 mb-3 block">{t('select_unit')}</label>
             <div className="flex gap-3">
               {product.variants?.map((v, idx) => (
                  // DESIGN CHANGE: Variant selectors are now image-based buttons to match the design.
@@ -165,7 +167,7 @@ const ProductDetailsPage = () => {
               {variant.discountedPrice && (
                 <span className="text-lg text-gray-400 line-through ml-3">MRP ₹{variant.price}</span>
               )}
-              <div className="text-xs text-gray-500 mt-1">(Inclusive of all taxes)</div>
+              <div className="text-xs text-gray-500 mt-1">({t('inclusive_of_all_taxes')})</div>
             </div>
 
             {/* DESIGN CHANGE: Updated cart button/stepper style to be a solid green button. */}
@@ -182,7 +184,7 @@ const ProductDetailsPage = () => {
             ) : (
                 <button onClick={handleAddToCart} className="bg-green-600 text-white font-bold px-8 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
                     <Plus className="w-5 h-5" />
-                    <span>ADD</span>
+                    <span>{t('add')}</span>
                 </button>
             )}
           </div>
@@ -191,19 +193,19 @@ const ProductDetailsPage = () => {
 
       {/* --- DESIGN CHANGE: Moved Product Details and Unit info below the main grid --- */}
       <div className="mt-12 pt-8 border-t border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 mb-3">Product Details</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-3">{t('product_details')}</h2>
         <div className="prose prose-sm max-w-none text-gray-600">
           {renderDescription()}
         </div>
         
         {product.description && product.description.length > 250 && (
           <button className="text-green-600 font-semibold text-sm mt-3" onClick={() => setShowMore(v => !v)}>
-            {showMore ? 'View less details' : 'View more details'}
+            {showMore ? t('view_less_details') : t('view_more_details')}
           </button>
         )}
 
         <div className="mt-8">
-            <h3 className="text-lg font-bold text-gray-800">Unit</h3>
+            <h3 className="text-lg font-bold text-gray-800">{t('unit')}</h3>
             <p className="text-gray-600">{variant.quantityLabel}</p>
         </div>
       </div>
@@ -212,7 +214,7 @@ const ProductDetailsPage = () => {
       {/* Related Products Section */}
       {related.length > 0 && (
         <div className="mt-12 pt-8 border-t border-gray-200">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Top 10 Products in Category</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">{t('top_products_in_category')}</h2>
           <RelatedProducts products={related} />
         </div>
       )}

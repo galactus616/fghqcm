@@ -10,8 +10,15 @@ import OrdersPage from "./pages/OrdersPage";
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import ScrollToTop from './components/ScrollToTop';
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import { useEffect } from "react";
+import useStore from "./store/useStore";
 
 function App() {
+  const { fetchProfile } = useStore();
+  useEffect(() => {
+    fetchProfile();
+    // eslint-disable-next-line
+  }, []);
   return (
     <>
       <ScrollToTop />
@@ -19,6 +26,7 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
           <Route path="products" element={<ProductsPage />} />
+          <Route path="product/:id" element={<ProductDetailsPage/>}/>
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="category/:categoryId" element={<CategoryPage />} />

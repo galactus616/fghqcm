@@ -3,12 +3,14 @@ import { Plus, Minus } from "lucide-react";
 import toast from "react-hot-toast";
 import useStore from '../store/useStore';
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ product }) => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const hasMultipleVariants = product.variants && product.variants.length > 1;
   const variant = product.variants?.[selectedVariantIdx] || product.variants?.[0] || {};
   const { addToCart, hydratedItems: cartItems, updateCartItem, removeFromCart } = useStore();
+  const { t } = useTranslation();
 
   const handleAddToCart = async () => {
     try {
@@ -17,9 +19,9 @@ const ProductCard = ({ product }) => {
         variantIndex: selectedVariantIdx,
         quantity: 1
       });
-      toast.success('Added to cart!');
+      toast.success(t('added_to_cart'));
     } catch {
-      toast.error('Failed to add to cart');
+      toast.error(t('failed_to_add_to_cart'));
     }
   };
 
@@ -116,9 +118,9 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Price and Add Button Section - horizontal layout at the bottom */}
-        <div className="flex items-center justify-between mt-auto pt-1">
+        <div className="flex items-center justify-between mt-auto pt-1 flex-nowrap">
           <div className="flex flex-col">
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center flex-col-reverse">
               <span className="text-[14px] sm:text-[16px] md:text-[18px] font-bold text-green-700">
                 ₹{variant.discountedPrice ?? variant.price}
               </span>
@@ -151,11 +153,11 @@ const ProductCard = ({ product }) => {
             </div>
           ) : (
             <button
-              className="flex items-center gap-1 text-white bg-green-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:bg-green-700 transition-colors"
+              className="flex items-center gap-1 flex-nowrap text-white bg-green-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:bg-green-700 transition-colors"
               onClick={handleAddToCart}
             >
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="inline">ADD</span>
+              <span className="inline">{t('add')}</span>
             </button>
           )}
         </div>

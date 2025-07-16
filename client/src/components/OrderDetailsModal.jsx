@@ -1,11 +1,13 @@
 import React from 'react';
 import { ArrowLeft, Heart, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 
 // Status tracker sub-component
 const OrderStatusTracker = ({ currentStatus }) => {
-  const statuses = ['Order Pending','Order Processing', 'Order Shipped', 'Order Delivered','Order Cancelled'];
+  const { t } = useTranslation();
+  const statuses = [t('order_pending'), t('order_processing'), t('order_shipped'), t('order_delivered'), t('order_cancelled')];
   const currentIndex = statuses.findIndex(s => s.toLowerCase().includes(currentStatus?.toLowerCase() || ''));
 
   return (
@@ -42,6 +44,8 @@ const OrderStatusTracker = ({ currentStatus }) => {
 const OrderDetailsModal = ({ order, onClose }) => {
   if (!order) return null;
 
+  const { t } = useTranslation();
+
   // Dummy/fallback data
   const trackingNumber = order.trackingNumber || 'S123456cll';
   const courier = order.courier || 'abcdefgh';
@@ -65,7 +69,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
         <div className="flex items-center justify-between pb-4 border-b border-gray-100">
           <Link to={'/orders'} onClick={onClose} className="flex items-center gap-2 text-lg font-bold text-gray-800">
             <ArrowLeft className="h-5 w-5" />
-            My Orders
+            {t('my_orders')}
           </Link>
           <Link to={'/'} className="flex items-center gap-4">
             <ShoppingBag className="h-6 w-6 text-gray-500" />
@@ -75,9 +79,9 @@ const OrderDetailsModal = ({ order, onClose }) => {
         <div className="flex-grow">
           {/* Order Info */}
           <div className="py-6">
-            <h2 className="text-xl font-bold text-gray-900">Order Confirmed</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('order_confirmed')}</h2>
             <p className="text-sm text-gray-500 mt-1">
-              Tracking No- {trackingNumber} <br /> Courier - {courier}
+              {t('tracking_no')}- {trackingNumber} <br /> {t('courier')} - {courier}
             </p>
           </div>
 
@@ -91,14 +95,14 @@ const OrderDetailsModal = ({ order, onClose }) => {
 
           {/* Delivery Address */}
           <div className="mt-6 rounded-lg border border-gray-200 p-4">
-            <h3 className="font-bold text-gray-800">Delivery Address</h3>
+            <h3 className="font-bold text-gray-800">{t('delivery_address')}</h3>
             <p className="mt-1 text-sm text-gray-600">{order.deliveryAddress}</p>
           </div>
 
           {/* Pricing Details */}
           <div className="mt-4 rounded-lg border border-gray-200 p-4 text-sm">
             <div className="flex justify-between font-bold text-gray-900">
-              <span>Order Total</span><span>{pricing.orderTotal.toFixed(2)}</span>
+              <span>{t('order_total')}</span><span>{pricing.orderTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -109,7 +113,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
             className="w-full rounded-lg border border-green-500 bg-green-500 py-3 font-semibold text-white transition hover:bg-green-600"
             onClick={onClose}
           >
-            Re-Order
+            {t('re_order')}
           </button>
         </div>
       </div>
