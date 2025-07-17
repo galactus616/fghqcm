@@ -74,20 +74,18 @@ const verifyOtp = async (req, res, next) => {
       { expiresIn: JWT_EXPIRES_IN }
     );
     // Set cookie for authentication
-    // Production (HTTPS):
-    // res.cookie('token', token, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: 'none',
-    //   maxAge: 30 * 24 * 60 * 60 * 1000
-    // });
-    // Development (HTTP):
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false, // Set to true in production (see above)
-      sameSite: 'lax', // Use 'none' in production (see above)
+      secure: true,
+      sameSite: 'none',
       maxAge: 30 * 24 * 60 * 60 * 1000
     });
+    // res.cookie('token', token, {
+    //   httpOnly: true,
+    //   secure: false,
+    //   sameSite: 'lax',
+    //   maxAge: 30 * 24 * 60 * 60 * 1000
+    // });
     res.json({
       message: "Login successful",
       user: {

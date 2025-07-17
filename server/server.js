@@ -20,8 +20,8 @@ connectDB();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    // origin: "https://swiftcart-1-kioc.onrender.com",
+    // origin: "http://localhost:5173",
+    origin: "https://arsacart-frontend.onrender.com",
     credentials: true,
   })
 );

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = '/api/auth';
-// const API_BASE = 'https://swiftcart-asmy.onrender.com/api/auth';
+// const API_BASE = '/api/auth';
+const API_BASE = 'https://arsacart.onrender.com/api/auth';
 
 export async function sendOtp(phone) {
   try {

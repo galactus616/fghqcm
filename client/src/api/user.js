@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = '/api/user/addresses';
+// const API_BASE = '/api/user/addresses';
+const API_BASE = 'https://arsacart.onrender.com/api/user/addresses';
 
 export async function getAddresses() {
   const res = await axios.get(API_BASE, { withCredentials: true });
