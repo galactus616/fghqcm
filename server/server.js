@@ -28,6 +28,13 @@ app.use(
   })
 );
 app.use(express.json());
+app.options('*', cors({
+  origin: [
+    "https://arsacart-frontend.onrender.com",
+    "https://www.brightlinesolutions.in"
+  ],
+  credentials: true,
+}));
 
 // Routes
 app.use("/api/auth", authRoutes);
