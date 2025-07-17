@@ -20,8 +20,10 @@ connectDB();
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "http://localhost:5173",
-    origin: "https://arsacart-frontend.onrender.com",
+    origin: [
+      "https://arsacart-frontend.onrender.com",
+      "https://www.brightlinesolutions.in"
+    ],
     credentials: true,
   })
 );
