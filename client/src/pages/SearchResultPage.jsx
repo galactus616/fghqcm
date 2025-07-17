@@ -25,7 +25,7 @@ const SearchResultPage = () => {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch(`/api/products?search=${encodeURIComponent(searchTerm)}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/products?search=${encodeURIComponent(searchTerm)}`);
         const data = await res.json();
         setProducts(Array.isArray(data) ? data : []);
       } catch (err) {

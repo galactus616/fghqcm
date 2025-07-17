@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// const API_BASE = '/api/auth';
-const API_BASE = 'https://arsacart.onrender.com/api/auth';
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/auth`;
 
 export async function sendOtp(phone) {
   try {

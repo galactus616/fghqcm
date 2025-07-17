@@ -157,7 +157,7 @@ const CheckoutPage = () => {
       let addressToUse = selectedAddress;
       // If temporary, do NOT save to backend, just use for order
       // If not temporary, use as is
-      const res = await fetch('/api/orders', {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -26,7 +26,7 @@ const CategoryPage = () => {
         const cat = cats.find(c => c.id === categoryId || c._id === categoryId || c.name === categoryId);
         setCategory(cat);
         // Fetch products for this category
-        const res = await fetch(`/api/products/categories/${cat?.id || cat?._id || categoryId}/products`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/categories/${cat?.id || cat?._id || categoryId}/products`);
         const data = await res.json();
         setProducts(Array.isArray(data) ? data : []);
       } catch (err) {

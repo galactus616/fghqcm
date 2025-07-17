@@ -16,7 +16,7 @@ const OrdersPage = () => {
       setLoading(true);
       setError('');
       try {
-        const res = await axios.get('/api/orders', { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders`, { withCredentials: true });
         setOrders(res.data || []);
       } catch (err) {
         setError('Failed to load orders.');

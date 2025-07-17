@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// const API_BASE = '/api/products';
-const API_BASE = 'https://arsacart.onrender.com/api/products';
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/products`;
 
 export async function getAllProducts() {
   const res = await axios.get(API_BASE, { withCredentials: true });
