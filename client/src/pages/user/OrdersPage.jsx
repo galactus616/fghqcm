@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import useStore from '../store/useStore';
+import useStore from '../../store/useStore';
 import { Package, X } from 'lucide-react';
 import axios from 'axios';
-import OrderDetailsModal from '../components/OrderDetailsModal';
+import OrderDetailsModal from '../../components/user/OrderDetailsModal';
 
 const OrdersPage = () => {
   const { isLoggedIn } = useStore();

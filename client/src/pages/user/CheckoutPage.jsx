@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import useStore from '../store/useStore';
+import useStore from '../../store/useStore';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
-import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../api/user';
-import LocationModal from '../components/common/LocationModal';
+import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../../api/user/user';
+import LocationModal from '../../components/common/LocationModal';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();

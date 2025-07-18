@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import useStore from "../store/useStore";
+import useStore from "../../store/useStore";
 import {
   getAddresses,
   addAddress,
   deleteAddress,
   setDefaultAddress,
-} from "../api/user";
+} from "../../api/user/user";
 import { LogOut, Edit2, Plus, Trash2, Star, Package, User, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, Star as StarIcon, ChevronRight } from "lucide-react";
 import axios from "axios";
-import OrderDetailsModal from "../components/OrderDetailsModal";
+import OrderDetailsModal from "../../components/user/OrderDetailsModal";
 
 function EditProfileModal({ isOpen, onClose, user, onSave }) {
   const [name, setName] = useState(user?.name || "");

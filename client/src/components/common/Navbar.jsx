@@ -247,7 +247,7 @@ export default function Navbar() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-green-700 group-hover:text-green-800 transition-colors">
-                  ArSaCart
+                  QBD
                 </span>
                 <span className="text-xs text-green-600 font-medium group-hover:text-green-700 transition-colors">
                   Quick & Fresh

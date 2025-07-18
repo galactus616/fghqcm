@@ -1,12 +1,12 @@
 import {create} from 'zustand';
-import { getProfile, logout as apiLogout, sendOtp, verifyOtp } from '../api/auth';
-import { getCart as apiGetCart, addToCart as apiAddToCart, updateCartItem as apiUpdateCartItem, removeFromCart as apiRemoveFromCart, clearCart as apiClearCart, mergeCart as apiMergeCart } from '../api/cart';
-import { getProductById } from '../api/products';
+import { getProfile, logout as apiLogout, sendOtp, verifyOtp } from '../api/user/auth';
+import { getCart as apiGetCart, addToCart as apiAddToCart, updateCartItem as apiUpdateCartItem, removeFromCart as apiRemoveFromCart, clearCart as apiClearCart, mergeCart as apiMergeCart } from '../api/user/cart';
+import { getProductById } from '../api/user/products';
 import { getAllLocalCartItems, addToLocalCart, setLocalCart, clearLocalCart } from '../utils/localCart';
-import { getCategories as apiGetCategories } from '../api/categories';
-import { getProductsByCategory as apiGetProductsByCategory } from '../api/products';
+import { getCategories as apiGetCategories } from '../api/user/categories';
+import { getProductsByCategory as apiGetProductsByCategory } from '../api/user/products';
 import debounce from 'lodash.debounce';
-import { updateProfile as apiUpdateProfile } from '../api/user';
+import { updateProfile as apiUpdateProfile } from '../api/user/user';
 
 const useStore = create((set, get) => ({
   // Auth slice

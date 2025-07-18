@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { sendOtp } from '../../api/auth';
+import { sendOtp } from '../../api/user/auth';
 import useStore from '../../store/useStore';
 
 export default function AuthModal({ isOpen, onClose }) {

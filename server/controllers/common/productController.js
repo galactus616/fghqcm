@@ -1,5 +1,5 @@
-const Product = require("../models/Product");
-const Category = require("../models/Category");
+const Product = require("../../models/Product");
+const Category = require("../../models/Category");
 
 const getAllProducts = async (req, res, next) => {
   const { search } = req.query;

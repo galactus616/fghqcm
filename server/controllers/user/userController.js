@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../../models/User');
 
 // Get all addresses for the logged-in user
 exports.getAddresses = async (req, res, next) => {

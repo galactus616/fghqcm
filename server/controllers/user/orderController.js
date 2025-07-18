@@ -1,6 +1,6 @@
-const Order = require("../models/Order");
-const Cart = require("../models/Cart");
-const Product = require("../models/Product");
+const Order = require("../../models/Order");
+const Cart = require("../../models/Cart");
+const Product = require("../../models/Product");
 
 const placeOrder = async (req, res, next) => {
   const userId = req.user._id;

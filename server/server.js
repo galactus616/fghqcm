@@ -6,12 +6,12 @@ const cookieParser = require("cookie-parser");
 const path = require('path');
 
 const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
-const productRoutes = require("./routes/productRoutes");
-const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const geminiRoutes = require("./routes/geminiRoutes");
-const userRoutes = require('./routes/userRoutes');
+const authRoutes = require("./routes/user/authRoutes");
+const productRoutes = require("./routes/user/productRoutes");
+const cartRoutes = require("./routes/user/cartRoutes");
+const orderRoutes = require("./routes/user/orderRoutes");
+const geminiRoutes = require("./routes/user/geminiRoutes");
+const userRoutes = require('./routes/user/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;

@@ -306,7 +306,7 @@ const dummyData = async () => {
             name: "Chicken Leg",
             basePrice: 180,
             variants: ["500g", "1kg"],
-            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752301438/Delhaize__Pilons_Poulet_1_kg__Delhaize_dp2ykr.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752301438/Delhaize__Pilons_Poulet_1_ kg__Delhaize_dp2ykr.jpg"
         }, {
             name: "Mutton liver",
             basePrice: 350,

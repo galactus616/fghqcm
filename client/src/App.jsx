@@ -1,16 +1,16 @@
 import { Routes, Route } from "react-router-dom";
-import UserLayout from "./components/Layouts/UserLayout";
-import HomePage from "./pages/HomePage";
-import CartPage from "./pages/CartPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import CategoryPage from "./pages/CategoryPage";
-import SearchResultPage from './pages/SearchResultPage';
-import OrdersPage from "./pages/OrdersPage";
-import OrderSuccessPage from './pages/OrderSuccessPage';
-import ScrollToTop from './components/ScrollToTop';
-import ProductDetailsPage from "./pages/ProductDetailsPage";
+import UserLayout from "./Layouts/UserLayout";
+import HomePage from "./pages/user/HomePage";
+import CartPage from "./pages/user/CartPage";
+import CheckoutPage from "./pages/user/CheckoutPage";
+import CategoryPage from "./pages/user/CategoryPage";
+import SearchResultPage from './pages/user/SearchResultPage';
+import OrdersPage from "./pages/user/OrdersPage";
+import OrderSuccessPage from './pages/user/OrderSuccessPage';
+import ScrollToTop from './components/user/ScrollToTop';
+import ProductDetailsPage from "./pages/user/ProductDetailsPage";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import AccountPage from "./pages/AccountPage";
+import AccountPage from "./pages/user/AccountPage";
 import React, { useEffect } from "react";
 import useStore from "./store/useStore";
 

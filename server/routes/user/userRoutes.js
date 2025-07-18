@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
-const authMiddleware = require('../middleware/authMiddleware');
+const userController = require('../../controllers/user/userController');
+const authMiddleware = require('../../middleware/authMiddleware');
 
 // Address management endpoints (all require authentication)
 router.get('/addresses', authMiddleware, userController.getAddresses);

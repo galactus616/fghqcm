@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductById, getProductsByCategory } from "../api/products";
+import { getProductById, getProductsByCategory } from "../../api/user/products";
 import { Plus, Minus, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
-import useStore from '../store/useStore';
+import useStore from '../../store/useStore';
 
 const RelatedProducts = ({ products }) => (
   <div className="flex gap-4 overflow-x-auto pb-4">

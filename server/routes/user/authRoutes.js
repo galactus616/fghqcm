@@ -5,9 +5,9 @@ const {
   getProfile,
   updateProfile,
   logout,
-} = require("../controllers/authController");
-const authenticateToken = require("../middleware/authMiddleware");
-const { authLimiter } = require('../middleware/rateLimiters');
+} = require("../../controllers/user/authController");
+const authenticateToken = require("../../middleware/authMiddleware");
+const { authLimiter } = require('../../middleware/rateLimiters');
 const router = express.Router();
 
 // OTP-based authentication

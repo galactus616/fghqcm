@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import toast from "react-hot-toast";
-import useStore from '../store/useStore';
+import useStore from '../../store/useStore';
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {

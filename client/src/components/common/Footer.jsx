@@ -34,7 +34,7 @@ const Footer = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold text-green-700">
-                  SwiftCart
+                  QBD
                 </span>
                 <span className="text-xs text-green-600 font-medium">
                   Quick & Fresh

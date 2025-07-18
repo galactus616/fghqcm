@@ -6,10 +6,10 @@ const {
   removeFromCart,
   clearCart,
   mergeCart,
-} = require("../controllers/cartController");
-const authenticateToken = require("../middleware/authMiddleware");
-const { sensitiveLimiter } = require('../middleware/rateLimiters');
-const { addToCartValidation, handleValidation } = require('../middleware/validation');
+} = require("../../controllers/user/cartController");
+const authenticateToken = require("../../middleware/authMiddleware");
+const { sensitiveLimiter } = require('../../middleware/rateLimiters');
+const { addToCartValidation, handleValidation } = require('../../middleware/validation');
 const router = express.Router();
 
 router.get("/", sensitiveLimiter, authenticateToken, getCart);
