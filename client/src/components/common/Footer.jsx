@@ -18,28 +18,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-green-600 p-2 rounded-lg">
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M3 3h18v18H3V3zm16 16V5H5v14h14z" />
-                  <path d="M7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z" />
-                  <circle cx="9" cy="9" r="1" />
-                  <circle cx="15" cy="9" r="1" />
-                  <circle cx="9" cy="13" r="1" />
-                  <circle cx="15" cy="13" r="1" />
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-green-700">
-                  QBD
-                </span>
-                <span className="text-xs text-green-600 font-medium">
-                  Quick & Fresh
-                </span>
-              </div>
+              <img src="/qbd.png" alt="QBD Logo" className="h-[64px] object-contain p-1" draggable={false} />
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
               Your trusted partner for quick grocery delivery. Fresh products,

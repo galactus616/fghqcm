@@ -229,30 +229,9 @@ export default function Navbar() {
       <nav className="bg-white border-b border-gray-100 py-4 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
         <div className="w-full flex flex-wrap items-center justify-between md:flex-nowrap">
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0 order-1">
+          <div className="flex items-center flex-shrink-0 order-1 mr-4">
             <Link to="/" className="flex items-center space-x-3 group">
-              <div className="bg-green-600 p-2 rounded-lg shadow-sm group-hover:bg-green-700 transition-colors">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M3 3h18v18H3V3zm16 16V5H5v14h14z" />
-                  <path d="M7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z" />
-                  <circle cx="9" cy="9" r="1" />
-                  <circle cx="15" cy="9" r="1" />
-                  <circle cx="9" cy="13" r="1" />
-                  <circle cx="15" cy="13" r="1" />
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-green-700 group-hover:text-green-800 transition-colors">
-                  QBD
-                </span>
-                <span className="text-xs text-green-600 font-medium group-hover:text-green-700 transition-colors">
-                  Quick & Fresh
-                </span>
-              </div>
+              <img src="/qbd.png" alt="QBD Logo" className="h-[52px] object-contain" draggable={false} />
             </Link>
           </div>
 
