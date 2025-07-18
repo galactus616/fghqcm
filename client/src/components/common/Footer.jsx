@@ -184,7 +184,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-500 text-sm">
-                © 2025 ForgeHive. All rights reserved.
+                © 2025 ForgeHive Solutions. All rights reserved.
               </p>
             </div>
             <div className="flex space-x-6">
