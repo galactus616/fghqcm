@@ -1,16 +1,24 @@
 const mongoose = require("mongoose");
 
 const OrderItemSchema = new mongoose.Schema({
-  product: {
-    id: { type: String, required: true },
-    name: { type: String, required: true },
-    price: { type: Number, required: true },
-    imageUrl: { type: String },
-  },
-  quantity: {
-    type: Number,
+  storeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Store",
     required: true,
-    min: 1,
+  },
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  imageUrl: { type: String },
+  quantity: { type: Number, required: true, min: 1 },
+  status: {
+    type: String,
+    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+    default: "Pending",
   },
 });
 
@@ -33,11 +41,6 @@ const OrderSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
-  },
-  status: {
-    type: String,
-    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
-    default: "Pending",
   },
   items: [OrderItemSchema],
   deliveryAddress: {

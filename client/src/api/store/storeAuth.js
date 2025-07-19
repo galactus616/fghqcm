@@ -1,9 +1,15 @@
-import React from 'react'
+import axios from 'axios';
 
-const storeAuth = () => {
-  return (
-    <div>storeAuth</div>
-  )
-}
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/store/auth`;
 
-export default storeAuth
+export const registerStoreOwner = async (email) => {
+  return axios.post(`${API_BASE}/register`, { email });
+};
+
+export const requestOtp = async (email) => {
+  return axios.post(`${API_BASE}/login/request-otp`, { email });
+};
+
+export const verifyOtp = async (email, otp) => {
+  return axios.post(`${API_BASE}/login/verify-otp`, { email, otp });
+};

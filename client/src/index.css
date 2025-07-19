@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
 body, html {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -23,4 +27,39 @@ button, [role="button"], .cursor-pointer {
 input, textarea, [contenteditable="true"] {
   caret-color: auto;
   user-select: text;
+}
+
+/* Sidebar: modern, subtle green scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #6ee7b7 #e6f4ea;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #6ee7b7;
+  border-radius: 8px;
+  opacity: 0.7;
+  transition: background 0.2s, opacity 0.2s;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #34d399;
+  opacity: 1;
+}
+
+/* Main content: hide scrollbar unless needed, and make it very subtle */
+.main-content-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb #fff;
+}
+.main-content-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+.main-content-scrollbar::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 8px;
+  opacity: 0.3;
 }
