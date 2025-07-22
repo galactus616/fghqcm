@@ -14,7 +14,7 @@ const Footer = () => {
     <footer className="bg-white border-t border-gray-100 py-12 w-full">
       <div className="px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
@@ -94,6 +94,29 @@ const Footer = () => {
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   Offers & Deals
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Partner With Us */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900">Partner With Us</h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="/store"
+                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                >
+                  Become a Store Partner
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/delivery-partner"
+                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                >
+                  Become a Delivery Partner
                 </a>
               </li>
             </ul>

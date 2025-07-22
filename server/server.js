@@ -13,6 +13,12 @@ const orderRoutes = require("./routes/user/orderRoutes");
 const geminiRoutes = require("./routes/user/geminiRoutes");
 const userRoutes = require('./routes/user/userRoutes');
 
+const storeKycRoutes = require('./routes/store/kycRoutes');
+const storeRoutes = require('./routes/store/storeRoutes');
+const inventoryRoutes = require('./routes/store/inventoryRoutes');
+const storeOrderRoutes = require('./routes/store/orderRoutes');
+const storeAuthRoutes = require('./routes/store/authRoutes');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -21,6 +27,7 @@ connectDB();
 app.use(cookieParser());
 app.use(cors({
   origin: [
+    "http://localhost:5173",
     "https://arsacart-frontend.onrender.com",
     "https://www.brightlinesolutions.in"
   ],
@@ -29,6 +36,7 @@ app.use(cors({
 app.use(express.json());
 app.options('*', cors({
   origin: [
+    "http://localhost:5173",
     "https://arsacart-frontend.onrender.com",
     "https://www.brightlinesolutions.in"
   ],
@@ -41,6 +49,12 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/gemini", geminiRoutes);
 app.use('/api/user', userRoutes);
+
+app.use('/api/store/auth', storeAuthRoutes);
+app.use('/api/store/kyc', storeKycRoutes);
+app.use('/api/store', storeRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/store/orders', storeOrderRoutes);
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
 app.get('*', (req, res, next) => {
