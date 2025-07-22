@@ -12,6 +12,7 @@ const cartRoutes = require("./routes/user/cartRoutes");
 const orderRoutes = require("./routes/user/orderRoutes");
 const geminiRoutes = require("./routes/user/geminiRoutes");
 const userRoutes = require('./routes/user/userRoutes');
+const locationRoutes = require('./routes/user/locationRoutes');
 
 const storeKycRoutes = require('./routes/store/kycRoutes');
 const storeRoutes = require('./routes/store/storeRoutes');
@@ -49,6 +50,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/gemini", geminiRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api', locationRoutes);
 
 app.use('/api/store/auth', storeAuthRoutes);
 app.use('/api/store/kyc', storeKycRoutes);
