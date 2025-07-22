@@ -3,6 +3,7 @@ import useStore from '../../store/useStore';
 import { Package, X } from 'lucide-react';
 import axios from 'axios';
 import OrderDetailsModal from '../../components/user/OrderDetailsModal';
+import { useTranslation } from "react-i18next";
 
 const OrdersPage = () => {
   const { isLoggedIn } = useStore();
@@ -10,6 +11,7 @@ const OrdersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -19,6 +21,7 @@ const OrdersPage = () => {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders`, { withCredentials: true });
         setOrders(res.data || []);
       } catch (err) {
+        console.error('Error loading orders:', err);
         setError('Failed to load orders.');
       } finally {
         setLoading(false);
@@ -53,7 +56,7 @@ const OrdersPage = () => {
         ) : error ? (
           <div className="text-center text-red-600 py-10" role="alert">{error}</div>
         ) : orders.length === 0 ? (
-          <div className="text-center text-gray-500 py-10">You have not placed any orders yet.</div>
+          <div className="text-center text-gray-500 py-10">{t('no_orders')}</div>
         ) : (
           <section className="space-y-8" aria-label="Order list">
             {orders.map(order => (
@@ -99,7 +102,7 @@ const OrdersPage = () => {
                     ))}
                   </ul>
                   <div className="flex justify-end mt-4">
-                    <span className="font-bold text-lg text-green-800">Total: ₹{order.total.toFixed(2)}</span>
+                    <span className="font-bold text-lg text-green-800">{t('total')}: ₹{order.total.toFixed(2)}</span>
                   </div>
                 </div>
                 <button

@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
 import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../../api/user/user';
 import LocationModal from '../../components/common/LocationModal';
+import { useTranslation } from "react-i18next";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
   const { currentLocation, setLocationModalOpen, setCurrentLocation } = useStore();
+  const { t } = useTranslation();
   const [addresses, setAddresses] = React.useState([]);
   const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(0);
   const [expanded, setExpanded] = React.useState(false);
@@ -207,23 +209,23 @@ const CheckoutPage = () => {
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5" />
-            Back
+            {t('back')}
           </button>
           <a
             href="/"
             className="text-green-700 hover:underline font-medium text-base"
           >
-            Continue Shopping
+            {t('continue_shopping')}
           </a>
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">Checkout</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">{t('checkout')}</h1>
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Cart Items List */}
           <div className="flex-1 min-w-0">
             <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-green-100">
-              <h2 className="text-lg font-semibold text-green-700 mb-4">Shopping Cart ({cartItems.length})</h2>
+              <h2 className="text-lg font-semibold text-green-700 mb-4">{t('shopping_cart', { count: cartItems.length })}</h2>
               {cartItems.length === 0 ? (
-                <div className="text-gray-500">Your cart is empty.</div>
+                <div className="text-gray-500">{t('your_cart_is_empty')}</div>
               ) : (
                 <div className="space-y-4">
                   {cartItems.map(item => (

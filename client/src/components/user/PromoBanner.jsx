@@ -1,9 +1,11 @@
 import React from "react";
 import { ShoppingCart, Leaf, ChevronRight, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const PromoBanner = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <section
       className="relative w-full h-[200px] md:h-[300px] rounded-2xl overflow-hidden shadow-md"

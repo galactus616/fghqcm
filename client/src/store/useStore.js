@@ -7,6 +7,7 @@ import { getCategories as apiGetCategories } from '../api/user/categories';
 import { getProductsByCategory as apiGetProductsByCategory } from '../api/user/products';
 import debounce from 'lodash.debounce';
 import { updateProfile as apiUpdateProfile } from '../api/user/user';
+import i18n from "../i18n";
 
 const useStore = create((set, get) => ({
   // Auth slice
@@ -294,7 +295,7 @@ const useStore = create((set, get) => ({
     try {
       const res = await fetch('/api/orders', { credentials: 'include' });
       const data = await res.json();
-      set({ orders: data.orders || [], ordersLoading: false });
+      set({ orders: data || [], ordersLoading: false });
     } catch (error) {
       set({ orders: [], ordersLoading: false, ordersError: 'Failed to load orders' });
     }
@@ -305,6 +306,11 @@ const useStore = create((set, get) => ({
   setCurrentLocation: (location) => set({ currentLocation: location }),
   isLocationModalOpen: false,
   setLocationModalOpen: (isOpen) => set({ isLocationModalOpen: isOpen }),
+  language: "en",
+  setLanguage: (lang) => {
+    set({ language: lang });
+    i18n.changeLanguage(lang);
+  },
 }));
 
 export default useStore; 
