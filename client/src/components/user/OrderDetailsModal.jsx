@@ -110,7 +110,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
         {/* Re-order Button */}
         <div className="mt-6 pt-6 border-t border-gray-100">
           <button
-            className="w-full rounded-lg border border-green-500 bg-green-500 py-3 font-semibold text-white transition hover:bg-green-600"
+            className="w-full rounded-lg border border-green-500 bg-green-500 py-3 font-semibold text-white transition hover:bg-green-600 cursor-pointer"
             onClick={onClose}
           >
             {t('re_order')}

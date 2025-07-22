@@ -56,7 +56,7 @@ const LandingPage = () => {
               Join Quick Bangladesh to reach more customers, manage your store with ease, and enjoy seamless onboarding. Fast, secure, and built for modern sellers.
             </p>
             <button
-              className="bg-gradient-to-r from-green-600 to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-xl shadow-lg border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2 transition-colors"
+              className="bg-gradient-to-r cursor-pointer from-green-600 to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-xl shadow-lg border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2 transition-colors"
               onClick={() => setShowAuthModal(true)}
             >
               Become a Store

@@ -4,6 +4,7 @@ import { getProductById, getProductsByCategory } from "../../api/user/products";
 import { Plus, Minus, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import useStore from '../../store/useStore';
+import { useTranslation } from "react-i18next";
 
 const RelatedProducts = ({ products }) => (
   <div className="flex gap-4 overflow-x-auto pb-4">
@@ -26,6 +27,7 @@ const ProductDetailsPage = () => {
   const [related, setRelated] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const { addToCart, hydratedItems: cartItems, updateCartItem, removeFromCart } = useStore();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -42,11 +44,11 @@ const ProductDetailsPage = () => {
           });
         }
       })
-      .catch(() => setError("Product not found"))
+      .catch(() => setError(t('product_not_found')))
       .finally(() => setLoading(false));
-  }, [productId]);
+  }, [productId, t]);
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+  if (loading) return <div className="p-8 text-center text-gray-500">{t('loading')}</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!product) return null;
 
@@ -62,9 +64,9 @@ const ProductDetailsPage = () => {
         variantIndex: selectedVariantIdx,
         quantity: 1
       });
-      toast.success('Added to cart!');
+      toast.success(t('added_to_cart'));
     } catch {
-      toast.error('Failed to add to cart');
+      toast.error(t('failed_to_add_to_cart'));
     }
   };
 
@@ -102,17 +104,17 @@ const ProductDetailsPage = () => {
       <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         {/* Back Button */}
         <button
-          className="flex items-center gap-2 text-green-700 hover:underline font-medium text-base mb-6"
+          className="flex cursor-pointer items-center gap-2 text-green-700 hover:underline font-medium text-base mb-6"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="w-5 h-5" />
-          Back
+          {t('back')}
         </button>
         {/* Delivery Info Bar */}
         <div className="mb-6 flex items-center gap-3 bg-green-100 border border-green-200 rounded-lg px-4 py-2 text-green-800 text-sm font-semibold">
-          <span>🚚 Delivery in 10 minutes</span>
+          <span>🚚 {t('delivery_in_10_minutes')}</span>
           <span className="text-gray-500 font-normal">|</span>
-          <span>123, Anywhere, state- pincode</span>
+          <span>{t('delivery_address_example')}</span>
         </div>
         {/* Main Product Card */}
         <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6 md:p-8 flex flex-col lg:flex-row gap-8">
@@ -130,7 +132,7 @@ const ProductDetailsPage = () => {
                 <button
                   key={idx}
                   onClick={() => setSelectedImageIdx(idx)}
-                  className={`w-14 h-14 rounded-xl border-2 p-1 transition-all duration-200 ${selectedImageIdx === idx ? 'border-green-500' : 'border-gray-200 hover:border-gray-400'}`}
+                  className={`w-14 h-14 cursor-pointer rounded-xl border-2 p-1 transition-all duration-200 ${selectedImageIdx === idx ? 'border-green-500' : 'border-gray-200 hover:border-gray-400'}`}
                   aria-label={`View image ${idx + 1}`}
                 >
                   <img src={img} alt={`${product.name} thumbnail ${idx+1}`} className="h-full w-full object-contain rounded-lg" />
@@ -146,10 +148,10 @@ const ProductDetailsPage = () => {
                   {typeof product.category === 'object' ? product.category.name : product.category}
                 </span>
                 {product.isBestSeller && (
-                  <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">BESTSELLER</span>
+                  <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{t('bestseller')}</span>
                 )}
                 {product.isFeatured && (
-                  <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">FEATURED</span>
+                  <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{t('featured')}</span>
                 )}
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-1">{product.name}</h1>
@@ -157,13 +159,13 @@ const ProductDetailsPage = () => {
               {/* Variant Selector */}
               {product.variants && product.variants.length > 1 && (
                 <div className="mb-4">
-                  <label className="font-semibold text-gray-800 mb-2 block">Select Unit</label>
+                  <label className="font-semibold text-gray-800 mb-2 block">{t('select_unit')}</label>
                   <div className="flex gap-2">
                     {product.variants.map((v, idx) => (
                       <button
                         key={idx}
                         type="button"
-                        className={`px-3 py-1 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap ${
+                        className={`px-3 py-1 cursor-pointer rounded-lg border text-xs font-medium transition-colors whitespace-nowrap ${
                           selectedVariantIdx === idx
                             ? 'bg-green-600 text-white border-green-600'
                             : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
@@ -181,16 +183,16 @@ const ProductDetailsPage = () => {
                 <div className="flex flex-col">
                   <span className="text-2xl md:text-3xl font-bold text-green-700">₹{variant.discountedPrice ?? variant.price}</span>
                   {variant.discountedPrice && (
-                    <span className="text-md text-gray-400 line-through ml-2">MRP ₹{variant.price}</span>
+                    <span className="text-md text-gray-400 line-through ml-2">{t('mrp')} ₹{variant.price}</span>
                   )}
-                  <div className="text-xs text-gray-500 mt-1">(Inclusive of all taxes)</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('inclusive_of_all_taxes')}</div>
                 </div>
                 {cartItem ? (
                   <div className="flex items-center border border-gray-300 rounded-md overflow-hidden ">
                     <button
                       onClick={handleDecrease}
-                      className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
-                      aria-label="Decrease quantity"
+                      className="p-2 bg-gray-200 cursor-pointer hover:bg-gray-300 transition-colors duration-200"
+                      aria-label={t('decrease_quantity')}
                     >
                       <Minus className="w-4 h-4 text-gray-700" />
                     </button>
@@ -199,36 +201,36 @@ const ProductDetailsPage = () => {
                     </span>
                     <button
                       onClick={handleIncrease}
-                      className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
-                      aria-label="Increase quantity"
+                      className="p-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white transition-colors duration-200"
+                      aria-label={t('increase_quantity')}
                     >
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
                   <button
-                    className="flex items-center gap-1 text-white bg-green-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
+                    className="flex items-center gap-1 cursor-pointer text-white bg-green-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
                     onClick={handleAddToCart}
                   >
                     <Plus className="w-4 h-4" />
-                    <span>ADD</span>
+                    <span>{t('add')}</span>
                   </button>
                 )}
               </div>
             </div>
             {/* Product Details Section */}
             <div className="mt-6 pt-6 border-t border-gray-100">
-              <h2 className="text-lg font-bold text-green-800 mb-2">Product Details</h2>
+              <h2 className="text-lg font-bold text-green-800 mb-2">{t('product_details')}</h2>
               <div className="prose prose-sm max-w-none text-gray-600">
                 {renderDescription()}
               </div>
               {product.description && product.description.length > 250 && (
-                <button className="text-green-600 font-semibold text-sm mt-3" onClick={() => setShowMore(v => !v)}>
-                  {showMore ? 'View less details' : 'View more details'}
+                <button className="text-green-600 font-semibold text-sm mt-3 cursor-pointer" onClick={() => setShowMore(v => !v)}>
+                  {showMore ? t('view_less_details') : t('view_more_details')}
                 </button>
               )}
               <div className="mt-6">
-                <h3 className="text-base font-bold text-gray-800">Unit</h3>
+                <h3 className="text-base font-bold text-gray-800">{t('unit')}</h3>
                 <p className="text-gray-600">{variant.quantityLabel}</p>
               </div>
             </div>
@@ -237,7 +239,7 @@ const ProductDetailsPage = () => {
         {/* Related Products Section */}
         {related.length > 0 && (
           <div className="mt-12 pt-8 border-t border-gray-200">
-            <h2 className="text-xl font-bold text-green-800 mb-4">Top 10 Products in Category</h2>
+            <h2 className="text-xl font-bold text-green-800 mb-4">{t('top_10_products_in_category')}</h2>
             <RelatedProducts products={related} />
           </div>
         )}

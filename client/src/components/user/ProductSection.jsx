@@ -11,7 +11,7 @@ const ProductSection = ({ title, products, isLoggedIn, categoryId }) => {
           {title}
         </h2>
         <button
-          className="text-green-700 hover:text-green-900 font-semibold text-sm md:text-base px-3 py-1 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 transition"
+          className="text-green-700 cursor-pointer hover:text-green-900 font-semibold text-sm md:text-base px-3 py-1 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 transition"
           onClick={() => navigate(`/category/${categoryId}`)}
         >
           See All

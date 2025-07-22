@@ -105,7 +105,7 @@ const OrdersPage = () => {
                   </div>
                 </div>
                 <button
-                  className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  className="mt-4 cursor-pointer bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
                   onClick={e => { e.stopPropagation(); setSelectedOrder(order); }}
                   aria-label={`Open details for order ${order.orderId}`}
                 >

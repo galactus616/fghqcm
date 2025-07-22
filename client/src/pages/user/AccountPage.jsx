@@ -9,6 +9,7 @@ import {
 import { LogOut, Edit2, Plus, Trash2, Star, Package, User, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, Star as StarIcon, ChevronRight } from "lucide-react";
 import axios from "axios";
 import OrderDetailsModal from "../../components/user/OrderDetailsModal";
+import { useTranslation } from 'react-i18next';
 
 function EditProfileModal({ isOpen, onClose, user, onSave }) {
   const [name, setName] = useState(user?.name || "");
@@ -43,7 +44,7 @@ function EditProfileModal({ isOpen, onClose, user, onSave }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 relative">
         <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+          className="absolute top-3 cursor-pointer right-3 text-gray-400 hover:text-gray-700"
           onClick={onClose}
           aria-label="Close"
         >
@@ -74,7 +75,7 @@ function EditProfileModal({ isOpen, onClose, user, onSave }) {
           {error && <div className="text-red-600 text-sm">{error}</div>}
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full cursor-pointer bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? "Saving..." : "Save Changes"}
@@ -125,7 +126,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 relative">
         <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+          className="absolute cursor-pointer top-3 right-3 text-gray-400 hover:text-gray-700"
           onClick={onClose}
           aria-label="Close"
         >
@@ -167,7 +168,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
           {success && <div className="text-green-600 text-sm">{success}</div>}
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full cursor-pointer bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? "Saving..." : "Change Password"}
@@ -241,6 +242,7 @@ export default function AccountPage() {
   const [userLoading, setUserLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const { t } = useTranslation();
 
   // Fetch addresses
   useEffect(() => {
@@ -325,8 +327,8 @@ export default function AccountPage() {
   if (!isLoggedIn) {
     return (
       <div className="max-w-xl mx-auto mt-16 p-8 bg-white rounded-2xl shadow text-center">
-        <h2 className="text-3xl font-bold mb-4">Account</h2>
-        <p className="text-gray-600 text-lg">You are not logged in.</p>
+        <h2 className="text-3xl font-bold mb-4">{t('account')}</h2>
+        <p className="text-gray-600 text-lg">{t('you_are_not_logged_in')}</p>
       </div>
     );
   }
@@ -340,8 +342,8 @@ export default function AccountPage() {
           <div className="w-20 h-20 rounded-full bg-white border border-green-200 flex items-center justify-center text-5xl font-bold text-green-700">
             <ImageIcon className="w-12 h-12 text-green-200" />
           </div>
-          <div className="text-lg font-bold text-gray-900 text-center">{user?.name?.trim() ? user.name : "No name set"}</div>
-          <div className="text-gray-400 text-sm text-center">{user?.email?.trim() ? user.email : "No email set"}</div>
+          <div className="text-lg font-bold text-gray-900 text-center">{user?.name?.trim() ? user.name : t('no_name_set')}</div>
+          <div className="text-gray-400 text-sm text-center">{user?.email?.trim() ? user.email : t('no_email_set')}</div>
         </div>
         {/* Navigation */}
         <nav className="flex flex-col gap-1 w-full">
@@ -351,11 +353,11 @@ export default function AccountPage() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-3 px-6 py-3 w-full text-left rounded-lg font-medium text-base transition-all
+                className={`flex cursor-pointer items-center gap-3 px-6 py-3 w-full text-left rounded-lg font-medium text-base transition-all
                   ${activeTab === tab.key ? "bg-white text-green-700 border border-green-200" : "text-gray-700 hover:bg-green-100"}`}
               >
                 <Icon className="w-5 h-5" />
-                <span>{tab.label}</span>
+                <span>{t(tab.label.replace(/\s+/g, '_').toLowerCase())}</span>
                 {activeTab === tab.key && <ChevronRight className="ml-auto w-4 h-4 text-green-500" />}
               </button>
             );
@@ -363,10 +365,10 @@ export default function AccountPage() {
         </nav>
         <div className="flex-1" />
         <button
-          className="flex items-center gap-2 px-6 py-3 w-full text-left rounded-lg font-medium text-base text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all"
+          className="flex cursor-pointer items-center gap-2 px-6 py-3 w-full text-left rounded-lg font-medium text-base text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all"
           onClick={logout}
         >
-          <LogOut className="w-5 h-5" /> Logout
+          <LogOut className="w-5 h-5" /> {t('logout')}
         </button>
       </aside>
 
@@ -416,7 +418,7 @@ export default function AccountPage() {
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold text-xl text-gray-900">Saved Addresses</h3>
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
+                className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
                 onClick={() => setShowAddAddress((v) => !v)}
               >
                 <Plus className="w-5 h-5" /> Add Address
@@ -448,7 +450,7 @@ export default function AccountPage() {
                     </div>
                     {!addr.isDefault && (
                       <button
-                        className="text-green-600 hover:underline text-xs px-2 py-1 rounded hover:bg-green-50"
+                        className="text-green-600 cursor-pointer hover:underline text-xs px-2 py-1 rounded hover:bg-green-50"
                         onClick={() => handleSetDefault(addr._id)}
                       >Set Default</button>
                     )}
@@ -480,11 +482,11 @@ export default function AccountPage() {
                 />
                 <div className="flex gap-2 mt-2">
                   <button
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600"
+                    className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600"
                     onClick={handleAddAddress}
                   >Save</button>
                   <button
-                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition border border-gray-200"
+                    className="bg-gray-100 cursor-pointer text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition border border-gray-200"
                     onClick={() => { setShowAddAddress(false); setNewAddress(""); setNewLabel("Home"); }}
                   >Cancel</button>
                 </div>
@@ -497,7 +499,7 @@ export default function AccountPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-gray-900">Payment Methods</h2>
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white cursor-pointer rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
                 onClick={() => alert("Add payment method functionality coming soon!")}
               >
                 <Plus className="w-5 h-5" /> Add New Payment Method
@@ -512,7 +514,7 @@ export default function AccountPage() {
                     <span className="text-gray-500 text-sm">Expires: 12/25</span>
                   </div>
                 </div>
-                <button className="text-red-500 hover:underline text-sm">Remove</button>
+                <button className="text-red-500 hover:underline text-sm cursor-pointer">Remove</button>
               </div>
               <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -522,7 +524,7 @@ export default function AccountPage() {
                     <span className="text-gray-500 text-sm">Expires: 01/26</span>
                   </div>
                 </div>
-                <button className="text-red-500 hover:underline text-sm">Remove</button>
+                <button className="text-red-500 hover:underline text-sm cursor-pointer">Remove</button>
               </div>
             </div>
           </section>
@@ -538,14 +540,14 @@ export default function AccountPage() {
                   <span className="font-semibold text-gray-800">Order #123456789</span>
                   <span className="text-gray-500 text-sm">Cancelled on: 2023-10-20</span>
                 </div>
-                <button className="text-green-600 hover:underline text-sm">View Details</button>
+                <button className="text-green-600 hover:underline text-sm cursor-pointer">View Details</button>
               </div>
               <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-800">Order #987654321</span>
                   <span className="text-gray-500 text-sm">Cancelled on: 2023-10-15</span>
                 </div>
-                <button className="text-green-600 hover:underline text-sm">View Details</button>
+                <button className="text-green-600 hover:underline text-sm cursor-pointer">View Details</button>
               </div>
             </div>
           </section>
@@ -559,7 +561,7 @@ export default function AccountPage() {
             <form className="bg-white rounded-lg p-6 border border-green-100 flex flex-col gap-4 max-w-lg mx-auto">
               <label className="font-semibold text-gray-700">Raise a Support Ticket</label>
               <textarea className="border border-green-200 rounded-lg p-3 min-h-[100px] resize-y focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400" placeholder="Describe your issue or question..." />
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600">Submit Ticket</button>
+              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600 cursor-pointer">Submit Ticket</button>
             </form>
             <div className="flex flex-col items-center gap-2 mt-6">
               <span className="text-gray-700 font-medium">Or contact us via Gmail:</span>

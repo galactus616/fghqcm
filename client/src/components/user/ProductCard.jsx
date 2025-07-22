@@ -57,11 +57,11 @@ const ProductCard = ({ product }) => {
       <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1 z-10">
         {product.isBestSeller ? (
           <span className="bg-amber-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
-            BESTSELLER
+            {t('bestseller')}
           </span>
         ) : product.isFeatured ? (
           <span className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
-            FEATURED
+            {t('featured')}
           </span>
         ) : null}
       </div>
@@ -97,7 +97,7 @@ const ProductCard = ({ product }) => {
                 <button
                   key={idx}
                   type="button"
-                  className={`px-2 sm:px-3 py-1 rounded-lg border text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap ${
+                  className={`px-2 sm:px-3 py-1 rounded-lg cursor-pointer border text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap ${
                     selectedVariantIdx === idx
                       ? 'bg-green-600 text-white border-green-600'
                       : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
@@ -135,8 +135,8 @@ const ProductCard = ({ product }) => {
             <div className="flex items-center border border-gray-300 rounded-md overflow-hidden ">
               <button
                 onClick={handleDecrease}
-                className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
-                aria-label="Decrease quantity"
+                className="p-2 bg-gray-200 cursor-pointer hover:bg-gray-300 transition-colors duration-200"
+                aria-label={t('decrease_quantity')}
               >
                 <Minus className="w-4 h-4 text-gray-700" />
               </button>
@@ -145,15 +145,15 @@ const ProductCard = ({ product }) => {
               </span>
               <button
                 onClick={handleIncrease}
-                className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
-                aria-label="Increase quantity"
+                className="p-2 cursor-pointer bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
+                aria-label={t('increase_quantity')}
               >
                 <Plus className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <button
-              className="flex items-center gap-1 flex-nowrap text-white bg-green-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:bg-green-700 transition-colors"
+              className="flex cursor-pointer items-center gap-1 flex-nowrap border-green-600 border-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:border-green-700 transition-colors"
               onClick={handleAddToCart}
             >
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" />

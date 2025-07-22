@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const CategoriesSlide = ({ categories }) => {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -24,13 +26,13 @@ const CategoriesSlide = ({ categories }) => {
     <section className="w-full py-6 px-2 sm:px-4 md:px-8">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl md:text-2xl font-bold text-green-800">
-          Shop by Category
+          {t('Shop by Category')}
         </h2>
         <div className="flex gap-2">
           <button
-            aria-label="Scroll left"
+            aria-label={t('Scroll left')}
             onClick={() => scroll("left")}
-            className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 shadow transition"
+            className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 shadow transition cursor-pointer"
           >
             <svg
               width="20"
@@ -48,9 +50,9 @@ const CategoriesSlide = ({ categories }) => {
             </svg>
           </button>
           <button
-            aria-label="Scroll right"
+            aria-label={t('Scroll right')}
             onClick={() => scroll("right")}
-            className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 shadow transition"
+            className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 shadow transition cursor-pointer"
           >
             <svg
               width="20"

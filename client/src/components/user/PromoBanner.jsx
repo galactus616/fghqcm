@@ -9,7 +9,7 @@ const PromoBanner = () => {
   return (
     <section
       className="relative w-full h-[200px] md:h-[300px] rounded-2xl overflow-hidden shadow-md"
-      aria-label="Special offer: Get your groceries delivered in 30 minutes"
+      aria-label={t("Special offer: Get your groceries delivered in 30 minutes")}
     >
       {/* Background Image with performance optimizations (Unchanged as requested) */}
       <img
@@ -29,27 +29,27 @@ const PromoBanner = () => {
           <div className="flex items-center mb-3">
             <Clock className="w-5 h-5 text-green-700" aria-hidden="true" />
             <span className="ml-2 text-green-800 font-semibold text-md">
-              Delivery in 30 Minutes
+              {t('Delivery in 30 Minutes')}
             </span>
           </div>
 
           <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 leading-tight">
-            Craving Freshness?
+            {t('Craving Freshness?')}
             <br className="hidden sm:block" />
-            Get It Fast.
+            {t('Get It Fast.')}
           </h1>
 
           <p className="mt-1 text-gray-800 text-xs md:text-sm font-medium max-w-[90%]">
-            From our store to your door in half an hour. Order now!
+            {t('From our store to your door in half an hour. Order now!')}
           </p>
 
           <button
-            className="mt-4 inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            aria-label="Start shopping now for 30-minute delivery"
+            className="mt-4 inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
+            aria-label={t('Start shopping now for 30-minute delivery')}
             onClick={() => navigate("/")}
           >
             <ShoppingCart className="w-3 h-3 mr-2" aria-hidden="true" />
-            Shop Now
+            {t('Shop Now')}
             <ChevronRight className="w-3 h-3 ml-1.5" aria-hidden="true" />
           </button>
         </div>

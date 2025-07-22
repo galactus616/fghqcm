@@ -39,7 +39,7 @@ const OrderSuccessPage = () => {
           <span className="font-bold text-green-700 text-lg">{countdown}</span>...
         </div>
         <button
-          className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold shadow-md transition-all duration-200"
+          className="mt-6 cursor-pointer bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold shadow-md transition-all duration-200"
           onClick={() => navigate("/orders")}
         >
           {t('go_to_my_orders_now')}

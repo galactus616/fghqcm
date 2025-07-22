@@ -1,8 +1,10 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 
 const CartPage = () => {
+  const { t } = useTranslation();
   return (
-    <div>CartPage</div>
+    <div>{t('cart_page')}</div>
   )
 }
 

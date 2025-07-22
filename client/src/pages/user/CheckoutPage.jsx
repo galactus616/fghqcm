@@ -205,7 +205,7 @@ const CheckoutPage = () => {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <button
-            className="flex items-center gap-2 text-green-700 hover:underline font-medium text-base"
+            className="flex items-center cursor-pointer gap-2 text-green-700 hover:underline font-medium text-base"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -237,7 +237,7 @@ const CheckoutPage = () => {
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
-                            className="p-1 bg-gray-200 hover:bg-gray-300 rounded"
+                            className="p-1 bg-gray-200 cursor-pointer hover:bg-gray-300 rounded"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="w-4 h-4" />
@@ -245,7 +245,7 @@ const CheckoutPage = () => {
                           <span className="px-2 text-gray-800 font-medium">{item.quantity}</span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
-                            className="p-1 bg-green-500 hover:bg-green-600 text-white rounded"
+                            className="p-1 bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded"
                             aria-label="Increase quantity"
                           >
                             <Plus className="w-4 h-4" />
@@ -255,7 +255,7 @@ const CheckoutPage = () => {
                       <div className="flex flex-col items-end gap-2">
                         <div className="font-bold text-green-700 text-lg">₹{(item.price * item.quantity).toFixed(2)}</div>
                         <button
-                          className="flex items-center gap-1 text-red-500 hover:underline text-xs"
+                          className="flex cursor-pointer items-center gap-1 text-red-500 hover:underline text-xs"
                           onClick={() => removeFromCart(item.productId, item.variantIndex)}
                         >
                           <Trash2 className="w-4 h-4" /> Remove
@@ -312,7 +312,7 @@ const CheckoutPage = () => {
                               ) : !addr.isTemporary ? (
                                 <button
                                   type="button"
-                                  className="text-green-600 hover:underline bg-transparent border-none p-0"
+                                  className="text-green-600 cursor-pointer hover:underline bg-transparent border-none p-0"
                                   onClick={e => { e.stopPropagation(); handleSetDefault(addr._id); }}
                                 >
                                   Set Default
@@ -320,7 +320,7 @@ const CheckoutPage = () => {
                               ) : null}
                               <button
                                 type="button"
-                                className="text-red-400 hover:underline bg-transparent border-none p-0"
+                                className="text-red-400 cursor-pointer hover:underline bg-transparent border-none p-0"
                                 onClick={e => { e.stopPropagation(); handleRemoveAddress(addr._id, idx); }}
                               >
                                 Remove
@@ -332,7 +332,7 @@ const CheckoutPage = () => {
                     })}
                     {addresses.length > 3 && (
                       <button
-                        className="text-green-700 text-xs mt-1 hover:underline self-start"
+                        className="text-green-700 cursor-pointer text-xs mt-1 hover:underline self-start"
                         onClick={() => setExpanded(e => !e)}
                       >
                         {expanded ? 'Show less' : `Show all addresses (${addresses.length})`}
@@ -342,7 +342,7 @@ const CheckoutPage = () => {
                   {/* Modern button row */}
                   <div className="flex flex-row gap-2 mt-4">
                     <button
-                      className="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
+                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
                       onClick={() => setShowNewAddress(true)}
                       style={{ minWidth: 0 }}
                     >
@@ -350,7 +350,7 @@ const CheckoutPage = () => {
                       Add Address
                     </button>
                     <button
-                      className="flex-1 flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 border border-blue-200"
+                      className="flex-1 cursor-pointer flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 border border-blue-200"
                       onClick={() => setLocationModalOpen(true)}
                       style={{ minWidth: 0 }}
                     >
@@ -376,11 +376,11 @@ const CheckoutPage = () => {
                       />
                       <div className="flex gap-2 mt-2">
                         <button
-                          className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+                          className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
                           onClick={handleAddAddress}
                         >Save</button>
                         <button
-                          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
+                          className="bg-gray-200 cursor-pointer text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
                           onClick={() => { setShowNewAddress(false); setNewAddress(''); setNewLabel('Home'); }}
                         >Cancel</button>
                       </div>
@@ -470,7 +470,7 @@ const CheckoutPage = () => {
               </div>
               {/* Place Order Button */}
               <button
-                className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full cursor-pointer bg-green-600 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handlePlaceOrder}
                 disabled={placingOrder || cartItems.length === 0}
               >

@@ -242,7 +242,7 @@ export default function Navbar() {
             {/* Language Toggle for Mobile */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="rounded  text-green-600 text-sm px-3 py-2 focus:outline-none bg-green-50 focus:ring-2 focus:ring-green-500"
+              className="rounded cursor-pointer  text-green-600 text-sm px-3 py-2 focus:outline-none bg-green-50 focus:ring-2 focus:ring-green-500"
               aria-label="Toggle language"
             >
               {language === "en" ? "En" : "Bn"}
@@ -326,7 +326,7 @@ export default function Navbar() {
             {/* Language Toggle for Desktop */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="ml-2 rounded text-green-600 text-sm px-4  p-3 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="ml-2 cursor-pointer rounded text-green-600 text-sm px-4  p-3 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
               aria-label="Toggle language"
             >
               {language === "en" ? "En" : "Bn"}
@@ -370,7 +370,7 @@ export default function Navbar() {
                           e.stopPropagation();
                           item.action();
                         }}
-                        className={`flex items-center w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                        className={`flex items-center cursor-pointer w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           item.isDestructive
                             ? "text-red-600 hover:bg-red-50"
                             : "text-gray-700 hover:bg-gray-50"
@@ -389,7 +389,7 @@ export default function Navbar() {
             {/* Desktop Cart Button */}
             <button
               onClick={toggleCart}
-              className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[100px] justify-center"
+              className="relative hidden cursor-pointer md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[100px] justify-center"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               <span className="font-medium">{t("my_cart")}</span>
@@ -418,7 +418,7 @@ export default function Navbar() {
                       e.stopPropagation();
                       item.action();
                     }}
-                    className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                    className={`block w-full cursor-pointer text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       item.isDestructive
                         ? "text-red-600 hover:bg-red-50"
                         : "text-gray-700 hover:bg-gray-100"
@@ -462,7 +462,7 @@ export default function Navbar() {
               <h2 className="text-xl font-semibold text-gray-800">{t("my_cart")}</h2>
               <button
                 onClick={toggleCart}
-                className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
+                className="text-gray-500 cursor-pointer hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
                 aria-label="Close cart"
               >
                 <X className="w-6 h-6" />
@@ -518,7 +518,7 @@ export default function Navbar() {
                         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
-                            className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+                            className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer duration-200"
                             aria-label={`Decrease quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Minus className="w-4 h-4 text-gray-700" />
@@ -528,7 +528,7 @@ export default function Navbar() {
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
-                            className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
+                            className="p-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white transition-colors duration-200"
                             aria-label={`Increase quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Plus className="w-4 h-4" />
@@ -585,12 +585,12 @@ export default function Navbar() {
                       {[20, 30, 50].map((amount) => (
                         <button
                           key={amount}
-                          className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                          className="flex-1  min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                         >
                           ₹{amount}
                         </button>
                       ))}
-                      <button className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                      <button className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer duration-200">
                         Custom
                       </button>
                     </div>
@@ -612,7 +612,7 @@ export default function Navbar() {
 
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 left-0 right-0 shadow-lg">
               <button
-                className="w-full bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-green-500 text-white py-3 px-4 cursor-pointer rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={async () => {
                   if (!isLoggedIn) {
                     setAuthMessage("You need to login to proceed to checkout.");

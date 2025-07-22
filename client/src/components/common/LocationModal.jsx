@@ -83,7 +83,7 @@ export default function LocationModal() {
             </h2>
             <button
               onClick={() => setLocationModalOpen(false)}
-              className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
+              className="text-gray-500 cursor-pointer hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
               aria-label="Close"
             >
               <X className="w-6 h-6" />
