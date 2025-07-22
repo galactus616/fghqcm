@@ -5,9 +5,9 @@ const ReviewRow = ({ label, value, isFile, required }) => (
     <div className="w-40 text-gray-500 font-medium flex-shrink-0">{label}{required && <span className="text-red-500">*</span>}</div>
     <div className="flex-1 font-semibold">
       {isFile
-        ? (value instanceof File
+        ? (typeof value === 'string' && value.trim() !== ''
             ? <span className="inline-block px-2 py-1 bg-green-100 text-green-700 rounded text-xs">File uploaded</span>
-            : <span className="text-red-500">File missing</span>
+            : <span className="text-red-500">Not provided</span>
           )
         : (value ? value : <span className="text-red-500">Not provided</span>)}
     </div>
