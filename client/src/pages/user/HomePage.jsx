@@ -3,6 +3,7 @@ import CategoriesSlide from "../../components/user/CategoriesSlide";
 import PromoBanner from "../../components/user/PromoBanner";
 import useStore from '../../store/useStore';
 import ProductSection from "../../components/user/ProductSection";
+import { useTranslation } from "react-i18next";
 
 const CategorySkeleton = () => (
   <section className="w-full py-6 px-2 sm:px-4 md:px-8">
@@ -55,6 +56,7 @@ const HomePage = () => {
     fetchCategories,
     fetchProductsForCategories,
   } = useStore();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchCategories();
@@ -70,7 +72,7 @@ const HomePage = () => {
     <div className="font-sans bg-green-50 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8">
         {/* Category Slide Section */}
-        {productError && <div className="text-center text-red-600 py-6">{productError}</div>}
+        {productError && <div className="text-center text-red-600 py-6">{t('product_error')}</div>}
         {loadingCategories && <CategorySkeleton />}
         {!loadingCategories && !productError && categories.length > 0 && (
           <CategoriesSlide categories={categories} />

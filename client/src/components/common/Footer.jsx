@@ -8,8 +8,10 @@ import {
   Instagram,
   Linkedin,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-white border-t border-gray-100 py-12 w-full">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -21,8 +23,7 @@ const Footer = () => {
               <img src="/qbd.png" alt="QBD Logo" className="h-[64px] object-contain p-1" draggable={false} />
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Your trusted partner for quick grocery delivery. Fresh products,
-              fast delivery, and excellent service.
+              {t('trusted_partner')}
             </p>
             <div className="flex space-x-4">
               <a
@@ -54,14 +55,16 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Quick Links</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {t('quick_links')}
+            </h3>
             <ul className="space-y-3">
               <li>
                 <a
                   href="/"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  Home
+                  {t('home')}
                 </a>
               </li>
               <li>
@@ -69,7 +72,7 @@ const Footer = () => {
                   href="/products"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  Products
+                  {t('products')}
                 </a>
               </li>
               <li>
@@ -77,7 +80,7 @@ const Footer = () => {
                   href="/cart"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  My Cart
+                  {t('my_cart')}
                 </a>
               </li>
               <li>
@@ -85,7 +88,7 @@ const Footer = () => {
                   href="/orders"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  My Orders
+                  {t('my_orders')}
                 </a>
               </li>
               <li>
@@ -125,7 +128,7 @@ const Footer = () => {
           {/* Customer Service */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">
-              Customer Service
+              {t('customer_service')}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -133,7 +136,7 @@ const Footer = () => {
                   href="/help"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  Help Center
+                  {t('help_center')}
                 </a>
               </li>
               <li>
@@ -141,7 +144,7 @@ const Footer = () => {
                   href="/contact"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  Contact Us
+                  {t('contact_us')}
                 </a>
               </li>
               <li>
@@ -149,7 +152,7 @@ const Footer = () => {
                   href="/faq"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  FAQ
+                  {t('faq')}
                 </a>
               </li>
               <li>
@@ -157,7 +160,7 @@ const Footer = () => {
                   href="/returns"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  Returns & Refunds
+                  {t('returns_refunds')}
                 </a>
               </li>
               <li>
@@ -165,7 +168,7 @@ const Footer = () => {
                   href="/track"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
-                  Track Order
+                  {t('track_order')}
                 </a>
               </li>
             </ul>
@@ -174,7 +177,7 @@ const Footer = () => {
           {/* Contact Info */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">
-              Contact Info
+              {t('contact_info')}
             </h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
@@ -196,7 +199,7 @@ const Footer = () => {
             </div>
             <div className="pt-2">
               <p className="text-gray-500 text-xs">
-                Available 24/7 for your convenience
+                {t('available_24_7')}
               </p>
             </div>
           </div>
@@ -207,7 +210,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-500 text-sm">
-                © 2024 SwiftCart. All rights reserved.
+                © 2024 SwiftCart. {t('all_rights_reserved')}
               </p>
             </div>
             <div className="flex space-x-6">
@@ -215,19 +218,19 @@ const Footer = () => {
                 href="/privacy"
                 className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm"
               >
-                Privacy Policy
+                {t('privacy_policy')}
               </a>
               <a
                 href="/terms"
                 className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm"
               >
-                Terms of Service
+                {t('terms_of_service')}
               </a>
               <a
                 href="/cookies"
                 className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm"
               >
-                Cookie Policy
+                {t('cookie_policy')}
               </a>
             </div>
           </div>
