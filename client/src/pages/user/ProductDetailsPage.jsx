@@ -294,12 +294,14 @@ const ProductDetailsPage = () => {
             <h2 className="text-xl font-bold text-green-800 mb-4">
               {t("top_10_products_in_category")}
             </h2>
-            <div className="flex gap-4 overflow-x-auto pb-4">
+            <div className="flex gap-4 overflow-x-auto w-full pb-4">
               {related.map((product) => (
-                <ProductCard
+                <div
                   key={product.id || product._id}
-                  product={product}
-                />
+                  className="flex-shrink-0 flex-none"
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
           </div>

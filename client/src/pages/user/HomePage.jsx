@@ -83,7 +83,7 @@ const HomePage = () => {
         {loadingProducts ? (
           <ProductsSkeleton />
         ) : (
-          <div className="space-y-10 mt-6">
+          <div className="space-y-10  mt-6">
             {categories.map((cat) => (
               <ProductSection
                 key={cat.id}
