@@ -4,7 +4,6 @@ import {
   getAddresses,
   addAddress,
   deleteAddress,
-  setDefaultAddress,
 } from "../../api/user/user";
 import { LogOut, Edit2, Plus, Trash2, Star, Package, User, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, Star as StarIcon, ChevronRight } from "lucide-react";
 import axios from "axios";
@@ -289,7 +288,7 @@ export default function AccountPage() {
   const handleAddAddress = async () => {
     if (!newAddress.trim()) return;
     try {
-      const data = await addAddress({ label: newLabel, address: newAddress, isDefault: addresses.length === 0 });
+      const data = await addAddress({ label: newLabel, address: newAddress });
       setAddresses(data);
       setShowAddAddress(false);
       setNewAddress("");
@@ -302,13 +301,6 @@ export default function AccountPage() {
   const handleDeleteAddress = async (addressId) => {
     try {
       const data = await deleteAddress(addressId);
-      setAddresses(data);
-    } catch {}
-  };
-
-  const handleSetDefault = async (addressId) => {
-    try {
-      const data = await setDefaultAddress(addressId);
       setAddresses(data);
     } catch {}
   };
@@ -439,21 +431,14 @@ export default function AccountPage() {
                 {addresses.map((addr) => (
                   <div
                     key={addr._id}
-                    className={`flex items-center gap-3 p-4 rounded-lg border ${addr.isDefault ? "border-green-500 bg-white" : "border-gray-200 bg-white"}`}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 bg-white"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-gray-800 text-base">{addr.label}</span>
-                        {addr.isDefault && <span className="text-green-600 text-xs font-bold flex items-center gap-1"><Star className="w-3 h-3" /> Default</span>}
                       </div>
                       <div className="text-gray-600 text-sm truncate max-w-xs">{addr.address}</div>
                     </div>
-                    {!addr.isDefault && (
-                      <button
-                        className="text-green-600 cursor-pointer hover:underline text-xs px-2 py-1 rounded hover:bg-green-50"
-                        onClick={() => handleSetDefault(addr._id)}
-                      >Set Default</button>
-                    )}
                     <button
                       className="text-red-500 hover:underline text-xs px-2 py-1 rounded hover:bg-red-50 flex items-center gap-1"
                       onClick={() => handleDeleteAddress(addr._id)}

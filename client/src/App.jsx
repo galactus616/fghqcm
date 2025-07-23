@@ -14,6 +14,7 @@ import AccountPage from "./pages/user/AccountPage";
 import React, { useEffect } from "react";
 import useStore from "./store/useStore";
 import useStoreOwner from "./store/useStoreOwner";
+import AddressModal from "./components/common/AddressModal";
 
 // Store onboarding imports
 import LandingPage from './pages/store/LandingPage';

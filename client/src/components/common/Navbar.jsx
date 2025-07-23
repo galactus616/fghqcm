@@ -105,59 +105,51 @@ export default function Navbar() {
     setIsCartOpen(!isCartOpen);
   };
 
-  // const handleDetectLocation = async () => {
-  //   setLocationLoading(true);
-  //   setLocationError("");
-  //   if (!navigator.geolocation) {
-  //     setLocationError("Geolocation is not supported by your browser.");
-  //     setLocationLoading(false);
-  //     return;
-  //   }
-  //   navigator.geolocation.getCurrentPosition(
-  //     async (position) => {
-  //       const { latitude, longitude } = position.coords;
-  //       try {
-  //         // Use OpenStreetMap Nominatim API for reverse geocoding
-  //         const response = await fetch(
-  //           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-  //         );
-  //         if (!response.ok) throw new Error("Failed to fetch address");
-  //         const data = await response.json();
-  //         // Try to get a nice display name (city, suburb, etc.)
-  //         let address = data.display_name;
-  //         if (data.address) {
-  //           address =
-  //             data.address.suburb ||
-  //             data.address.neighbourhood ||
-  //             data.address.city ||
-  //             data.address.town ||
-  //             data.address.village ||
-  //             data.address.state ||
-  //             data.display_name;
-  //           if (data.address.city && data.address.state) {
-  //             address = `${data.address.city}, ${data.address.state}`;
-  //           } else if (data.address.town && data.address.state) {
-  //             address = `${data.address.town}, ${data.address.state}`;
-  //           } else if (data.address.village && data.address.state) {
-  //             address = `${data.address.village}, ${data.address.state}`;
-  //           }
-  //         }
-  //         setCurrentLocation(address);
-  //         setIsLocationModalOpen(false);
-  //       } catch (err) {
-  //         setLocationError("Failed to detect address. Please try again.");
-  //       } finally {
-  //         setLocationLoading(false);
-  //       }
-  //     },
-  //     (error) => {
-  //       setLocationError(
-  //         error.message || "Failed to get your location. Please allow location access."
-  //       );
-  //       setLocationLoading(false);
-  //     }
-  //   );
-  // };
+  const handleDetectLocation = async () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/location?lat=${latitude}&lon=${longitude}`
+          );
+          if (!response.ok) throw new Error("Failed to fetch address");
+          const data = await response.json();
+          let address = data.display_name;
+          if (data.address) {
+            address =
+              data.address.suburb ||
+              data.address.neighbourhood ||
+              data.address.city ||
+              data.address.town ||
+              data.address.village ||
+              data.address.state ||
+              data.display_name;
+            if (data.address.city && data.address.state) {
+              address = `${data.address.city}, ${data.address.state}`;
+            } else if (data.address.town && data.address.state) {
+              address = `${data.address.town}, ${data.address.state}`;
+            } else if (data.address.village && data.address.state) {
+              address = `${data.address.village}, ${data.address.state}`;
+            }
+          }
+          setCurrentLocation(address);
+          toast.success("Location detected successfully!");
+        } catch (err) {
+          toast.error("Failed to detect address. Please try again.");
+        }
+      },
+      (error) => {
+        toast.error(
+          error.message || "Failed to get your location. Please allow location access."
+        );
+      }
+    );
+  };
 
   // const handleSaveAddress = (newAddress) => {
   //   setCurrentLocation(newAddress);
@@ -285,7 +277,7 @@ export default function Navbar() {
             <span className="font-medium text-green-700">{t("location")}</span>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-1 text-green-600" />
-              <span className="font-medium text-gray-800">
+              <span className="font-medium text-gray-800 truncate max-w-[140px]" title={currentLocation}>
                 {currentLocation}
               </span>
               <ChevronDown className="w-4 h-4 ml-1 text-green-600" />
@@ -299,7 +291,9 @@ export default function Navbar() {
           >
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-1 text-green-600" />
-              <span className="text-gray-800">{currentLocation}</span>
+              <span className="text-gray-800 truncate max-w-[140px]" title={currentLocation}>
+                {currentLocation}
+              </span>
               <ChevronDown className="w-4 h-4 ml-1 text-green-600" />
             </div>
           </div>

@@ -14,8 +14,8 @@ exports.getAddresses = async (req, res, next) => {
 // Add a new address
 exports.addAddress = async (req, res, next) => {
   try {
-    const { label = 'Home', address, isDefault = false } = req.body;
-    if (!address) return res.status(400).json({ message: 'Address is required' });
+    const { label = 'Home', flat = '', floor = '', area = '', landmark = '', isDefault = false } = req.body;
+    if (!flat && !area) return res.status(400).json({ message: 'Flat and area are required' });
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'User not found' });
     // Limit max addresses (e.g., 10)
@@ -23,7 +23,7 @@ exports.addAddress = async (req, res, next) => {
     if (isDefault) {
       user.addresses.forEach(addr => addr.isDefault = false);
     }
-    user.addresses.push({ label, address, isDefault });
+    user.addresses.push({ label, flat, floor, area, landmark, isDefault });
     await user.save();
     res.status(201).json(user.addresses);
   } catch (err) {
@@ -35,13 +35,16 @@ exports.addAddress = async (req, res, next) => {
 exports.updateAddress = async (req, res, next) => {
   try {
     const { addressId } = req.params;
-    const { label, address, isDefault } = req.body;
+    const { label, flat, floor, area, landmark, isDefault } = req.body;
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'User not found' });
     const addr = user.addresses.id(addressId);
     if (!addr) return res.status(404).json({ message: 'Address not found' });
     if (label !== undefined) addr.label = label;
-    if (address !== undefined) addr.address = address;
+    if (flat !== undefined) addr.flat = flat;
+    if (floor !== undefined) addr.floor = floor;
+    if (area !== undefined) addr.area = area;
+    if (landmark !== undefined) addr.landmark = landmark;
     if (isDefault !== undefined && isDefault) {
       user.addresses.forEach(a => a.isDefault = false);
       addr.isDefault = true;

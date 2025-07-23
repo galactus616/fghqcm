@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin, X } from "lucide-react";
 import useStore from "../../store/useStore";
+import { getAddresses } from '../../api/user/user';
 
 export default function LocationModal() {
   const {
@@ -8,9 +9,22 @@ export default function LocationModal() {
     setLocationModalOpen,
     currentLocation,
     setCurrentLocation,
+    selectedAddressId,
+    setSelectedAddressId,
   } = useStore();
   const [locationLoading, setLocationLoading] = React.useState(false);
   const [locationError, setLocationError] = React.useState("");
+  const [addresses, setAddresses] = React.useState([]);
+  const [addressesLoading, setAddressesLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!isLocationModalOpen) return;
+    setAddressesLoading(true);
+    getAddresses().then(data => {
+      setAddresses(data);
+      setAddressesLoading(false);
+    }).catch(() => setAddressesLoading(false));
+  }, [isLocationModalOpen]);
 
   const handleDetectLocation = async () => {
     setLocationLoading(true);
@@ -91,6 +105,38 @@ export default function LocationModal() {
           </div>
 
           <div className="space-y-4">
+            {/* Address List */}
+            {addressesLoading ? (
+              <div className="text-center text-gray-400">Loading addresses...</div>
+            ) : addresses.length > 0 && (
+              <div className="flex flex-col gap-2 mb-4">
+                {addresses.map(addr => (
+                  <button
+                    key={addr._id}
+                    className={`flex flex-col items-start text-left p-3 rounded-lg border transition-all duration-150 w-full
+                      ${selectedAddressId === addr._id ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white'}
+                      hover:border-green-400`}
+                    onClick={() => {
+                      setSelectedAddressId(addr._id);
+                      setCurrentLocation([
+                        addr.flat,
+                        addr.floor,
+                        addr.area,
+                        addr.landmark
+                      ].filter(Boolean).join(', '));
+                      setLocationModalOpen(false);
+                    }}
+                  >
+                    <span className="font-semibold text-gray-800 flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-green-600" /> {addr.label}
+                    </span>
+                    <span className="text-xs text-gray-500 mt-0.5">
+                      { [addr.flat, addr.floor, addr.area, addr.landmark].filter(Boolean).join(', ') }
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
             <button
               onClick={handleDetectLocation}
               className={`w-full flex items-center justify-center bg-green-500 text-white py-3 px-4 rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${locationLoading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-green-600'}`}

@@ -19,7 +19,10 @@ const UserSchema = new mongoose.Schema({
   addresses: [
     {
       label: { type: String, default: "Home" },
-      address: { type: String, required: true },
+      flat: { type: String },
+      floor: { type: String },
+      area: { type: String },
+      landmark: { type: String },
       isDefault: { type: Boolean, default: false },
     }
   ],
