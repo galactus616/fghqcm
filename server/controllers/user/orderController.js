@@ -26,18 +26,18 @@ const placeOrder = async (req, res, next) => {
       return next(error);
     }
 
-    const populatedItems = userCart.items.map((item) => ({
-      product: {
-        id: item.productId._id.toString(),
+    const populatedItems = userCart.items.map((item) => {
+      return {
+        productId: item.productId._id.toString(),
         name: item.productId.name,
         price: item.productId.price,
         imageUrl: item.productId.imageUrl,
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      };
+    });
 
     const total = populatedItems.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
+      (sum, item) => sum + item.price * item.quantity,
       0
     );
 
@@ -68,10 +68,10 @@ const placeOrder = async (req, res, next) => {
         phone: newOrder.phone,
         items: newOrder.items.map((item) => ({
           product: {
-            id: item.product.id,
-            name: item.product.name,
-            price: item.product.price,
-            imageUrl: item.product.imageUrl,
+            id: item.productId,
+            name: item.name,
+            price: item.price,
+            imageUrl: item.imageUrl,
           },
           quantity: item.quantity,
         })),
@@ -96,10 +96,10 @@ const getOrders = async (req, res, next) => {
       phone: order.phone,
       items: order.items.map((item) => ({
         product: {
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          imageUrl: item.product.imageUrl,
+          id: item.productId,
+          name: item.name,
+          price: item.price,
+          imageUrl: item.imageUrl,
         },
         quantity: item.quantity,
       })),
