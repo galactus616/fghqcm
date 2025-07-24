@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getCurrencySymbol } from "../../utils/currencyUtils";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProductById, getProductsByCategory } from "../../api/user/products";
 import { Plus, Minus, ArrowLeft } from "lucide-react";
@@ -220,11 +221,11 @@ const ProductDetailsPage = () => {
                 <div className="flex items-center justify-between mb-6 mt-2">
                   <div className="flex flex-col">
                     <span className="text-2xl md:text-3xl font-bold text-green-700">
-                      ₹{variant.discountedPrice ?? variant.price}
+                      {getCurrencySymbol()}{variant.discountedPrice ?? variant.price}
                     </span>
                     {variant.discountedPrice && (
                       <span className="text-md text-gray-400 line-through ml-2">
-                        {t("mrp")} ₹{variant.price}
+                        {t("mrp")} {getCurrencySymbol()}{variant.price}
                       </span>
                     )}
                     <div className="text-xs text-gray-500 mt-1">

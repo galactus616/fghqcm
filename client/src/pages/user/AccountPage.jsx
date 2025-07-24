@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useStore from "../../store/useStore";
+import { getCurrencySymbol } from "../../utils/currencyUtils";
 import {
   getAddresses,
   addAddress,
@@ -405,7 +406,7 @@ export default function AccountPage() {
                       <span className="text-xs text-gray-500">Status:</span>
                       <span className={`font-semibold px-2 py-1 rounded text-xs ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.status}</span>
                     </div>
-                    <div className="font-bold text-green-800 text-base">₹{order.total?.toFixed(2)}</div>
+                    <div className="font-bold text-green-800 text-base">{getCurrencySymbol()}{order.total?.toFixed(2)}</div>
                   </div>
                 ))}
               </div>
@@ -578,4 +579,4 @@ export default function AccountPage() {
       </main>
     </div>
   );
-} 
+}

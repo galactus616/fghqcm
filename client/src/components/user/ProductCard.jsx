@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import useStore from '../../store/useStore';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 
 const ProductCard = ({ product }) => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
@@ -11,6 +12,11 @@ const ProductCard = ({ product }) => {
   const variant = product.variants?.[selectedVariantIdx] || product.variants?.[0] || {};
   const { addToCart, hydratedItems: cartItems, updateCartItem, removeFromCart } = useStore();
   const { t } = useTranslation();
+  
+  // Get currency symbol based on current language
+  const getCurrencySymbol = () => {
+    return i18n.language === 'bn' ? '৳' : '₹';
+  };
 
   const handleAddToCart = async () => {
     try {
@@ -50,7 +56,7 @@ const ProductCard = ({ product }) => {
     }
   };
   return (
-    <div className="border-2 border-red-600 rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
+    <div className=" rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
       <div className="relative">
       
       {/* Badges */}
@@ -122,11 +128,11 @@ const ProductCard = ({ product }) => {
           <div className="flex flex-col">
             <div className="flex items-center flex-col-reverse">
               <span className="text-[14px] sm:text-[16px] md:text-[18px] font-bold text-green-700">
-                ₹{variant.discountedPrice ?? variant.price}
+                {getCurrencySymbol()}{variant.discountedPrice ?? variant.price}
               </span>
               {variant.discountedPrice && (
                 <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                  ₹{variant.price}
+                  {getCurrencySymbol()}{variant.price}
                 </span>
               )}
             </div>
