@@ -7,11 +7,11 @@ const ProductSection = ({ title, products, isLoggedIn, categoryId }) => {
   return (
     <section className="my-6 px-4">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl md:text-2xl font-bold text-green-800">
+        <h2 className="text-xl md:text-2xl font-bold text-[#0a614d]">
           {title}
         </h2>
         <button
-          className="text-green-700 hover:text-green-900 font-semibold text-sm md:text-base px-3 py-1 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 transition"
+          className="text-[#0a614d] cursor-pointer hover:text-[#0a614d]/80 font-semibold text-sm md:text-base px-3 py-1 rounded-lg border border-[#0a614d]/30 bg-[#0a614d]/5 hover:bg-[#0a614d]/10 transition"
           onClick={() => navigate(`/category/${categoryId}`)}
         >
           See All

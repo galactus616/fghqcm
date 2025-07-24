@@ -69,17 +69,17 @@ const dummyData = async () => {
           "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
       },
       {
-        name: "Stationry",
+        name: "Stationery",
         imageUrl:
           "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
       },
       {
-        name: "Tea Coffe",
+        name: "Tea & Coffee",
         imageUrl:
           "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
       },
       {
-        name: "Biscuite",
+        name: "Biscuits",
         imageUrl:
           "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_42_sandwich-cookie-package-design-isolated-orange-background-3d-illustration_317442-125-removebg-preview_kpzwvu.png",
       },
@@ -127,7 +127,7 @@ const dummyData = async () => {
             variants: ["6 pcs", "12 pcs"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300603/download_18_edvapu.jpg"
         }, {
-            name: "Pinapple",
+            name: "Pineapple",
             basePrice: 150,
             variants: ["1kg"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300605/Pineapple_Fruit_White_Transparent_Pineapple_Fruit_Pineapple_Pineapple_Clipart_Pineapple_Fruit_PNG_Image_For_Free_Download_a503gs.jpg"
@@ -163,7 +163,7 @@ const dummyData = async () => {
             variants: ["250g", "500g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300371/download_15_bimwog.jpg"
         }, {
-            name: "Brocoli",
+            name: "Broccoli",
             basePrice: 35,
             variants: ["1kg", "2kg"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300371/20_Free_download_Broccoli_vegetables_isolated_on_transparent_background__Free_for_use_download__nuabem.jpg"
@@ -189,7 +189,7 @@ const dummyData = async () => {
             variants: ["50g", "100g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300801/KURKURE_bgevbb.jpg"
         }, {
-            name: "Vujia",
+            name: "Bhujia",
             basePrice: 30,
             variants: ["50g", "100g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300798/ALOO_BHUJIA_-_HALDIRAMS_SNACKS_ITEMS_ml4fpi.jpg"
@@ -213,7 +213,7 @@ const dummyData = async () => {
             name: "Sprite",
             basePrice: 80,
             variants: ["500ml", "1L"],
-            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752299820/Sprite_Bottle_Png_Logo_-Sprite_Png_Transparent_PNG-368x1242-_Free_Download_on_NicePNG_jua5ev.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1753270446/spriter_ixhhd1.jpg"
         }, {
             name: "Cola",
             basePrice: 40,
@@ -306,19 +306,19 @@ const dummyData = async () => {
             name: "Chicken Leg",
             basePrice: 180,
             variants: ["500g", "1kg"],
-            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752301438/Delhaize__Pilons_Poulet_1_ kg__Delhaize_dp2ykr.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1753270638/chicken_leg_pyxero.jpg"
         }, {
             name: "Mutton liver",
             basePrice: 350,
             variants: ["500g", "1kg"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752301439/Transparent_HD_Raw_Beef_Liver_lhma9i.jpg"
         }, {
-            name: "Beaf",
+            name: "Beef",
             basePrice: 220,
             variants: ["500g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752301439/download_22_ywjqdh.jpg"
         }, {
-            name: "whole chicken",
+            name: "Whole Chicken",
             basePrice: 200,
             variants: ["500g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752301438/CHICKEN_vitamin_B6_Precursor_of_serotonin_and_noradrenaline_so_it_increases_the_disposition_and_avoids_fatigue__medpvx.jpg"
@@ -339,17 +339,17 @@ const dummyData = async () => {
             variants: ["M", "L", "XL"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752298360/What_colour_pants_and_sneakers_would_you_pair_with_this__exelfe.jpg"
         }, {
-            name: "kids dress",
+            name: "Kids Dress",
             basePrice: 900,
             variants: ["30", "32", "34"],
-            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752298360/THERESA_TANA_LAWN_COTTON_a_couple_of_lovely_dresses_in_Theresa_Liberty_Florals_Summer_Button_Front_Dress_or_Dress_with_Cutout_Back_-which_one_would_you_choose_eh9i0p.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1753270729/kids_dress_xaumpc.jpg"
         }, {
             name: "Sneakers",
             basePrice: 1200,
             variants: ["7", "8", "9"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1740688354/cld-sample-5.jpg"
         }, {
-            name: "dress",
+            name: "Women's Dress",
             basePrice: 1500,
             variants: ["M", "L", "XL"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752298360/Verdusa_Women_s_Long_Sleeve_Sweetheart_Neck_Lantern_Sleeve_Ruched_Bust_Ruffle_Trim_Mini_Dress_woanwp.jpg"
@@ -395,7 +395,7 @@ const dummyData = async () => {
             variants: ["32GB", "64GB"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752575152/Tablet_Pc_4g_5g_8_Inch_Android_Wifi_Kids_Cameras_Tablet_With_Dual_Sim_Card_Education_Tablets_Pc_s3j9m7.jpg"
         }],
-        Stationry: [{
+        Stationery: [{
             name: "Notebook",
             basePrice: 40,
             variants: ["A4", "A5"],
@@ -419,20 +419,20 @@ const dummyData = async () => {
             name: "Eraser",
             basePrice: 10,
             variants: ["Small", "Large"],
-            img: "hhttps://res.cloudinary.com/deepmitra/image/upload/v1752575620/Apsara_Non_Dust_Eraser_Colourful_ztksef.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1753270923/eraser_lfxkv9.jpg"
         }, {
             name: "Sharpener",
             basePrice: 15,
             variants: ["Single", "Double"],
-            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752575462/%D9%85%D8%AF%D8%A7%D8%AF_%D8%AA%D8%B1%D8%A7%D8%B4_%DA%A9%D9%86%DA%A9%D9%88_%D9%85%D8%AF%D9%84_REGULAR_01_%D8%A8%D8%B3%D8%AA%D9%87_112_%D8%B9%D8%AF%D8%AF%DB%8C_https__wks_ird9_85_d8__gtd9t1.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752575462/%D9%85%D8%AF%D8%A7%D8%AF_%D8%AA%D8%B1%D8%A7%D8%B4_%DA%A9%D9%86%DA%A9%D9%88_%D9%85%D8%AF%D8%A7%D8%AF_%D8%AA%D8%B1%D8%A7%D8%B4_%DA%A9%D9%86%DA%A9%D9%88_REGULAR_01_%D8%A8%D8%B3%D8%AA%D9%87_112_%D8%B9%D8%AF%D8%AF%DB%8C_https__wks_ird9_85_d8__gtd9t1.jpg"
         }],
-        "Tea Coffe": [{
+        "Tea & Coffee": [{
             name: "Green Tea",
             basePrice: 120,
             variants: ["25 bags", "50 bags"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752299020/download_9_cpclo0.jpg"
         }, {
-            name: "MilkTea",
+            name: "Milk Tea",
             basePrice: 100,
             variants: ["25 bags", "50 bags"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752299020/Premium_Tea_Pouch_Packaging___Packaging_Design_Agency_in_Delhi_graphicdesigners_biyhhz.jpg"
@@ -440,7 +440,7 @@ const dummyData = async () => {
             name: "Coffee Beans",
             basePrice: 300,
             variants: ["250g", "500g"],
-            img: "https://res.cloudinary.com/deepmitra/image/upload/v1752299019/Design_a_eye-catching_pkg_for_specialty_coffee_espresso__Product_packaging_contest_vgfmgn.jpg"
+            img: "https://res.cloudinary.com/deepmitra/image/upload/v1753271435/coffe_beans_x0nxld.jpg"
         }, {
             name: "Instant Coffee",
             basePrice: 150,
@@ -457,7 +457,7 @@ const dummyData = async () => {
             variants: ["100g", "200g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752575973/Starbucks_DoubleShot_Espresso_Cream_Light_Iced_Coffee_Multipack_Cans_4_pk___6_5_fl_oz_fob5wd.jpg"
         }],
-        Biscuite: [{
+        Biscuits: [{
             name: "Marie Biscuits",
             basePrice: 30,
             variants: ["100g", "200g"],
@@ -468,7 +468,7 @@ const dummyData = async () => {
             variants: ["100g", "200g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300980/Arnotts_Tim_Tam_Dark_Chocolate_nbxt7d.jpg"
         }, {
-            name: "Chocopie Biscuits",
+            name: "Choco Pie Biscuits",
             basePrice: 40,
             variants: ["100g", "200g"],
             img: "https://res.cloudinary.com/deepmitra/image/upload/v1752300982/download_20_uwwtgv.jpg"

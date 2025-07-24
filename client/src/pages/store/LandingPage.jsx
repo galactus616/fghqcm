@@ -28,7 +28,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="w-full bg-white shadow-md py-6 px-10 flex items-center justify-between z-10 border-b border-green-100">
         <div className="flex items-center gap-4">
-          <img src="/qbd.png" alt="QBD Logo" className="h-14 w-14 object-contain rounded-lg bg-green-50 p-2 shadow" />
+          <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain rounded-lg bg-green-50 p-2 shadow" />
           <div className="font-extrabold text-2xl text-green-800 tracking-tight">store hub</div>
         </div>
         <div className="hidden md:block text-green-400 text-base font-medium italic tracking-wide">Empowering local stores across Bangladesh</div>
@@ -56,7 +56,7 @@ const LandingPage = () => {
               Join Quick Bangladesh to reach more customers, manage your store with ease, and enjoy seamless onboarding. Fast, secure, and built for modern sellers.
             </p>
             <button
-              className="bg-gradient-to-r from-green-600 to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-xl shadow-lg border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2 transition-colors"
+              className="bg-gradient-to-r cursor-pointer from-green-600 to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-xl shadow-lg border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2 transition-colors"
               onClick={() => setShowAuthModal(true)}
             >
               Become a Store

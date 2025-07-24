@@ -23,9 +23,12 @@ import toast from "react-hot-toast";
 import useStore from "../../store/useStore";
 import LocationModal from "./LocationModal";
 import { useTranslation } from "react-i18next";
+import { useCurrencySymbol } from "../../utils/currencyUtils";
 
 // Navbar component
 export default function Navbar() {
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const navigate = useNavigate();
   // Zustand store hooks
   const {
@@ -105,59 +108,51 @@ export default function Navbar() {
     setIsCartOpen(!isCartOpen);
   };
 
-  // const handleDetectLocation = async () => {
-  //   setLocationLoading(true);
-  //   setLocationError("");
-  //   if (!navigator.geolocation) {
-  //     setLocationError("Geolocation is not supported by your browser.");
-  //     setLocationLoading(false);
-  //     return;
-  //   }
-  //   navigator.geolocation.getCurrentPosition(
-  //     async (position) => {
-  //       const { latitude, longitude } = position.coords;
-  //       try {
-  //         // Use OpenStreetMap Nominatim API for reverse geocoding
-  //         const response = await fetch(
-  //           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-  //         );
-  //         if (!response.ok) throw new Error("Failed to fetch address");
-  //         const data = await response.json();
-  //         // Try to get a nice display name (city, suburb, etc.)
-  //         let address = data.display_name;
-  //         if (data.address) {
-  //           address =
-  //             data.address.suburb ||
-  //             data.address.neighbourhood ||
-  //             data.address.city ||
-  //             data.address.town ||
-  //             data.address.village ||
-  //             data.address.state ||
-  //             data.display_name;
-  //           if (data.address.city && data.address.state) {
-  //             address = `${data.address.city}, ${data.address.state}`;
-  //           } else if (data.address.town && data.address.state) {
-  //             address = `${data.address.town}, ${data.address.state}`;
-  //           } else if (data.address.village && data.address.state) {
-  //             address = `${data.address.village}, ${data.address.state}`;
-  //           }
-  //         }
-  //         setCurrentLocation(address);
-  //         setIsLocationModalOpen(false);
-  //       } catch (err) {
-  //         setLocationError("Failed to detect address. Please try again.");
-  //       } finally {
-  //         setLocationLoading(false);
-  //       }
-  //     },
-  //     (error) => {
-  //       setLocationError(
-  //         error.message || "Failed to get your location. Please allow location access."
-  //       );
-  //       setLocationLoading(false);
-  //     }
-  //   );
-  // };
+  const handleDetectLocation = async () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/location?lat=${latitude}&lon=${longitude}`
+          );
+          if (!response.ok) throw new Error("Failed to fetch address");
+          const data = await response.json();
+          let address = data.display_name;
+          if (data.address) {
+            address =
+              data.address.suburb ||
+              data.address.neighbourhood ||
+              data.address.city ||
+              data.address.town ||
+              data.address.village ||
+              data.address.state ||
+              data.display_name;
+            if (data.address.city && data.address.state) {
+              address = `${data.address.city}, ${data.address.state}`;
+            } else if (data.address.town && data.address.state) {
+              address = `${data.address.town}, ${data.address.state}`;
+            } else if (data.address.village && data.address.state) {
+              address = `${data.address.village}, ${data.address.state}`;
+            }
+          }
+          setCurrentLocation(address);
+          toast.success("Location detected successfully!");
+        } catch (err) {
+          toast.error("Failed to detect address. Please try again.");
+        }
+      },
+      (error) => {
+        toast.error(
+          error.message || "Failed to get your location. Please allow location access."
+        );
+      }
+    );
+  };
 
   // const handleSaveAddress = (newAddress) => {
   //   setCurrentLocation(newAddress);
@@ -228,12 +223,12 @@ export default function Navbar() {
   };
   return (
     <div className="font-sans">
-      <nav className="bg-white border-b border-gray-100 py-4 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
+      <nav className="bg-white border-b border-[#0a614d]/30 py-2 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
         <div className="w-full flex flex-wrap items-center justify-between md:flex-nowrap">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 order-1 mr-4">
             <Link to="/" className="flex items-center space-x-3 group">
-              <img src="/qbd.png" alt="QBD Logo" className="h-[52px] object-contain" draggable={false} />
+              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain" draggable={false} />
             </Link>
           </div>
 
@@ -242,7 +237,7 @@ export default function Navbar() {
             {/* Language Toggle for Mobile */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="rounded  text-green-600 text-sm px-3 py-2 focus:outline-none bg-green-50 focus:ring-2 focus:ring-green-500"
+              className="rounded cursor-pointer text-[#0a614d] text-sm px-3 py-2 focus:outline-none bg-[#0a614d]/10 focus:ring-2 focus:ring-[#0a614d]"
               aria-label="Toggle language"
             >
               {language === "en" ? "En" : "Bn"}
@@ -257,7 +252,7 @@ export default function Navbar() {
                   setIsAuthModalOpen(true);
                 }
               }}
-              className="cursor-pointer p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              className="cursor-pointer p-2 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
               aria-label="Toggle profile menu"
             >
               <User className="w-6 h-6" />
@@ -265,7 +260,7 @@ export default function Navbar() {
 
             <button
               onClick={toggleCart}
-              className="relative cursor-pointer p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              className="relative cursor-pointer p-2 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
               aria-label="Open cart"
             >
               <ShoppingCart className="w-6 h-6" />
@@ -280,15 +275,16 @@ export default function Navbar() {
           {/* Desktop Location */}
           <div
             className="hidden md:flex flex-col text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 ml-6 order-2 min-w-[200px] p-2 rounded-lg"
+            style={{ border: '1px solid #0a614d1a' }}
             onClick={openLocationModal}
           >
-            <span className="font-medium text-green-700">{t("location")}</span>
+            <span className="font-medium text-[#0a614d]">{t("location")}</span>
             <div className="flex items-center">
-              <MapPin className="w-4 h-4 mr-1 text-green-600" />
-              <span className="font-medium text-gray-800">
+              <MapPin className="w-4 h-4 mr-1 text-[#0a614d]" />
+              <span className="font-medium text-gray-800 truncate max-w-[140px]" title={currentLocation}>
                 {currentLocation}
               </span>
-              <ChevronDown className="w-4 h-4 ml-1 text-green-600" />
+              <ChevronDown className="w-4 h-4 ml-1 text-[#0a614d]" />
             </div>
           </div>
 
@@ -299,14 +295,16 @@ export default function Navbar() {
           >
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-1 text-green-600" />
-              <span className="text-gray-800">{currentLocation}</span>
+              <span className="text-gray-800 truncate max-w-[140px]" title={currentLocation}>
+                {currentLocation}
+              </span>
               <ChevronDown className="w-4 h-4 ml-1 text-green-600" />
             </div>
           </div>
 
           {/* Search Bar */}
           <div className="flex-1 mx-6 w-full md:w-auto mt-3 md:mt-0 order-4 md:order-3 max-w-2xl">
-            <div className="relative flex items-center bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-200">
+            <div className="relative flex items-center bg-gray-50 rounded-lg overflow-hidden border border-[#0a614d]/30 hover:border-[#0a614d] transition-colors duration-200">
               <Search className="absolute left-3 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -326,7 +324,7 @@ export default function Navbar() {
             {/* Language Toggle for Desktop */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="ml-2 rounded text-green-600 text-sm px-4  p-3 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="ml-2 cursor-pointer rounded text-[#0a614d] text-sm px-4  p-3 bg-[#0a614d]/10 focus:outline-none focus:ring-2 focus:ring-[#0a614d]"
               aria-label="Toggle language"
             >
               {language === "en" ? "En" : "Bn"}
@@ -336,11 +334,11 @@ export default function Navbar() {
               {isLoggedIn && user ? (
                 <button
                   onClick={toggleProfileDropdown}
-                  className={`flex items-center cursor-pointer p-2 rounded-full border border-gray-200 hover:border-green-300 transition-all duration-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
+                  className={`flex items-center cursor-pointer p-2 rounded-full border border-[#0a614d]/30 hover:border-[#0a614d] transition-all duration-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0a614d] ${isProfileDropdownOpen ? 'ring-2 ring-[#0a614d]/80 bg-[#0a614d]/10 border-[#0a614d]' : ''}`}
                   style={{ minHeight: 40, minWidth: 40 }}
                 >
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-base border border-green-200 shadow-sm">
-                    {getUserInitial(user) || <User className="w-4 h-4 text-green-400" />}
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#0a614d]/10 text-[#0a614d] font-semibold text-base border border-[#0a614d]/30 shadow-sm">
+                    {getUserInitial(user) || <User className="w-4 h-4 text-[#0a614d]/50" />}
                   </span>
                   <span className="ml-2 font-medium text-gray-900 truncate max-w-[70px] text-sm">{getUserShortName(user)}</span>
                   <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
@@ -348,16 +346,16 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-2 rounded-full hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 border border-gray-200 hover:border-green-200 bg-white"
+                  className="flex items-center text-gray-700 cursor-pointer hover:bg-[#0a614d]/10 transition-colors duration-200 p-2 rounded-full hover:text-[#0a614d] focus:outline-none focus:ring-2 focus:ring-[#0a614d] border border-[#0a614d]/30 hover:border-[#0a614d] bg-white"
                   style={{ minHeight: 40, minWidth: 40 }}
                 >
-                  <User className="w-5 h-5 mr-2 text-green-600" />
+                  <User className="w-5 h-5 mr-2 text-[#0a614d]" />
                   <span className="font-medium">Login</span>
                 </button>
               )}
               {isLoggedIn && isProfileDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
+                  className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-[#0a614d]/30 border border-[#0a614d]/30"
                   style={{ pointerEvents: 'auto', zIndex: 9999 }}
                 >
                   {minimalProfileMenuItems.map((item, index) => {
@@ -370,7 +368,7 @@ export default function Navbar() {
                           e.stopPropagation();
                           item.action();
                         }}
-                        className={`flex items-center w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                        className={`flex items-center cursor-pointer w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           item.isDestructive
                             ? "text-red-600 hover:bg-red-50"
                             : "text-gray-700 hover:bg-gray-50"
@@ -389,7 +387,7 @@ export default function Navbar() {
             {/* Desktop Cart Button */}
             <button
               onClick={toggleCart}
-              className="relative hidden md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[100px] justify-center"
+              className="relative hidden cursor-pointer md:flex items-center bg-[#006a4e] text-white py-3 px-6 rounded-lg shadow-sm hover:bg-[#0a614d]/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#0a614d] focus:ring-offset-2 order-5 min-w-[100px] justify-center"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               <span className="font-medium">{t("my_cart")}</span>
@@ -418,7 +416,7 @@ export default function Navbar() {
                       e.stopPropagation();
                       item.action();
                     }}
-                    className={`block w-full text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                    className={`block w-full cursor-pointer text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       item.isDestructive
                         ? "text-red-600 hover:bg-red-50"
                         : "text-gray-700 hover:bg-gray-100"
@@ -462,7 +460,7 @@ export default function Navbar() {
               <h2 className="text-xl font-semibold text-gray-800">{t("my_cart")}</h2>
               <button
                 onClick={toggleCart}
-                className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
+                className="text-gray-500 cursor-pointer hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
                 aria-label="Close cart"
               >
                 <X className="w-6 h-6" />
@@ -482,7 +480,7 @@ export default function Navbar() {
                 <>
                   <div className="bg-green-50 bg-opacity-80 text-green-700 font-medium p-3 rounded-lg flex justify-between items-center text-sm">
                     <span>{t("your_total_savings") || "Your total savings"}</span>
-                    <span>₹{cartTotals.totalSavings.toFixed(2)}</span>
+                    <span>{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
                   </div>
 
                   <div className="flex items-center bg-blue-50 bg-opacity-80 text-blue-700 p-3 rounded-lg text-sm">
@@ -509,16 +507,16 @@ export default function Navbar() {
                             {item.name || 'Unavailable'}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            ₹{(item.price ?? 0).toFixed(2)}{' '}
+                            {currencySymbol}{(item.price ?? 0).toFixed(2)}{' '}
                             <span className="line-through text-gray-400">
-                              ₹{(item.originalPrice ?? 0).toFixed(2)}
+                              {currencySymbol}{(item.originalPrice ?? 0).toFixed(2)}
                             </span>
                           </p>
                         </div>
                         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
-                            className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+                            className="p-2 bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer duration-200"
                             aria-label={`Decrease quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Minus className="w-4 h-4 text-gray-700" />
@@ -528,7 +526,7 @@ export default function Navbar() {
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
-                            className="p-2 bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
+                            className="p-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white transition-colors duration-200"
                             aria-label={`Increase quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Plus className="w-4 h-4" />
@@ -543,12 +541,12 @@ export default function Navbar() {
                     <div className="space-y-2 text-sm text-gray-700">
                       <div className="flex justify-between">
                         <span>{t("items_total")}</span>
-                        <span>₹{cartTotals.itemsTotal.toFixed(2)}</span>
+                        <span>{currencySymbol}{cartTotals.itemsTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t("saved")}</span>
                         <span className="text-green-600">
-                          ₹{cartTotals.totalSavings.toFixed(2)}
+                          {currencySymbol}{cartTotals.totalSavings.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -558,13 +556,13 @@ export default function Navbar() {
                       {cartItems.length > 0 && (
                         <div className="flex justify-between">
                           <span>{t("handling_charge")}</span>
-                          <span>₹{cartTotals.handlingCharge.toFixed(2)}</span>
+                          <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
                         </div>
                       )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
                         <span>{t("grand_total")}</span>
                         <span>
-                          ₹
+                          {currencySymbol}
                           {cartItems.length > 0
                             ? cartTotals.grandTotal.toFixed(2)
                             : "0.00"}
@@ -585,12 +583,12 @@ export default function Navbar() {
                       {[20, 30, 50].map((amount) => (
                         <button
                           key={amount}
-                          className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                          className="flex-1  min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                         >
-                          ₹{amount}
+                          {currencySymbol}{amount}
                         </button>
                       ))}
-                      <button className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                      <button className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer duration-200">
                         Custom
                       </button>
                     </div>
@@ -612,7 +610,7 @@ export default function Navbar() {
 
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 left-0 right-0 shadow-lg">
               <button
-                className="w-full bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-green-500 text-white py-3 px-4 cursor-pointer rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={async () => {
                   if (!isLoggedIn) {
                     setAuthMessage("You need to login to proceed to checkout.");
@@ -626,7 +624,7 @@ export default function Navbar() {
                 disabled={cartItems.length === 0}
               >
                 <span className="font-bold text-lg">
-                  ₹{cartTotals.grandTotal.toFixed(2)}
+                  {currencySymbol}{cartTotals.grandTotal.toFixed(2)}
                 </span>
                 <span className="flex items-center">
                   Proceed{' '}

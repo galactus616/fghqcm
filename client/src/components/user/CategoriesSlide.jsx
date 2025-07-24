@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const CategoriesSlide = ({ categories }) => {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -23,14 +25,14 @@ const CategoriesSlide = ({ categories }) => {
   return (
     <section className="w-full py-6 px-2 sm:px-4 md:px-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl md:text-2xl font-bold text-green-800">
-          Shop by Category
+        <h2 className="text-xl md:text-2xl font-bold text-[#0a614d]">
+          {t('Shop by Category')}
         </h2>
         <div className="flex gap-2">
           <button
-            aria-label="Scroll left"
+            aria-label={t('Scroll left')}
             onClick={() => scroll("left")}
-            className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 shadow transition"
+            className="p-2 rounded-full bg-[#0a614d]/10 hover:bg-[#0a614d]/20 text-[#0a614d] shadow transition cursor-pointer"
           >
             <svg
               width="20"
@@ -48,9 +50,9 @@ const CategoriesSlide = ({ categories }) => {
             </svg>
           </button>
           <button
-            aria-label="Scroll right"
+            aria-label={t('Scroll right')}
             onClick={() => scroll("right")}
-            className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-700 shadow transition"
+            className="p-2 rounded-full bg-[#0a614d]/10 hover:bg-[#0a614d]/20 text-[#0a614d] shadow transition cursor-pointer"
           >
             <svg
               width="20"
@@ -77,21 +79,21 @@ const CategoriesSlide = ({ categories }) => {
         {categories.map((cat, idx) => (
           <div
             key={idx}
-            className="flex flex-col items-center min-w-[110px] bg-white rounded-xl p-4 shadow-md hover:shadow-lg border border-green-100 transition-all duration-200 cursor-pointer group"
+            className="flex flex-col items-center min-w-[110px] bg-white rounded-xl p-4 shadow-md hover:shadow-lg border border-[#0a614d]/30 transition-all duration-200 cursor-pointer group"
             onClick={() => navigate(`/category/${cat.id || cat._id || cat.name}`)}
           >
             {cat.imageUrl ? (
               <img
                 src={cat.imageUrl}
                 alt={cat.name}
-                className="w-12 h-12 object-cover rounded-full mb-2 border border-green-200 group-hover:scale-110 transition-transform duration-200"
+                className="w-12 h-12 object-cover rounded-full mb-2 border border-[#0a614d]/30 group-hover:scale-110 transition-transform duration-200"
               />
             ) : (
-              <div className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mb-2 text-2xl text-green-700">
+              <div className="w-12 h-12 flex items-center justify-center bg-[#0a614d]/10 rounded-full mb-2 text-2xl text-[#0a614d]">
                 ?
               </div>
             )}
-            <span className="text-green-800 font-semibold text-sm text-center group-hover:text-green-600 transition-colors duration-200">
+            <span className="text-[#0a614d] font-semibold text-sm text-center group-hover:text-[#0a614d]/80 transition-colors duration-200">
               {cat.name}
             </span>
           </div>

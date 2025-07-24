@@ -61,7 +61,7 @@ export default function AuthModal({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 relative">
         <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+          className="absolute cursor-pointer top-3 right-3 text-gray-400 hover:text-gray-700"
           onClick={onClose}
           aria-label="Close"
         >
@@ -88,7 +88,7 @@ export default function AuthModal({ isOpen, onClose }) {
             {error && <div className="text-red-600 text-sm">{error}</div>}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {loading ? t('sending_otp') : t('send_otp')}
@@ -115,14 +115,14 @@ export default function AuthModal({ isOpen, onClose }) {
             {error && <div className="text-red-600 text-sm">{error}</div>}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-green-600 cursor-pointer hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {loading ? t('verifying') : t('verify_login')}
             </button>
             <button
               type="button"
-              className="w-full text-green-700 hover:underline text-sm mt-2"
+              className="w-full cursor-pointer text-green-700 hover:underline text-sm mt-2"
               onClick={() => { setStep(1); setOtp(''); setError(''); }}
             >
               {t('change_mobile_number')}

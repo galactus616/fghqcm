@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import useStore from '../../store/useStore';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft } from 'lucide-react';
+import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft, X } from 'lucide-react';
 import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../../api/user/user';
 import LocationModal from '../../components/common/LocationModal';
+import AddressModal from '../../components/common/AddressModal';
 import { useTranslation } from "react-i18next";
+import { useCurrencySymbol } from "../../utils/currencyUtils";
 
 const CheckoutPage = () => {
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const navigate = useNavigate();
   const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
-  const { currentLocation, setLocationModalOpen, setCurrentLocation } = useStore();
+  const { currentLocation, setLocationModalOpen, setCurrentLocation, selectedAddressId, setSelectedAddressId } = useStore();
   const { t } = useTranslation();
   const [addresses, setAddresses] = React.useState([]);
-  const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(0);
+  const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(null);
   const [expanded, setExpanded] = React.useState(false);
   const [newAddress, setNewAddress] = React.useState('');
   const [newLabel, setNewLabel] = React.useState('Home');
@@ -23,33 +27,13 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = React.useState('cod');
   const [placingOrder, setPlacingOrder] = React.useState(false);
   const [coupon, setCoupon] = React.useState('');
-
-  // Add temporary current location address if detected
-  React.useEffect(() => {
-    if (currentLocation && currentLocation !== 'Select location') {
-      // Check if already in addresses
-      const exists = addresses.some(addr => addr.label === 'Current Location' && addr.address === currentLocation);
-      if (!exists) {
-        setAddresses(prev => [
-          { _id: 'current-location', label: 'Current Location', address: currentLocation, isTemporary: true },
-          ...prev
-        ]);
-        setSelectedAddressIdx(0);
-      }
-    }
-    // Remove temporary address if currentLocation is reset
-    if (!currentLocation || currentLocation === 'Select location') {
-      setAddresses(prev => prev.filter(addr => !addr.isTemporary));
-      if (selectedAddressIdx === 0) setSelectedAddressIdx(1); // fallback to next address
-    }
-    // eslint-disable-next-line
-  }, [currentLocation]);
-
-  // Remove temporary address on mount if not selected
-  React.useEffect(() => {
-    setAddresses(prev => prev.filter(addr => !addr.isTemporary || selectedAddressIdx === 0));
-    // eslint-disable-next-line
-  }, []);
+  // Local state for AddressModal
+  const [showAddressModal, setShowAddressModal] = React.useState(false);
+  const [pendingAddress, setPendingAddress] = React.useState(null);
+  const handleAddressModalSave = (addressObj) => {
+    setPendingAddress(addressObj);
+    handleAddAddress(addressObj);
+  };
 
   // Fetch addresses from backend
   React.useEffect(() => {
@@ -57,9 +41,8 @@ const CheckoutPage = () => {
       try {
         const data = await getAddresses();
         setAddresses(data);
-        // Select default address if exists
-        const defaultIdx = data.findIndex(a => a.isDefault);
-        setSelectedAddressIdx(defaultIdx !== -1 ? defaultIdx : 0);
+        // Do not auto-select any address
+        setSelectedAddressIdx(null);
       } catch {
         setAddresses([]);
       }
@@ -67,15 +50,32 @@ const CheckoutPage = () => {
     fetchAddresses();
   }, []);
 
-  const handleAddAddress = async () => {
-    if (!newAddress.trim()) return toast.error('Enter address');
+  // Sync local selectedAddressIdx with global selectedAddressId
+  React.useEffect(() => {
+    if (!addresses.length) return;
+    if (selectedAddressId) {
+      const idx = addresses.findIndex(a => a._id === selectedAddressId);
+      setSelectedAddressIdx(idx !== -1 ? idx : null);
+    } else {
+      setSelectedAddressIdx(null);
+    }
+  }, [selectedAddressId, addresses]);
+
+  const handleAddAddress = async (addressObj) => {
+    console.log('Address object received:', addressObj);
+    // Require at least one of flat, area, or landmark
+    if (!addressObj || (!addressObj.flat && !addressObj.area && !addressObj.landmark)) {
+      return toast.error('Enter address');
+    }
     try {
-      const data = await addAddress({ label: newLabel, address: newAddress, isDefault: addresses.length === 0 });
+      const data = await addAddress({
+        ...addressObj,
+        isDefault: false // Do not set as default
+      });
       setAddresses(data);
-      setShowNewAddress(false);
-      setNewAddress('');
-      setNewLabel('Home');
-      setSelectedAddressIdx(data.length - 1);
+      setShowAddressModal(false);
+      setPendingAddress(null);
+      setSelectedAddressIdx(null); // Do not auto-select
       toast.success('Address added');
     } catch (err) {
       toast.error('Failed to add address');
@@ -91,28 +91,6 @@ const CheckoutPage = () => {
     } catch {
       toast.error('Failed to delete address');
     }
-  };
-
-  const handleSetDefault = async (addressId) => {
-    try {
-      const data = await setDefaultAddress(addressId);
-      setAddresses(data);
-      const defaultIdx = data.findIndex(a => a.isDefault);
-      setSelectedAddressIdx(defaultIdx !== -1 ? defaultIdx : 0);
-      toast.success('Default address set');
-    } catch {
-      toast.error('Failed to set default');
-    }
-  };
-
-  const handleSaveLocation = async (loc) => {
-    // Only add to local state, do not save to backend
-    setAddresses(prev => [
-      { _id: 'current-location', label: 'Current Location', address: loc, isTemporary: true },
-      ...prev.filter(addr => !addr.isTemporary)
-    ]);
-    setSelectedAddressIdx(0);
-    toast.success('Location detected!');
   };
 
   const cartTotals = React.useMemo(() => {
@@ -156,9 +134,7 @@ const CheckoutPage = () => {
     }
     setPlacingOrder(true);
     try {
-      let addressToUse = selectedAddress;
-      // If temporary, do NOT save to backend, just use for order
-      // If not temporary, use as is
+      // Send only the address _id to the backend
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/orders`, {
         method: 'POST',
         headers: {
@@ -166,7 +142,7 @@ const CheckoutPage = () => {
         },
         credentials: 'include',
         body: JSON.stringify({
-          deliveryAddress: addressToUse,
+          deliveryAddress: selectedAddress._id, // Only send the address ID
           phone,
           paymentMethod,
         }),
@@ -199,13 +175,24 @@ const CheckoutPage = () => {
     }
   };
 
+  // Only show saved addresses
+  const displayAddresses = addresses;
+
+  // Address type icons
+  const ADDRESS_TYPE_ICONS = {
+    Home: <span role="img" aria-label="Home">🏠</span>,
+    Work: <span role="img" aria-label="Work">🏢</span>,
+    Hotel: <span role="img" aria-label="Hotel">🏨</span>,
+    Other: <span role="img" aria-label="Other">🏷️</span>,
+  };
+
   return (
-    <div className="font-sans bg-green-50 min-h-screen pb-10">
+    <div className="font-sans bg-[#0a614d]/5 min-h-screen pb-10">
       <LocationModal />
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <button
-            className="flex items-center gap-2 text-green-700 hover:underline font-medium text-base"
+            className="flex items-center cursor-pointer gap-2 text-green-700 hover:underline font-medium text-base"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -230,14 +217,21 @@ const CheckoutPage = () => {
                 <div className="space-y-4">
                   {cartItems.map(item => (
                     <div key={item.id} className="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                      <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
+                      <div className="relative">
+                        <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
+                        {item.originalPrice && item.originalPrice > item.price && (
+                          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
+                            {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF
+                          </span>
+                        )}
+                      </div>
                       <div className="flex-1 w-full">
                         <div className="font-semibold text-gray-800 text-base mb-1">{item.name}</div>
                         <div className="text-xs text-gray-500 mb-1">{item.variantLabel}</div>
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
-                            className="p-1 bg-gray-200 hover:bg-gray-300 rounded"
+                            className="p-1 bg-gray-200 cursor-pointer hover:bg-gray-300 rounded"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="w-4 h-4" />
@@ -245,7 +239,7 @@ const CheckoutPage = () => {
                           <span className="px-2 text-gray-800 font-medium">{item.quantity}</span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
-                            className="p-1 bg-green-500 hover:bg-green-600 text-white rounded"
+                            className="p-1 bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded"
                             aria-label="Increase quantity"
                           >
                             <Plus className="w-4 h-4" />
@@ -253,9 +247,9 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="font-bold text-green-700 text-lg">₹{(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="font-bold text-green-700 text-lg">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</div>
                         <button
-                          className="flex items-center gap-1 text-red-500 hover:underline text-xs"
+                          className="flex cursor-pointer items-center gap-1 text-red-500 hover:underline text-xs"
                           onClick={() => removeFromCart(item.productId, item.variantIndex)}
                         >
                           <Trash2 className="w-4 h-4" /> Remove
@@ -278,18 +272,31 @@ const CheckoutPage = () => {
                 </div>
                 <div className="bg-white border border-gray-100 rounded-xl p-4 mb-4">
                   <div className="flex flex-col gap-2">
-                    {(expanded ? addresses : addresses.slice(0, 3)).map((addr, idx) => {
+                    {(expanded ? displayAddresses : displayAddresses.slice(0, 3)).map((addr, idx) => {
                       const isSelected = selectedAddressIdx === idx;
                       return (
                         <label
                           key={addr._id}
                           className={`flex items-center gap-3 cursor-pointer rounded-lg px-3 py-2 border transition-all duration-150
-                            ${isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white'}
-                            hover:border-green-400`}
+                            ${isSelected ? 'border-green-600 bg-green-50 shadow-sm' : 'border-gray-200 bg-white'}
+                            hover:border-green-400 focus-within:ring-2 focus-within:ring-green-200`}
                           htmlFor={`address-radio-${idx}`}
                           style={{ position: 'relative', minHeight: 48 }}
+                          tabIndex={0}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              setSelectedAddressIdx(idx);
+                              setSelectedAddressId(addr._id);
+                              setCurrentLocation([
+                                addr.flat,
+                                addr.floor,
+                                addr.area,
+                                addr.landmark
+                              ].filter(Boolean).join(', '));
+                            }
+                          }}
                         >
-                          <span className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${isSelected ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'} transition-all`}>
+                          <span className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${isSelected ? 'border-green-600 bg-green-600' : 'border-gray-300 bg-white'} transition-all`}>
                             {isSelected && <span className="w-2.5 h-2.5 bg-white rounded-full block" />}
                           </span>
                           <input
@@ -297,42 +304,43 @@ const CheckoutPage = () => {
                             type="radio"
                             name="address"
                             checked={isSelected}
-                            onChange={() => setSelectedAddressIdx(idx)}
+                            onChange={() => {
+                              setSelectedAddressIdx(idx);
+                              setSelectedAddressId(addr._id);
+                              setCurrentLocation([
+                                addr.flat,
+                                addr.floor,
+                                addr.area,
+                                addr.landmark
+                              ].filter(Boolean).join(', '));
+                            }}
                             className="hidden"
                           />
                           <div className="flex flex-col flex-1 min-w-0">
                             <span className="flex items-center gap-2 text-gray-800 text-sm font-medium">
-                              {addr.label === 'Current Location' ? <MapPin className="w-4 h-4 text-blue-500" /> : <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" /></svg>}
-                              <span className={`font-semibold ${addr.label === 'Current Location' ? 'text-blue-600' : 'text-gray-700'}`}>{addr.label}</span>
+                              {ADDRESS_TYPE_ICONS[addr.label] || ADDRESS_TYPE_ICONS.Other}
+                              <span className="font-semibold text-gray-700">{addr.label}</span>
                             </span>
-                            <span className="block text-xs text-gray-500 mt-0.5 truncate max-w-xs">{addr.address}</span>
-                            <div className="flex items-center gap-2 mt-1 text-xs">
-                              {addr.isDefault && !addr.isTemporary ? (
-                                <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded">Default</span>
-                              ) : !addr.isTemporary ? (
-                                <button
-                                  type="button"
-                                  className="text-green-600 hover:underline bg-transparent border-none p-0"
-                                  onClick={e => { e.stopPropagation(); handleSetDefault(addr._id); }}
-                                >
-                                  Set Default
-                                </button>
-                              ) : null}
-                              <button
-                                type="button"
-                                className="text-red-400 hover:underline bg-transparent border-none p-0"
-                                onClick={e => { e.stopPropagation(); handleRemoveAddress(addr._id, idx); }}
-                              >
-                                Remove
-                              </button>
-                            </div>
+                            <span className="block text-xs text-gray-500 mt-0.5 truncate max-w-xs" title={[
+                              addr.flat,
+                              addr.floor,
+                              addr.area,
+                              addr.landmark
+                            ].filter(Boolean).join(', ')}>
+                              {[
+                                addr.flat,
+                                addr.floor,
+                                addr.area,
+                                addr.landmark
+                              ].filter(Boolean).join(', ')}
+                            </span>
                           </div>
                         </label>
                       );
                     })}
                     {addresses.length > 3 && (
                       <button
-                        className="text-green-700 text-xs mt-1 hover:underline self-start"
+                        className="text-green-700 cursor-pointer text-xs mt-1 hover:underline self-start"
                         onClick={() => setExpanded(e => !e)}
                       >
                         {expanded ? 'Show less' : `Show all addresses (${addresses.length})`}
@@ -342,50 +350,16 @@ const CheckoutPage = () => {
                   {/* Modern button row */}
                   <div className="flex flex-row gap-2 mt-4">
                     <button
-                      className="flex-1 flex items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
-                      onClick={() => setShowNewAddress(true)}
+                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
+                      onClick={() => {
+                        setShowAddressModal(true);
+                      }}
                       style={{ minWidth: 0 }}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
                       Add Address
                     </button>
-                    <button
-                      className="flex-1 flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 border border-blue-200"
-                      onClick={() => setLocationModalOpen(true)}
-                      style={{ minWidth: 0 }}
-                    >
-                      <MapPin className="w-4 h-4" />
-                      Use Location
-                    </button>
                   </div>
-                  {showNewAddress && (
-                    <div className="flex flex-col gap-2 mt-4 bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-inner">
-                      <input
-                        type="text"
-                        className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
-                        placeholder="Enter new address"
-                        value={newAddress}
-                        onChange={e => setNewAddress(e.target.value)}
-                      />
-                      <input
-                        type="text"
-                        className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
-                        placeholder="Label (e.g. Home, Work)"
-                        value={newLabel}
-                        onChange={e => setNewLabel(e.target.value)}
-                      />
-                      <div className="flex gap-2 mt-2">
-                        <button
-                          className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-                          onClick={handleAddAddress}
-                        >Save</button>
-                        <button
-                          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
-                          onClick={() => { setShowNewAddress(false); setNewAddress(''); setNewLabel('Home'); }}
-                        >Cancel</button>
-                      </div>
-                    </div>
-                  )}
                 </div>
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
@@ -422,23 +396,23 @@ const CheckoutPage = () => {
               <div className="mb-6">
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Items ({cartItems.length})</span>
-                  <span>₹{cartTotals.itemsTotal.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.itemsTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Your savings</span>
-                  <span className="text-green-600">-₹{cartTotals.totalSavings.toFixed(2)}</span>
+                  <span className="text-green-600">-{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Delivery</span>
-                  <span>₹{cartTotals.deliveryCharge.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.deliveryCharge.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Handling Charge</span>
-                  <span>₹{cartTotals.handlingCharge.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-green-800 text-lg border-t border-green-100 pt-2 mt-2">
                   <span>Grand Total</span>
-                  <span>₹{cartTotals.grandTotal.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.grandTotal.toFixed(2)}</span>
                 </div>
               </div>
               {/* Payment Method */}
@@ -470,9 +444,9 @@ const CheckoutPage = () => {
               </div>
               {/* Place Order Button */}
               <button
-                className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full cursor-pointer bg-green-600 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handlePlaceOrder}
-                disabled={placingOrder || cartItems.length === 0}
+                disabled={placingOrder || cartItems.length === 0 || selectedAddressIdx === null}
               >
                 {placingOrder ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
                 Place Order
@@ -481,6 +455,12 @@ const CheckoutPage = () => {
           </div>
         </div>
       </div>
+      {/* Local AddressModal */}
+      <AddressModal
+        isOpen={showAddressModal}
+        onClose={() => setShowAddressModal(false)}
+        onSave={handleAddressModalSave}
+      />
     </div>
   );
 };

@@ -6,7 +6,7 @@ const UserLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50">
+      <div className="fixed top-0 left-0 w-full z-30">
         <Navbar />
       </div>
       {/* Add padding top equal to navbar height (e.g., 64px) */}

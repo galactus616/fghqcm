@@ -69,7 +69,7 @@ const HomePage = () => {
   }, [categories]);
 
   return (
-    <div className="font-sans bg-green-50 min-h-screen pb-10">
+    <div className="font-sans bg-[#0a614d]/5 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8">
         {/* Category Slide Section */}
         {productError && <div className="text-center text-red-600 py-6">{t('product_error')}</div>}
@@ -83,7 +83,7 @@ const HomePage = () => {
         {loadingProducts ? (
           <ProductsSkeleton />
         ) : (
-          <div className="space-y-10 mt-6">
+          <div className="space-y-10  mt-6">
             {categories.map((cat) => (
               <ProductSection
                 key={cat.id}

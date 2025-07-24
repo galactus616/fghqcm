@@ -112,7 +112,7 @@ const MultiStepKycForm = () => {
           <h2 className="text-2xl font-bold text-green-700 mb-2">KYC Submitted!</h2>
           <p className="text-gray-700 mb-6 text-center max-w-md">Your KYC is under review. You will be notified by email once your account is verified.<br/>If you have questions, please contact support.</p>
           <button
-            className="px-6 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
+            className="px-6 py-2 cursor-pointer rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
             onClick={handleLogout}
           >
             Log out
@@ -165,7 +165,7 @@ const MultiStepKycForm = () => {
           <svg className="w-5 h-5 text-green-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" /><path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2" /></svg>
           <span className="text-xs truncate flex-1">{storeOwner?.email}</span>
           <button
-            className="ml-2 px-3 py-1 bg-white text-green-800 rounded-lg font-semibold shadow hover:bg-green-100 transition text-xs"
+            className="ml-2 px-3 py-1 bg-white text-green-800 cursor-pointer rounded-lg font-semibold shadow hover:bg-green-100 transition text-xs"
             onClick={handleLogout}
           >
             Logout
@@ -191,7 +191,7 @@ const MultiStepKycForm = () => {
         <div className="sticky bottom-0 left-0 w-full bg-white border-t border-gray-100 flex justify-end px-12 py-6 z-10">
           {currentStep > 0 && (
             <button
-              className="px-6 py-2 rounded bg-gray-100 text-gray-700 font-semibold mr-4 hover:bg-gray-200 transition"
+              className="px-6 py-2 rounded cursor-pointer bg-gray-100 text-gray-700 font-semibold mr-4 hover:bg-gray-200 transition"
               onClick={() => setCurrentStep(currentStep - 1)}
             >
               Back
@@ -199,7 +199,7 @@ const MultiStepKycForm = () => {
           )}
           {currentStep < steps.length - 1 && (
             <button
-              className="px-8 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow w-full max-w-xs"
+              className="px-8 py-2 rounded cursor-pointer bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow w-full max-w-xs"
               onClick={handleNextStep}
             >
               Save & Continue
@@ -207,7 +207,7 @@ const MultiStepKycForm = () => {
           )}
           {currentStep === steps.length - 1 && (
             <button
-              className="px-8 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow w-full max-w-xs"
+              className="px-8 py-2 rounded cursor-pointer bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow w-full max-w-xs"
               onClick={handleSubmit}
             >
               Submit KYC

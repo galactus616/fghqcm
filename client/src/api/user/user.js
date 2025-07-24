@@ -8,11 +8,13 @@ export async function getAddresses() {
 }
 
 export async function addAddress(addressObj) {
+  // addressObj should have: label, flat, floor, area, landmark, isDefault
   const res = await axios.post(`${API_BASE}/user/addresses`, addressObj, { withCredentials: true });
   return res.data;
 }
 
 export async function updateAddress(addressId, addressObj) {
+  // addressObj should have: label, flat, floor, area, landmark, isDefault
   const res = await axios.put(`${API_BASE}/user/addresses/${addressId}`, addressObj, { withCredentials: true });
   return res.data;
 }
