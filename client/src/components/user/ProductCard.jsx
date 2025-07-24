@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
   
   // Get currency symbol based on current language
   const getCurrencySymbol = () => {
-    return i18n.language === 'bn' ? '৳' : '₹';
+    return i18n.language === 'bn' ? '৳' : 'Tk';
   };
 
   const handleAddToCart = async () => {
@@ -56,7 +56,7 @@ const ProductCard = ({ product }) => {
     }
   };
   return (
-    <div className=" rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all duration-200 hover:shadow-md hover:border-gray-200">
+    <div className=" rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all border-1 border-green-300 duration-200 hover:shadow-md hover:border-gray-200">
       <div className="relative">
       
       {/* Badges */}
@@ -66,12 +66,11 @@ const ProductCard = ({ product }) => {
             {t('bestseller')}
           </span>
         ) : product.isFeatured ? (
-          <span className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
+          <span className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full ">
             {t('featured')}
           </span>
         ) : null}
       </div>
-
       {/* Product Image */}
       <div className="flex justify-center items-center h-24 sm:h-28 md:h-32 lg:h-36 object-fill w-full bg-gray-50 rounded-lg overflow-hidden">
         <Link to={`/product/${product.id || product._id}`}>
@@ -127,12 +126,22 @@ const ProductCard = ({ product }) => {
         <div className="flex items-center justify-between mt-auto pt-1 flex-nowrap">
           <div className="flex flex-col">
             <div className="flex items-center flex-col-reverse">
-              <span className="text-[14px] sm:text-[16px] md:text-[18px] font-bold text-green-700">
-                {getCurrencySymbol()}{variant.discountedPrice ?? variant.price}
-              </span>
+              <section className="text-[14px] flex gap-1 sm:text-[16px] md:text-[18px] font-bold text-green-700">
+                <span>
+                  {getCurrencySymbol()}
+                  </span>
+                <span>
+                  {variant.discountedPrice ?? variant.price}
+                  </span>
+              </section>
               {variant.discountedPrice && (
-                <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                  {getCurrencySymbol()}{variant.price}
+                <span className="text-[10px] sm:text-xs flex gap-1 text-gray-400 line-through">
+                  <span>
+                    {getCurrencySymbol()}
+                    </span>
+                  <span>
+                    {variant.price}
+                    </span>
                 </span>
               )}
             </div>
@@ -174,7 +183,6 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
-
 
 
 

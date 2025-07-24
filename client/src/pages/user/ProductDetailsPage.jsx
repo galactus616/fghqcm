@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getCurrencySymbol } from "../../utils/currencyUtils";
+import { useCurrencySymbol } from "../../utils/currencyUtils";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProductById, getProductsByCategory } from "../../api/user/products";
 import { Plus, Minus, ArrowLeft } from "lucide-react";
@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 import ProductCard from "../../components/user/ProductCard";
 
 const ProductDetailsPage = () => {
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -220,12 +222,14 @@ const ProductDetailsPage = () => {
                 {/* Price and Cart Controls */}
                 <div className="flex items-center justify-between mb-6 mt-2">
                   <div className="flex flex-col">
-                    <span className="text-2xl md:text-3xl font-bold text-green-700">
-                      {getCurrencySymbol()}{variant.discountedPrice ?? variant.price}
-                    </span>
+                    <section className="text-2xl flex gap-2 md:text-3xl font-bold text-green-700">
+                      <span>{currencySymbol}</span>
+                      <span>{variant.discountedPrice ?? variant.price}</span>
+                    </section>
                     {variant.discountedPrice && (
                       <span className="text-md text-gray-400 line-through ml-2">
-                        {t("mrp")} {getCurrencySymbol()}{variant.price}
+                        {t()} {currencySymbol}
+                        {variant.price}
                       </span>
                     )}
                     <div className="text-xs text-gray-500 mt-1">

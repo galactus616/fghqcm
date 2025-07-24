@@ -23,10 +23,12 @@ import toast from "react-hot-toast";
 import useStore from "../../store/useStore";
 import LocationModal from "./LocationModal";
 import { useTranslation } from "react-i18next";
-import { getCurrencySymbol } from "../../utils/currencyUtils";
+import { useCurrencySymbol } from "../../utils/currencyUtils";
 
 // Navbar component
 export default function Navbar() {
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const navigate = useNavigate();
   // Zustand store hooks
   const {
@@ -483,7 +485,7 @@ export default function Navbar() {
                 <>
                   <div className="bg-green-50 bg-opacity-80 text-green-700 font-medium p-3 rounded-lg flex justify-between items-center text-sm">
                     <span>{t("your_total_savings") || "Your total savings"}</span>
-                    <span>{getCurrencySymbol()}{cartTotals.totalSavings.toFixed(2)}</span>
+                    <span>{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
                   </div>
 
                   <div className="flex items-center bg-blue-50 bg-opacity-80 text-blue-700 p-3 rounded-lg text-sm">
@@ -510,9 +512,9 @@ export default function Navbar() {
                             {item.name || 'Unavailable'}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            {getCurrencySymbol()}{(item.price ?? 0).toFixed(2)}{' '}
+                            {currencySymbol}{(item.price ?? 0).toFixed(2)}{' '}
                             <span className="line-through text-gray-400">
-                              {getCurrencySymbol()}{(item.originalPrice ?? 0).toFixed(2)}
+                              {currencySymbol}{(item.originalPrice ?? 0).toFixed(2)}
                             </span>
                           </p>
                         </div>
@@ -544,12 +546,12 @@ export default function Navbar() {
                     <div className="space-y-2 text-sm text-gray-700">
                       <div className="flex justify-between">
                         <span>{t("items_total")}</span>
-                        <span>{getCurrencySymbol()}{cartTotals.itemsTotal.toFixed(2)}</span>
+                        <span>{currencySymbol}{cartTotals.itemsTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t("saved")}</span>
                         <span className="text-green-600">
-                          {getCurrencySymbol()}{cartTotals.totalSavings.toFixed(2)}
+                          {currencySymbol}{cartTotals.totalSavings.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -559,13 +561,13 @@ export default function Navbar() {
                       {cartItems.length > 0 && (
                         <div className="flex justify-between">
                           <span>{t("handling_charge")}</span>
-                          <span>{getCurrencySymbol()}{cartTotals.handlingCharge.toFixed(2)}</span>
+                          <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
                         </div>
                       )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
                         <span>{t("grand_total")}</span>
                         <span>
-                          {getCurrencySymbol()}
+                          {currencySymbol}
                           {cartItems.length > 0
                             ? cartTotals.grandTotal.toFixed(2)
                             : "0.00"}
@@ -588,7 +590,7 @@ export default function Navbar() {
                           key={amount}
                           className="flex-1  min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                         >
-                          {getCurrencySymbol()}{amount}
+                          {currencySymbol}{amount}
                         </button>
                       ))}
                       <button className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer duration-200">
@@ -627,7 +629,7 @@ export default function Navbar() {
                 disabled={cartItems.length === 0}
               >
                 <span className="font-bold text-lg">
-                  {getCurrencySymbol()}{cartTotals.grandTotal.toFixed(2)}
+                  {currencySymbol}{cartTotals.grandTotal.toFixed(2)}
                 </span>
                 <span className="flex items-center">
                   Proceed{' '}
