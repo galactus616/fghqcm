@@ -40,7 +40,7 @@ const SearchResultPage = () => {
   }, [searchTerm, t]);
 
   return (
-    <div className="font-sans bg-green-50 min-h-screen pb-10">
+    <div className="font-sans bg-[#0a614d]/5 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <button

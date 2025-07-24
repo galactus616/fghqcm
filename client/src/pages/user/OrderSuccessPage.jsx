@@ -22,7 +22,7 @@ const OrderSuccessPage = () => {
   }, [countdown, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center pt-8 bg-green-50 px-4">
+    <div className="min-h-screen flex flex-col items-center pt-8 bg-[#0a614d]/5 px-4">
       <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 flex flex-col items-center max-w-md w-full">
         <CheckCircle className="w-20 h-20 text-green-600 mb-4 animate-bounce" />
         <h1 className="text-2xl md:text-3xl font-extrabold text-green-800 mb-2 text-center">

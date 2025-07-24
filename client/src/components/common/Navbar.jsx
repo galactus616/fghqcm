@@ -223,7 +223,7 @@ export default function Navbar() {
   };
   return (
     <div className="font-sans">
-      <nav className="bg-white border-b border-gray-100 py-2 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
+      <nav className="bg-white border-b border-[#0a614d]/30 py-2 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
         <div className="w-full flex flex-wrap items-center justify-between md:flex-nowrap">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 order-1 mr-4">
@@ -237,7 +237,7 @@ export default function Navbar() {
             {/* Language Toggle for Mobile */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="rounded cursor-pointer  text-green-600 text-sm px-3 py-2 focus:outline-none bg-green-50 focus:ring-2 focus:ring-green-500"
+              className="rounded cursor-pointer text-[#0a614d] text-sm px-3 py-2 focus:outline-none bg-[#0a614d]/10 focus:ring-2 focus:ring-[#0a614d]"
               aria-label="Toggle language"
             >
               {language === "en" ? "En" : "Bn"}
@@ -252,7 +252,7 @@ export default function Navbar() {
                   setIsAuthModalOpen(true);
                 }
               }}
-              className="cursor-pointer p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              className="cursor-pointer p-2 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
               aria-label="Toggle profile menu"
             >
               <User className="w-6 h-6" />
@@ -260,7 +260,7 @@ export default function Navbar() {
 
             <button
               onClick={toggleCart}
-              className="relative cursor-pointer p-2 text-green-600 hover:bg-green-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              className="relative cursor-pointer p-2 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
               aria-label="Open cart"
             >
               <ShoppingCart className="w-6 h-6" />
@@ -275,15 +275,16 @@ export default function Navbar() {
           {/* Desktop Location */}
           <div
             className="hidden md:flex flex-col text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 ml-6 order-2 min-w-[200px] p-2 rounded-lg"
+            style={{ border: '1px solid #0a614d1a' }}
             onClick={openLocationModal}
           >
-            <span className="font-medium text-green-700">{t("location")}</span>
+            <span className="font-medium text-[#0a614d]">{t("location")}</span>
             <div className="flex items-center">
-              <MapPin className="w-4 h-4 mr-1 text-green-600" />
+              <MapPin className="w-4 h-4 mr-1 text-[#0a614d]" />
               <span className="font-medium text-gray-800 truncate max-w-[140px]" title={currentLocation}>
                 {currentLocation}
               </span>
-              <ChevronDown className="w-4 h-4 ml-1 text-green-600" />
+              <ChevronDown className="w-4 h-4 ml-1 text-[#0a614d]" />
             </div>
           </div>
 
@@ -303,7 +304,7 @@ export default function Navbar() {
 
           {/* Search Bar */}
           <div className="flex-1 mx-6 w-full md:w-auto mt-3 md:mt-0 order-4 md:order-3 max-w-2xl">
-            <div className="relative flex items-center bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-200">
+            <div className="relative flex items-center bg-gray-50 rounded-lg overflow-hidden border border-[#0a614d]/30 hover:border-[#0a614d] transition-colors duration-200">
               <Search className="absolute left-3 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -323,7 +324,7 @@ export default function Navbar() {
             {/* Language Toggle for Desktop */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="ml-2 cursor-pointer rounded text-green-600 text-sm px-4  p-3 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="ml-2 cursor-pointer rounded text-[#0a614d] text-sm px-4  p-3 bg-[#0a614d]/10 focus:outline-none focus:ring-2 focus:ring-[#0a614d]"
               aria-label="Toggle language"
             >
               {language === "en" ? "En" : "Bn"}
@@ -333,11 +334,11 @@ export default function Navbar() {
               {isLoggedIn && user ? (
                 <button
                   onClick={toggleProfileDropdown}
-                  className={`flex items-center cursor-pointer p-2 rounded-full border border-gray-200 hover:border-green-300 transition-all duration-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isProfileDropdownOpen ? 'ring-2 ring-green-400 bg-green-50 border-green-300' : ''}`}
+                  className={`flex items-center cursor-pointer p-2 rounded-full border border-[#0a614d]/30 hover:border-[#0a614d] transition-all duration-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0a614d] ${isProfileDropdownOpen ? 'ring-2 ring-[#0a614d]/80 bg-[#0a614d]/10 border-[#0a614d]' : ''}`}
                   style={{ minHeight: 40, minWidth: 40 }}
                 >
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold text-base border border-green-200 shadow-sm">
-                    {getUserInitial(user) || <User className="w-4 h-4 text-green-400" />}
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#0a614d]/10 text-[#0a614d] font-semibold text-base border border-[#0a614d]/30 shadow-sm">
+                    {getUserInitial(user) || <User className="w-4 h-4 text-[#0a614d]/50" />}
                   </span>
                   <span className="ml-2 font-medium text-gray-900 truncate max-w-[70px] text-sm">{getUserShortName(user)}</span>
                   <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 text-green-600 flex-shrink-0 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
@@ -345,16 +346,16 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="flex items-center text-gray-700 cursor-pointer hover:bg-green-50 transition-colors duration-200 p-2 rounded-full hover:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 border border-gray-200 hover:border-green-200 bg-white"
+                  className="flex items-center text-gray-700 cursor-pointer hover:bg-[#0a614d]/10 transition-colors duration-200 p-2 rounded-full hover:text-[#0a614d] focus:outline-none focus:ring-2 focus:ring-[#0a614d] border border-[#0a614d]/30 hover:border-[#0a614d] bg-white"
                   style={{ minHeight: 40, minWidth: 40 }}
                 >
-                  <User className="w-5 h-5 mr-2 text-green-600" />
+                  <User className="w-5 h-5 mr-2 text-[#0a614d]" />
                   <span className="font-medium">Login</span>
                 </button>
               )}
               {isLoggedIn && isProfileDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
+                  className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 ring-1 ring-[#0a614d]/30 border border-[#0a614d]/30"
                   style={{ pointerEvents: 'auto', zIndex: 9999 }}
                 >
                   {minimalProfileMenuItems.map((item, index) => {
@@ -386,7 +387,7 @@ export default function Navbar() {
             {/* Desktop Cart Button */}
             <button
               onClick={toggleCart}
-              className="relative hidden cursor-pointer md:flex items-center bg-green-600 text-white py-3 px-6 rounded-lg shadow-sm hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 order-5 min-w-[100px] justify-center"
+              className="relative hidden cursor-pointer md:flex items-center bg-[#006a4e] text-white py-3 px-6 rounded-lg shadow-sm hover:bg-[#0a614d]/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#0a614d] focus:ring-offset-2 order-5 min-w-[100px] justify-center"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               <span className="font-medium">{t("my_cart")}</span>

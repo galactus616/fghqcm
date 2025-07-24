@@ -48,7 +48,7 @@ const OrdersPage = () => {
   };
 
   return (
-    <main className="font-sans bg-green-50 min-h-screen pb-10 pt-8">
+    <main className="font-sans bg-[#0a614d]/5 min-h-screen pb-10 pt-8">
       <div className="max-w-3xl mx-auto px-2 sm:px-4 md:px-8">
         <header className="flex items-center gap-2 mb-8">
           <Package className="w-7 h-7 text-green-600" aria-hidden="true" />

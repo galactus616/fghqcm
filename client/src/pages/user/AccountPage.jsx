@@ -364,7 +364,7 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-green-50 flex">
+    <div className="min-h-screen bg-[#0a614d]/5 flex">
       {/* Sidebar */}
       <aside className="w-72 bg-white border-r border-green-100 flex flex-col min-h-screen justify-between">
         {/* Profile Info */}
@@ -421,7 +421,7 @@ export default function AccountPage() {
         </div>
       </aside>
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center py-12 px-4 md:px-12 bg-green-50">
+      <main className="flex-1 flex flex-col items-center py-12 px-4 md:px-12 bg-[#0a614d]/5">
         <div className="w-full max-w-3xl">
           {activeTab === "profile" && (
             <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">

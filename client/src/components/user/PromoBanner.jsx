@@ -27,8 +27,8 @@ const PromoBanner = () => {
       <div className="relative z-10 h-full flex items-center px-6 md:px-12">
         <div className="bg-white/50 backdrop-blur-md ring-1 ring-white/50 p-4 md:p-6 rounded-2xl shadow-lg max-w-md transition-all hover:shadow-xl hover:ring-white/70">
           <div className="flex items-center mb-3">
-            <Clock className="w-5 h-5 text-green-700" aria-hidden="true" />
-            <span className="ml-2 text-green-800 font-semibold text-md">
+            <Clock className="w-5 h-5 text-[#0a614d]" aria-hidden="true" />
+            <span className="ml-2 text-[#0a614d] font-semibold text-md">
               {t('Delivery in 30 Minutes')}
             </span>
           </div>
@@ -44,7 +44,7 @@ const PromoBanner = () => {
           </p>
 
           <button
-            className="mt-4 inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
+            className="mt-4 inline-flex items-center justify-center bg-[#0a614d] hover:bg-[#0a614d]/80 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#0a614d] focus:ring-offset-2 cursor-pointer"
             aria-label={t('Start shopping now for 30-minute delivery')}
             onClick={() => navigate("/")}
           >
