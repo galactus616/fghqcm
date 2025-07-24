@@ -175,6 +175,9 @@ const ProductDetailsPage = () => {
                       ? product.category.name
                       : product.category}
                   </span>
+                </div>
+                <div className="text-2xl md:text-3xl font-bold text-green-800 mb-1 flex items-center gap-2">
+                  {product.name}
                   {product.isBestSeller && (
                     <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                       {t("bestseller")}
@@ -185,15 +188,20 @@ const ProductDetailsPage = () => {
                       {t("featured")}
                     </span>
                   )}
+
+                  {product.discountedPrice &&
+                    product.discountedPrice < product.price && (
+                      <span className=" text-white text-sm font-bold px-2 py-1 rounded-full">
+                        {Math.round(
+                          ((product.price - product.discountedPrice) /
+                            product.price) *
+                            100
+                        )}
+                        % OFF
+                      </span>
+                    )}
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-1 flex items-center gap-2">
-                  {product.name}
-                  {product.discountedPrice && product.discountedPrice < product.price && (
-                    <span className="bg-red-500 text-white text-sm font-bold px-2 py-1 rounded-full">
-                      {Math.round(((product.price - product.discountedPrice) / product.price) * 100)}% OFF
-                    </span>
-                  )}
-                </h1>
+
                 <div className="text-gray-500 text-sm mb-4">
                   {product.description?.slice(0, 60)}
                   {product.description && product.description.length > 60
@@ -232,11 +240,29 @@ const ProductDetailsPage = () => {
                       <span>{variant.discountedPrice ?? variant.price}</span>
                     </section>
                     {variant.discountedPrice && (
+                      <div className=" flex gap-1">
                       <span className="text-md text-gray-400 line-through ml-2">
                         {t()} {currencySymbol}
                         {variant.price}
+
                       </span>
+                         <div>
+                      {variant.discountedPrice &&
+                        variant.discountedPrice < variant.price && (
+                          <span className="  text-gray-400 text-sm px-2 font-semibold py-1 ">
+                            {Math.round(
+                              ((variant.price - variant.discountedPrice) /
+                                variant.price) *
+                                100
+                            )}
+                            % OFF
+                          </span>
+                        )}
+                    </div>
+                      </div>
                     )}
+
+                   
                     <div className="text-xs text-gray-500 mt-1">
                       {t("inclusive_of_all_taxes")}
                     </div>

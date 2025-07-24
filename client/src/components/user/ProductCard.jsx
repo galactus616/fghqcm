@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useCurrencySymbol } from "../../utils/currencyUtils";
 
 const ProductCard = ({ product }) => {
-  console.log(product);
+  // console.log(product);
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const hasMultipleVariants = product.variants && product.variants.length > 1;
   const variant =
