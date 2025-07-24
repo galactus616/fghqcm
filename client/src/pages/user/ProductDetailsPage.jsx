@@ -186,8 +186,13 @@ const ProductDetailsPage = () => {
                     </span>
                   )}
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-1 flex items-center gap-2">
                   {product.name}
+                  {product.discountedPrice && product.discountedPrice < product.price && (
+                    <span className="bg-red-500 text-white text-sm font-bold px-2 py-1 rounded-full">
+                      {Math.round(((product.price - product.discountedPrice) / product.price) * 100)}% OFF
+                    </span>
+                  )}
                 </h1>
                 <div className="text-gray-500 text-sm mb-4">
                   {product.description?.slice(0, 60)}

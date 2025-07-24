@@ -233,7 +233,14 @@ const CheckoutPage = () => {
                 <div className="space-y-4">
                   {cartItems.map(item => (
                     <div key={item.id} className="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                      <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
+                      <div className="relative">
+                        <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
+                        {item.originalPrice && item.originalPrice > item.price && (
+                          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
+                            {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF
+                          </span>
+                        )}
+                      </div>
                       <div className="flex-1 w-full">
                         <div className="font-semibold text-gray-800 text-base mb-1">{item.name}</div>
                         <div className="text-xs text-gray-500 mb-1">{item.variantLabel}</div>
