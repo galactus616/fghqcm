@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useStore from "../../store/useStore";
+import { getCurrencySymbol, useCurrencySymbol } from "../../utils/currencyUtils";
 import {
   getAddresses,
   addAddress,
@@ -233,6 +234,8 @@ const SIDEBAR_TABS = [
 
 export default function AccountPage() {
   const { user, isLoggedIn, logout, updateProfile } = useStore();
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const [addresses, setAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
   const [addressError, setAddressError] = useState("");
@@ -685,4 +688,4 @@ export default function AccountPage() {
       </main>
     </div>
   );
-} 
+}

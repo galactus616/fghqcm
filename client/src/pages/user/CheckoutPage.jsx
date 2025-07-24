@@ -7,8 +7,11 @@ import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../.
 import LocationModal from '../../components/common/LocationModal';
 import AddressModal from '../../components/common/AddressModal';
 import { useTranslation } from "react-i18next";
+import { useCurrencySymbol } from "../../utils/currencyUtils";
 
 const CheckoutPage = () => {
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const navigate = useNavigate();
   const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
   const { currentLocation, setLocationModalOpen, setCurrentLocation, selectedAddressId, setSelectedAddressId } = useStore();
@@ -214,7 +217,14 @@ const CheckoutPage = () => {
                 <div className="space-y-4">
                   {cartItems.map(item => (
                     <div key={item.id} className="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                      <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
+                      <div className="relative">
+                        <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
+                        {item.originalPrice && item.originalPrice > item.price && (
+                          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
+                            {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF
+                          </span>
+                        )}
+                      </div>
                       <div className="flex-1 w-full">
                         <div className="font-semibold text-gray-800 text-base mb-1">{item.name}</div>
                         <div className="text-xs text-gray-500 mb-1">{item.variantLabel}</div>
@@ -237,7 +247,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="font-bold text-green-700 text-lg">₹{(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="font-bold text-green-700 text-lg">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</div>
                         <button
                           className="flex cursor-pointer items-center gap-1 text-red-500 hover:underline text-xs"
                           onClick={() => removeFromCart(item.productId, item.variantIndex)}
@@ -386,23 +396,23 @@ const CheckoutPage = () => {
               <div className="mb-6">
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Items ({cartItems.length})</span>
-                  <span>₹{cartTotals.itemsTotal.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.itemsTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Your savings</span>
-                  <span className="text-green-600">-₹{cartTotals.totalSavings.toFixed(2)}</span>
+                  <span className="text-green-600">-{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Delivery</span>
-                  <span>₹{cartTotals.deliveryCharge.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.deliveryCharge.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Handling Charge</span>
-                  <span>₹{cartTotals.handlingCharge.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-green-800 text-lg border-t border-green-100 pt-2 mt-2">
                   <span>Grand Total</span>
-                  <span>₹{cartTotals.grandTotal.toFixed(2)}</span>
+                  <span>{currencySymbol}{cartTotals.grandTotal.toFixed(2)}</span>
                 </div>
               </div>
               {/* Payment Method */}

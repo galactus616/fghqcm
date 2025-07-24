@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useCurrencySymbol } from "../../utils/currencyUtils";
 import useStore from '../../store/useStore';
 import { Package, X } from 'lucide-react';
 import axios from 'axios';
@@ -6,6 +7,8 @@ import OrderDetailsModal from '../../components/user/OrderDetailsModal';
 import { useTranslation } from "react-i18next";
 
 const OrdersPage = () => {
+  // Use the currency symbol hook for reactive updates
+  const currencySymbol = useCurrencySymbol();
   const { isLoggedIn } = useStore();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,12 +100,12 @@ const OrdersPage = () => {
                           <div className="font-medium text-gray-800 truncate" title={item.product.name}>{item.product.name}</div>
                           <div className="text-sm text-gray-500">Qty: {item.quantity}</div>
                         </div>
-                        <div className="font-semibold text-green-700 text-sm">₹{item.product.price.toFixed(2)}</div>
+                        <div className="font-semibold text-green-700 text-sm">{currencySymbol}{item.product.price.toFixed(2)}</div>
                       </li>
                     ))}
                   </ul>
                   <div className="flex justify-end mt-4">
-                    <span className="font-bold text-lg text-green-800">{t('total')}: ₹{order.total.toFixed(2)}</span>
+                    <span className="font-bold text-lg text-green-800">{t('total')}: {currencySymbol}{order.total.toFixed(2)}</span>
                   </div>
                 </div>
                 <button
@@ -128,4 +131,4 @@ const OrdersPage = () => {
   );
 };
 
-export default OrdersPage; 
+export default OrdersPage;
