@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema({
       area: { type: String },
       landmark: { type: String },
       isDefault: { type: Boolean, default: false },
+      _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
     }
   ],
   // OTP fields for authentication

@@ -3,12 +3,15 @@ import useStore from "../../store/useStore";
 import {
   getAddresses,
   addAddress,
+  updateAddress,
   deleteAddress,
 } from "../../api/user/user";
-import { LogOut, Edit2, Plus, Trash2, Star, Package, User, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, Star as StarIcon, ChevronRight } from "lucide-react";
+import { User, LogOut, Edit2, Plus, Trash2, Star, Package, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, ChevronRight, Mail, Phone } from "lucide-react";
 import axios from "axios";
 import OrderDetailsModal from "../../components/user/OrderDetailsModal";
 import { useTranslation } from 'react-i18next';
+import AddressModal from '../../components/common/AddressModal';
+import toast from 'react-hot-toast';
 
 function EditProfileModal({ isOpen, onClose, user, onSave }) {
   const [name, setName] = useState(user?.name || "");
@@ -220,6 +223,7 @@ function SettingsSection() {
 }
 
 const SIDEBAR_TABS = [
+  { key: "profile", label: "Profile", icon: User },
   { key: "orders", label: "My Orders", icon: Package },
   { key: "addresses", label: "Addresses", icon: MapPin },
   { key: "payment", label: "Payment", icon: CreditCard },
@@ -233,6 +237,7 @@ export default function AccountPage() {
   const [addressLoading, setAddressLoading] = useState(true);
   const [addressError, setAddressError] = useState("");
   const [showAddAddress, setShowAddAddress] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false); // <-- add this line
   const [newAddress, setNewAddress] = useState("");
   const [newLabel, setNewLabel] = useState("Home");
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -241,7 +246,11 @@ export default function AccountPage() {
   const [userLoading, setUserLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [pendingAddress, setPendingAddress] = useState(null);
   const { t } = useTranslation();
+  const [profileName, setProfileName] = useState(user?.name || "");
+  const [profilePhone, setProfilePhone] = useState(user?.phone || "");
+  const [profileEmail, setProfileEmail] = useState(user?.email || "");
 
   // Fetch addresses
   useEffect(() => {
@@ -285,6 +294,12 @@ export default function AccountPage() {
     }
   }, [user, isLoggedIn]);
 
+  useEffect(() => {
+    setProfileName(user?.name || "");
+    setProfilePhone(user?.phone || "");
+    setProfileEmail(user?.email || "");
+  }, [user]);
+
   const handleAddAddress = async () => {
     if (!newAddress.trim()) return;
     try {
@@ -293,6 +308,7 @@ export default function AccountPage() {
       setShowAddAddress(false);
       setNewAddress("");
       setNewLabel("Home");
+      toast.success('Address added successfully!');
     } catch (err) {
       // Optionally show error
     }
@@ -302,11 +318,30 @@ export default function AccountPage() {
     try {
       const data = await deleteAddress(addressId);
       setAddresses(data);
+      toast.success('Address deleted successfully!');
     } catch {}
   };
 
   const handleLogout = async () => {
     await logout();
+  };
+
+  const handleAddressModalSave = async (address) => {
+    try {
+      if (address._id) {
+        const data = await updateAddress(address._id, address);
+        setAddresses(data);
+        toast.success('Address updated successfully!');
+      } else {
+        const data = await addAddress(address);
+        setAddresses(data);
+        toast.success('Address added successfully!');
+      }
+      setShowAddressModal(false);
+      setPendingAddress(null);
+    } catch (err) {
+      alert('Failed to save address. Please try again.');
+    }
   };
 
   if (userLoading) {
@@ -326,240 +361,327 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto my-16 p-0 md:p-0 bg-white rounded-2xl border border-green-100 flex flex-col md:flex-row min-h-[600px]">
+    <div className="min-h-screen bg-green-50 flex">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-green-50 border-r border-green-100 flex flex-col items-center md:items-stretch py-8 px-0 md:px-4 gap-8">
-        {/* Avatar and user info */}
-        <div className="flex flex-col items-center gap-2 mb-6">
-          <div className="w-20 h-20 rounded-full bg-white border border-green-200 flex items-center justify-center text-5xl font-bold text-green-700">
-            <ImageIcon className="w-12 h-12 text-green-200" />
+      <aside className="w-72 bg-white border-r border-green-100 flex flex-col min-h-screen justify-between">
+        {/* Profile Info */}
+        <div>
+          <div className="flex flex-col items-center py-6 px-6 bg-white border-b border-green-100">
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center text-4xl text-green-700 font-bold shadow mb-4 select-none">
+              {user?.photoUrl
+                ? <img src={user.photoUrl} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                : (user?.name?.trim() ? user.name.trim()[0].toUpperCase() : <User className="w-10 h-10" />)
+              }
+            </div>
+            <div className="text-lg font-bold text-gray-900 mb-2">{user?.name?.trim() || <span className="text-gray-400 font-normal">Set your name</span>}</div>
+            <div className="flex flex-col items-center gap-2 w-full">
+              <div className="flex items-center gap-2 text-gray-500 text-sm bg-gray-50 rounded px-3 py-1 w-full">
+                {/* Email icon */}
+                <Mail className="w-4 h-4" />
+                <span className="truncate">{user?.email || <span className="text-gray-300">Add your email</span>}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-500 text-sm bg-gray-50 rounded px-3 py-1 w-full">
+                {/* Phone icon */}
+                <Phone className="w-4 h-4" />
+                <span className="truncate">{user?.phone || <span className="text-gray-300">Add your phone</span>}</span>
+              </div>
+            </div>
           </div>
-          <div className="text-lg font-bold text-gray-900 text-center">{user?.name?.trim() ? user.name : t('no_name_set')}</div>
-          <div className="text-gray-400 text-sm text-center">{user?.email?.trim() ? user.email : t('no_email_set')}</div>
+          {/* Navigation */}
+          <nav className="flex flex-col gap-1 mt-4">
+            {SIDEBAR_TABS.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-3 px-8 py-3 w-full text-left rounded-lg font-medium text-base transition-all capitalize cursor-pointer
+                    ${activeTab === tab.key ? "bg-green-50 text-green-700 border-l-4 border-green-500" : "text-gray-700 hover:bg-green-50"}`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-semibold">{tab.label}</span>
+                  {activeTab === tab.key && <ChevronRight className="ml-auto w-4 h-4 text-green-500" />}
+                </button>
+              );
+            })}
+          </nav>
         </div>
-        {/* Navigation */}
-        <nav className="flex flex-col gap-1 w-full">
-          {SIDEBAR_TABS.map(tab => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`flex cursor-pointer items-center gap-3 px-6 py-3 w-full text-left rounded-lg font-medium text-base transition-all
-                  ${activeTab === tab.key ? "bg-white text-green-700 border border-green-200" : "text-gray-700 hover:bg-green-100"}`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{t(tab.label.replace(/\s+/g, '_').toLowerCase())}</span>
-                {activeTab === tab.key && <ChevronRight className="ml-auto w-4 h-4 text-green-500" />}
-              </button>
-            );
-          })}
-        </nav>
-        <div className="flex-1" />
-        <button
-          className="flex cursor-pointer items-center gap-2 px-6 py-3 w-full text-left rounded-lg font-medium text-base text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all"
-          onClick={logout}
-        >
-          <LogOut className="w-5 h-5" /> {t('logout')}
-        </button>
+        {/* Logout */}
+        <div className="border-t border-green-100">
+          <button
+            className="flex items-center gap-3 w-full py-5 px-8 rounded-lg font-medium text-base text-red-600 hover:bg-red-50 transition-all cursor-pointer"
+            onClick={handleLogout}
+          >
+            <LogOut className="w-5 h-5" strokeWidth={2.5} />
+            <span className="font-semibold">Logout</span>
+          </button>
+        </div>
       </aside>
-
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-12 flex flex-col">
-        {activeTab === "orders" && (
-          <section className="w-full max-w-2xl mx-auto bg-green-50 rounded-xl p-8 border border-green-100 flex flex-col gap-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-xl text-gray-900">My Orders</h3>
-              <a
-                href="/orders"
-                className="text-green-700 hover:underline text-base font-medium flex items-center gap-1"
+      <main className="flex-1 flex flex-col items-center py-12 px-4 md:px-12 bg-green-50">
+        <div className="w-full max-w-3xl">
+          {activeTab === "profile" && (
+            <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">
+              <h3 className="font-bold text-2xl text-green-800 mb-4">Profile</h3>
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  try {
+                    await updateProfile({ name: profileName, email: profileEmail });
+                    toast.success('Profile updated successfully!');
+                  } catch {
+                    toast.error('Failed to update profile.');
+                  }
+                }}
               >
-                <Package className="w-5 h-5" /> View All
-              </a>
-            </div>
-            {ordersLoading ? (
-              <div className="text-gray-400 py-8 text-center">Loading orders...</div>
-            ) : orders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                <Inbox className="w-12 h-12 mb-2" />
-                <div className="text-lg font-medium">No recent orders.</div>
-                <div className="text-sm">Your recent orders will appear here.</div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {orders.map((order) => (
-                  <div key={order.id || order._id} className="p-4 rounded-lg border border-gray-200 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-2 cursor-pointer hover:bg-green-50 transition" onClick={() => setSelectedOrder(order)}>
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 flex-1 min-w-0">
-                      <span className="text-xs text-gray-500">Order ID:</span>
-                      <span className="font-semibold text-gray-800 text-base">{order.orderId}</span>
-                      <span className="text-xs text-gray-500">Placed on:</span>
-                      <span className="font-medium text-green-700 text-xs">{new Date(order.date).toLocaleDateString()}</span>
-                      <span className="text-xs text-gray-500">Status:</span>
-                      <span className={`font-semibold px-2 py-1 rounded text-xs ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.status}</span>
-                    </div>
-                    <div className="font-bold text-green-800 text-base">₹{order.total?.toFixed(2)}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <OrderDetailsModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
-          </section>
-        )}
-        {activeTab === "addresses" && (
-          <section className="w-full max-w-2xl mx-auto bg-green-50 rounded-xl p-8 border border-green-100 flex flex-col gap-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-xl text-gray-900">Saved Addresses</h3>
-              <button
-                className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
-                onClick={() => setShowAddAddress((v) => !v)}
-              >
-                <Plus className="w-5 h-5" /> Add Address
-              </button>
-            </div>
-            {addressLoading ? (
-              <div className="text-gray-400 py-8 text-center">Loading addresses...</div>
-            ) : addressError ? (
-              <div className="text-red-600 py-8 text-center">{addressError}</div>
-            ) : addresses.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                <MapPin className="w-12 h-12 mb-2 text-green-200" />
-                <div className="text-lg font-medium">No addresses saved.</div>
-                <div className="text-sm">Add your address to get started.</div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {addresses.map((addr) => (
-                  <div
-                    key={addr._id}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 bg-white"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-800 text-base">{addr.label}</span>
+                {/* Avatar removed - only show fields below */}
+                <label className="block">
+                  <span className="text-gray-700 font-medium">Name</span>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+                    value={profileName}
+                    onChange={e => setProfileName(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700 font-medium">Phone</span>
+                  <input
+                    type="tel"
+                    className="w-full px-4 py-2 border border-green-100 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed"
+                    value={profilePhone}
+                    readOnly
+                    disabled
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700 font-medium">Email</span>
+                  <input
+                    type="email"
+                    className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+                    value={profileEmail}
+                    onChange={e => setProfileEmail(e.target.value)}
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600 mt-2 cursor-pointer"
+                >Save Changes</button>
+              </form>
+            </section>
+          )}
+          {activeTab === "orders" && (
+            <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">
+              <h3 className="font-bold text-2xl text-green-800 mb-4">My Orders</h3>
+              {ordersLoading ? (
+                <div className="text-gray-400 py-8 text-center">Loading orders...</div>
+              ) : orders.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+                  <Inbox className="w-12 h-12 mb-2" />
+                  <div className="text-lg font-medium">No recent orders.</div>
+                  <div className="text-sm">Your recent orders will appear here.</div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {orders.map((order) => {
+                    // Format delivery address for display
+                    let formattedAddress = '';
+                    if (order.deliveryAddress && typeof order.deliveryAddress === 'object') {
+                      const { label, flat, floor, area, landmark } = order.deliveryAddress;
+                      formattedAddress = [
+                        label ? `${label}` : '',
+                        flat,
+                        floor,
+                        area,
+                        landmark
+                      ].filter(Boolean).join(', ');
+                    } else {
+                      formattedAddress = order.deliveryAddress || '';
+                    }
+                    return (
+                      <div key={order.id || order._id} className="p-4 rounded-lg border border-gray-200 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-2 cursor-pointer hover:bg-green-50 transition" onClick={() => setSelectedOrder(order)}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <span className="text-xs text-gray-500">Order ID:</span>
+                            <span className="font-semibold text-gray-800 text-base">{order.orderId}</span>
+                            <span className="text-xs text-gray-500">Placed on:</span>
+                            <span className="font-medium text-green-700 text-xs">{new Date(order.date).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2 mt-1">
+                            <span className="text-xs text-gray-500">Status:</span>
+                            <span className={`font-semibold px-2 py-1 rounded text-xs ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.status}</span>
+                            {formattedAddress && (
+                              <span className="text-xs text-gray-500 truncate max-w-[200px] md:max-w-xs">{formattedAddress}</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="font-bold text-green-800 text-base flex-shrink-0">₹{order.total?.toFixed(2)}</div>
                       </div>
-                      <div className="text-gray-600 text-sm truncate max-w-xs">{addr.address}</div>
+                    );
+                  })}
+                </div>
+              )}
+              <OrderDetailsModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
+            </section>
+          )}
+          {activeTab === "addresses" && (
+            <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">
+              <h3 className="font-bold text-2xl text-green-800 mb-4">Saved Addresses</h3>
+              <div className="flex items-center justify-between mb-2">
+                <button
+                  className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
+                  onClick={() => {
+                    setPendingAddress(null);
+                    setShowAddressModal(true);
+                  }}
+                >
+                  <Plus className="w-5 h-5" /> Add Address
+                </button>
+              </div>
+              {addressLoading ? (
+                <div className="text-gray-400 py-8 text-center">Loading addresses...</div>
+              ) : addressError ? (
+                <div className="text-red-600 py-8 text-center">{addressError}</div>
+              ) : addresses.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+                  <MapPin className="w-12 h-12 mb-2 text-green-200" />
+                  <div className="text-lg font-medium">No addresses saved.</div>
+                  <div className="text-sm">Add your address to get started.</div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {addresses.map((addr) => {
+                    // Format address for display
+                    const formatted = [
+                      addr.flat,
+                      addr.floor,
+                      addr.area,
+                      addr.landmark
+                    ].filter(Boolean).join(', ');
+                    return (
+                      <div
+                        key={addr._id}
+                        className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 bg-white cursor-pointer"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold text-gray-800 text-base">{addr.label}</span>
+                            {addr.isDefault && (
+                              <span className="ml-2 px-2 py-0.5 rounded bg-green-100 text-green-700 text-xs font-semibold">Default</span>
+                            )}
+                          </div>
+                          <div className="text-gray-600 text-sm truncate max-w-xs">{formatted}</div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            className="text-blue-500 hover:underline text-xs px-2 py-1 rounded hover:bg-blue-50 flex items-center gap-1 border border-blue-100 cursor-pointer"
+                            onClick={() => {
+                              setPendingAddress({ ...addr, _id: addr._id });
+                              setShowAddressModal(true);
+                            }}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-4.243 1.414 1.414-4.243a4 4 0 01.828-1.414z" /></svg>
+                            Edit
+                          </button>
+                          <button
+                            className="text-red-500 hover:underline text-xs px-2 py-1 rounded hover:bg-red-50 flex items-center gap-1 border border-red-100 cursor-pointer"
+                            onClick={() => handleDeleteAddress(addr._id)}
+                          >
+                            <Trash2 className="w-4 h-4" /> Delete
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          )}
+          {activeTab === "payment" && (
+            <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">
+              <h3 className="font-bold text-2xl text-green-800 mb-4">Payment Methods</h3>
+              <div className="flex items-center justify-between mb-4">
+                <button
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white cursor-pointer rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
+                  onClick={() => alert("Add payment method functionality coming soon!")}
+                >
+                  <Plus className="w-5 h-5" /> Add New Payment Method
+                </button>
+              </div>
+              <div className="flex flex-col gap-4">
+                <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-6 h-6 text-green-600" />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-gray-800">Credit Card (**** **** **** 1234)</span>
+                      <span className="text-gray-500 text-sm">Expires: 12/25</span>
                     </div>
-                    <button
-                      className="text-red-500 hover:underline text-xs px-2 py-1 rounded hover:bg-red-50 flex items-center gap-1"
-                      onClick={() => handleDeleteAddress(addr._id)}
-                    >
-                      <Trash2 className="w-4 h-4" /> Delete
-                    </button>
                   </div>
-                ))}
-              </div>
-            )}
-            {showAddAddress && (
-              <div className="flex flex-col gap-2 mt-6 bg-white p-4 rounded-xl border border-gray-200">
-                <input
-                  type="text"
-                  className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
-                  placeholder="Enter new address"
-                  value={newAddress}
-                  onChange={e => setNewAddress(e.target.value)}
-                />
-                <input
-                  type="text"
-                  className="px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
-                  placeholder="Label (e.g. Home, Work)"
-                  value={newLabel}
-                  onChange={e => setNewLabel(e.target.value)}
-                />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600"
-                    onClick={handleAddAddress}
-                  >Save</button>
-                  <button
-                    className="bg-gray-100 cursor-pointer text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition border border-gray-200"
-                    onClick={() => { setShowAddAddress(false); setNewAddress(""); setNewLabel("Home"); }}
-                  >Cancel</button>
+                  <button className="text-red-500 hover:underline text-sm cursor-pointer">Remove</button>
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-6 h-6 text-green-600" />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-gray-800">Credit Card (**** **** **** 5678)</span>
+                      <span className="text-gray-500 text-sm">Expires: 01/26</span>
+                    </div>
+                  </div>
+                  <button className="text-red-500 hover:underline text-sm cursor-pointer">Remove</button>
                 </div>
               </div>
-            )}
-          </section>
-        )}
-        {activeTab === "payment" && (
-          <section className="w-full max-w-2xl mx-auto bg-green-50 rounded-xl p-8 border border-green-100 flex flex-col gap-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Payment Methods</h2>
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white cursor-pointer rounded-lg font-semibold hover:bg-green-700 transition-all text-base border border-green-600"
-                onClick={() => alert("Add payment method functionality coming soon!")}
-              >
-                <Plus className="w-5 h-5" /> Add New Payment Method
-              </button>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <CreditCard className="w-6 h-6 text-green-600" />
+            </section>
+          )}
+          {activeTab === "cancellations" && (
+            <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">
+              <h3 className="font-bold text-2xl text-green-800 mb-4">Cancellations</h3>
+              <div className="flex flex-col gap-4">
+                <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-800">Credit Card (**** **** **** 1234)</span>
-                    <span className="text-gray-500 text-sm">Expires: 12/25</span>
+                    <span className="font-semibold text-gray-800">Order #123456789</span>
+                    <span className="text-gray-500 text-sm">Cancelled on: 2023-10-20</span>
                   </div>
+                  <button className="text-green-600 hover:underline text-sm cursor-pointer">View Details</button>
                 </div>
-                <button className="text-red-500 hover:underline text-sm cursor-pointer">Remove</button>
-              </div>
-              <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <CreditCard className="w-6 h-6 text-green-600" />
+                <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-800">Credit Card (**** **** **** 5678)</span>
-                    <span className="text-gray-500 text-sm">Expires: 01/26</span>
+                    <span className="font-semibold text-gray-800">Order #987654321</span>
+                    <span className="text-gray-500 text-sm">Cancelled on: 2023-10-15</span>
                   </div>
+                  <button className="text-green-600 hover:underline text-sm cursor-pointer">View Details</button>
                 </div>
-                <button className="text-red-500 hover:underline text-sm cursor-pointer">Remove</button>
               </div>
-            </div>
-          </section>
-        )}
-        {activeTab === "cancellations" && (
-          <section className="w-full max-w-2xl mx-auto bg-green-50 rounded-xl p-8 border border-green-100 flex flex-col gap-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Cancellations</h2>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-gray-800">Order #123456789</span>
-                  <span className="text-gray-500 text-sm">Cancelled on: 2023-10-20</span>
-                </div>
-                <button className="text-green-600 hover:underline text-sm cursor-pointer">View Details</button>
+            </section>
+          )}
+          {activeTab === "support" && (
+            <section className="bg-white rounded-2xl p-8 border border-green-100 flex flex-col gap-6 mb-8">
+              <h3 className="font-bold text-2xl text-green-800 mb-4">Support</h3>
+              <form className="bg-white rounded-lg p-6 border border-green-100 flex flex-col gap-4 max-w-lg mx-auto">
+                <label className="font-semibold text-gray-700">Raise a Support Ticket</label>
+                <textarea className="border border-green-200 rounded-lg p-3 min-h-[100px] resize-y focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400" placeholder="Describe your issue or question..." />
+                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600 cursor-pointer">Submit Ticket</button>
+              </form>
+              <div className="flex flex-col items-center gap-2 mt-6">
+                <span className="text-gray-700 font-medium">Or contact us via Gmail:</span>
+                <a href="mailto:support@example.com" className="text-green-700 hover:underline flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 48 48"><path fill="#fff" d="M4 12v24h40V12z"/><path fill="#e53935" d="M44 12H4l20 15z"/><path fill="#c62828" d="M44 12v24L24 27z"/><path fill="#fbc02d" d="M4 36V12l20 15z"/></svg> support@example.com</a>
               </div>
-              <div className="bg-white rounded-lg p-4 border border-green-100 flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-gray-800">Order #987654321</span>
-                  <span className="text-gray-500 text-sm">Cancelled on: 2023-10-15</span>
-                </div>
-                <button className="text-green-600 hover:underline text-sm cursor-pointer">View Details</button>
-              </div>
-            </div>
-          </section>
-        )}
-        {activeTab === "support" && (
-          <section className="w-full max-w-2xl mx-auto bg-green-50 rounded-xl p-8 border border-green-100 flex flex-col gap-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Bell className="w-6 h-6 text-yellow-500" />
-              <h3 className="font-semibold text-xl text-gray-900">Support</h3>
-            </div>
-            <form className="bg-white rounded-lg p-6 border border-green-100 flex flex-col gap-4 max-w-lg mx-auto">
-              <label className="font-semibold text-gray-700">Raise a Support Ticket</label>
-              <textarea className="border border-green-200 rounded-lg p-3 min-h-[100px] resize-y focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400" placeholder="Describe your issue or question..." />
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition border border-green-600 cursor-pointer">Submit Ticket</button>
-            </form>
-            <div className="flex flex-col items-center gap-2 mt-6">
-              <span className="text-gray-700 font-medium">Or contact us via Gmail:</span>
-              <a href="mailto:support@example.com" className="text-green-700 hover:underline flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 48 48"><path fill="#fff" d="M4 12v24h40V12z"/><path fill="#e53935" d="M44 12H4l20 15z"/><path fill="#c62828" d="M44 12v24L24 27z"/><path fill="#fbc02d" d="M4 36V12l20 15z"/></svg> support@example.com</a>
-            </div>
-          </section>
-        )}
-        <EditProfileModal
-          isOpen={editProfileOpen}
-          onClose={() => setEditProfileOpen(false)}
-          user={user}
-          onSave={updateProfile}
-        />
+            </section>
+          )}
+          <EditProfileModal
+            isOpen={editProfileOpen}
+            onClose={() => setEditProfileOpen(false)}
+            user={user}
+            onSave={updateProfile}
+          />
+          <AddressModal
+            isOpen={showAddressModal}
+            onClose={() => { setShowAddressModal(false); setPendingAddress(null); }}
+            onSave={handleAddressModalSave}
+            address={pendingAddress}
+          />
+        </div>
       </main>
     </div>
   );

@@ -8,13 +8,30 @@ const ADDRESS_TYPES = [
   { label: "Other", icon: <span role="img" aria-label="Other">🏷️</span> },
 ];
 
-export default function AddressModal({ isOpen, onClose, onSave }) {
+export default function AddressModal({ isOpen, onClose, onSave, address }) {
   const [addressType, setAddressType] = React.useState("Home");
   const [flat, setFlat] = React.useState("");
   const [floor, setFloor] = React.useState("");
   const [area, setArea] = React.useState("");
   const [landmark, setLandmark] = React.useState("");
   const [detecting, setDetecting] = React.useState(false);
+
+  // Pre-fill fields if editing
+  React.useEffect(() => {
+    if (isOpen && address) {
+      setAddressType(address.label || "Home");
+      setFlat(address.flat || "");
+      setFloor(address.floor || "");
+      setArea(address.area || "");
+      setLandmark(address.landmark || "");
+    } else if (isOpen) {
+      setAddressType("Home");
+      setFlat("");
+      setFloor("");
+      setArea("");
+      setLandmark("");
+    }
+  }, [isOpen, address]);
 
   React.useEffect(() => {
     if (!isOpen) return;
@@ -67,6 +84,18 @@ export default function AddressModal({ isOpen, onClose, onSave }) {
     );
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave({
+      label: addressType,
+      flat,
+      floor,
+      area,
+      landmark,
+      _id: address?._id
+    });
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -76,9 +105,10 @@ export default function AddressModal({ isOpen, onClose, onSave }) {
         onClick={onClose}
       ></div>
       <div className="fixed inset-0 flex items-center justify-center z-60 p-4" onClick={onClose}>
-        <div
+        <form
           className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto p-6 relative"
           onClick={e => e.stopPropagation()}
+          onSubmit={handleSubmit}
         >
           <div className="flex justify-between items-center border-b pb-3 mb-4">
             <h2 className="text-xl font-semibold text-gray-800">Enter complete address</h2>
@@ -142,17 +172,11 @@ export default function AddressModal({ isOpen, onClose, onSave }) {
               onChange={e => setLandmark(e.target.value)}
             />
             <button
+              type="submit"
               className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition"
-              onClick={() => onSave({
-                label: addressType,
-                flat,
-                floor,
-                area,
-                landmark
-              })}
-            >Save Address</button>
+            >{address ? "Update Address" : "Save Address"}</button>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );

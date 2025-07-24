@@ -220,12 +220,12 @@ export default function Navbar() {
   };
   return (
     <div className="font-sans">
-      <nav className="bg-white border-b border-gray-100 py-4 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
+      <nav className="bg-white border-b border-gray-100 py-2 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
         <div className="w-full flex flex-wrap items-center justify-between md:flex-nowrap">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 order-1 mr-4">
             <Link to="/" className="flex items-center space-x-3 group">
-              <img src="/qbd.png" alt="QBD Logo" className="h-[52px] object-contain" draggable={false} />
+              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain" draggable={false} />
             </Link>
           </div>
 

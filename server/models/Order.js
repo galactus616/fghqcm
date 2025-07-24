@@ -10,11 +10,6 @@ const OrderItemSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   imageUrl: { type: String },
   quantity: { type: Number, required: true, min: 1 },
-  status: {
-    type: String,
-    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
-    default: "Pending",
-  },
 });
 
 const OrderSchema = new mongoose.Schema({
@@ -37,10 +32,20 @@ const OrderSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  status: {
+    type: String,
+    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+    default: "Pending",
+  },
   items: [OrderItemSchema],
   deliveryAddress: {
-    type: String,
-    required: true,
+    label: { type: String, default: "Home" },
+    flat: { type: String },
+    floor: { type: String },
+    area: { type: String },
+    landmark: { type: String },
+    isDefault: { type: Boolean, default: false },
+    // Optionally include _id if you want to keep the original address id
   },
   phone: {
     type: String,

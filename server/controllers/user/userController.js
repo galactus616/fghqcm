@@ -62,7 +62,8 @@ exports.deleteAddress = async (req, res, next) => {
     const { addressId } = req.params;
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    user.addresses.id(addressId).remove();
+    // Remove address using filter for better compatibility
+    user.addresses = user.addresses.filter(addr => addr._id.toString() !== addressId);
     await user.save();
     res.json(user.addresses);
   } catch (err) {

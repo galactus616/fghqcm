@@ -131,9 +131,7 @@ const CheckoutPage = () => {
     }
     setPlacingOrder(true);
     try {
-      let addressToUse = selectedAddress;
-      // If temporary, do NOT save to backend, just use for order
-      // If not temporary, use as is
+      // Send only the address _id to the backend
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/orders`, {
         method: 'POST',
         headers: {
@@ -141,7 +139,7 @@ const CheckoutPage = () => {
         },
         credentials: 'include',
         body: JSON.stringify({
-          deliveryAddress: addressToUse,
+          deliveryAddress: selectedAddress._id, // Only send the address ID
           phone,
           paymentMethod,
         }),
