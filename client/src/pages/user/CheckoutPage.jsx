@@ -232,8 +232,8 @@ const CheckoutPage = () => {
               ) : (
                 <div className="space-y-4">
                   {cartItems.map(item => (
-                    <div key={item.id} className="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                      <div className="relative">
+                    <div key={item.id} className="relative md:static flex flex-col sm:flex-row items-center gap-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
+                      <div className="md:relative">
                         <img src={item.imageUrl} alt={item.name} className="w-20 h-20 rounded-lg object-cover bg-gray-50 border border-gray-100" />
                         {item.originalPrice && item.originalPrice > item.price && (
                           <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
@@ -263,7 +263,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="font-bold text-green-700 text-lg">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="font-bold text-green-700 text-lg">{currencySymbol} {(item.price * item.quantity).toFixed(2)}</div>
                         <button
                           className="flex cursor-pointer items-center gap-1 text-red-500 hover:underline text-xs"
                           onClick={() => removeFromCart(item.productId, item.variantIndex)}
@@ -432,23 +432,23 @@ const CheckoutPage = () => {
               <div className="mb-6">
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Items ({cartItems.length})</span>
-                  <span>{currencySymbol}{cartTotals.itemsTotal.toFixed(2)}</span>
+                  <span>{currencySymbol} {cartTotals.itemsTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Your savings</span>
-                  <span className="text-green-600">-{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
+                  <span className="text-green-600">-{currencySymbol} {cartTotals.totalSavings.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Delivery</span>
-                  <span>{currencySymbol}{cartTotals.deliveryCharge.toFixed(2)}</span>
+                  <span>{currencySymbol} {cartTotals.deliveryCharge.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Handling Charge</span>
-                  <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
+                  <span>{currencySymbol} {cartTotals.handlingCharge.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-green-800 text-lg border-t border-green-100 pt-2 mt-2">
                   <span>Grand Total</span>
-                  <span>{currencySymbol}{cartTotals.grandTotal.toFixed(2)}</span>
+                  <span>{currencySymbol} {cartTotals.grandTotal.toFixed(2)}</span>
                 </div>
               </div>
               {/* Payment Method */}
