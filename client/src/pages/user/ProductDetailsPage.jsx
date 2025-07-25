@@ -116,25 +116,25 @@ const ProductDetailsPage = () => {
   return (
     <div className="font-sans bg-[#0a614d]/5 min-h-screen pb-10">
       <section className="w-11/12 mx-auto">
-        <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
           {/* Back Button */}
           <button
-            className="flex cursor-pointer items-center gap-2 text-green-700 hover:underline font-medium text-base mb-6"
+            className="flex cursor-pointer items-center gap-2 text-primary hover:underline font-medium text-base mb-6"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5" />
             {t("back")}
           </button>
           {/* Delivery Info Bar */}
-          <div className="mb-6 flex items-center gap-3 bg-green-100 border border-green-200 rounded-lg px-4 py-2 text-green-800 text-sm font-semibold">
+          <div className="mb-6 flex items-center gap-3 bg-primary/10 border border-primary/30 rounded-lg px-4 py-2 text-primary text-sm font-semibold">
             <span>🚚 {t("delivery_in_10_minutes")}</span>
             <span className="text-gray-500 font-normal">|</span>
             <span>{t("delivery_address_example")}</span>
           </div>
-          {/* Main Product Card */}
-          <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-6 md:p-8 flex flex-col lg:flex-row gap-8">
+          {/* Main Product Card - Two Column Layout */}
+          <div className="bg-white rounded-2xl shadow-lg border border-primary/30 p-6 md:p-8 flex flex-col lg:flex-row gap-12">
             {/* Left: Image Gallery */}
-            <div className="flex flex-col items-center w-full lg:w-1/2">
+            <div className="flex flex-col items-center w-full lg:w-[400px]">
               <div className="border border-gray-200 rounded-2xl w-full aspect-square flex items-center justify-center p-4 mb-4 bg-gray-50">
                 <img
                   src={product.images?.[selectedImageIdx] || product.imageUrl}
@@ -152,7 +152,7 @@ const ProductDetailsPage = () => {
                     onClick={() => setSelectedImageIdx(idx)}
                     className={`w-14 h-14 cursor-pointer rounded-xl border-2 p-1 transition-all duration-200 ${
                       selectedImageIdx === idx
-                        ? "border-green-500"
+                        ? "border-primary"
                         : "border-gray-200 hover:border-gray-400"
                     }`}
                     aria-label={`View image ${idx + 1}`}
@@ -166,54 +166,34 @@ const ProductDetailsPage = () => {
                 ))}
               </div>
             </div>
-            {/* Right: Product Info */}
-            <div className="flex-1 flex flex-col justify-between">
+            {/* Right: Product Info - Clean Modern Layout */}
+            <div className="flex-1 flex flex-col max-w-md justify-between mt-8 lg:mt-0">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-bold uppercase text-gray-500 bg-gray-100 rounded px-2 py-0.5">
-                    {typeof product.category === "object"
-                      ? product.category.name
-                      : product.category}
-                  </span>
-                </div>
-                <div className="text-2xl md:text-3xl font-bold text-green-800 mb-1 flex items-center gap-2">
-                  {product.name}
-                  {product.isBestSeller && (
-                    <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      {t("bestseller")}
-                    </span>
-                  )}
-                  {product.isFeatured && (
-                    <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      {t("featured")}
-                    </span>
-                  )}
-
-                  {product.discountedPrice &&
-                    product.discountedPrice < product.price && (
-                      <span className=" text-white text-sm font-bold px-2 py-1 rounded-full">
-                        {Math.round(
-                          ((product.price - product.discountedPrice) /
-                            product.price) *
-                            100
-                        )}
-                        % OFF
-                      </span>
-                    )}
-                </div>
-
-                <div className="text-gray-500 text-sm mb-4">
-                  {product.description?.slice(0, 60)}
-                  {product.description && product.description.length > 60
-                    ? "..."
-                    : ""}
-                </div>
+                {/* Category Badge */}
+                <span
+                  className="text-xs font-bold uppercase text-gray-500 bg-gray-100 rounded px-2 py-0.5 cursor-pointer hover:underline mb-2 inline-block"
+                  onClick={() => {
+                    if (typeof product.category === 'object' && product.category.id) {
+                      navigate(`/category/${product.category.id}`);
+                    } else if (typeof product.category === 'object' && product.category._id) {
+                      navigate(`/category/${product.category._id}`);
+                    } else if (typeof product.category === 'string') {
+                      navigate(`/category/${product.category}`);
+                    }
+                  }}
+                >
+                  {typeof product.category === "object"
+                    ? product.category.name
+                    : product.category}
+                </span>
+                {/* Product Name */}
+                <h1 className="text-3xl font-bold text-primary mb-1">{product.name}</h1>
+                {/* Short Description */}
+                <p className="text-gray-600 mb-4">{product.description?.slice(0, 60)}{product.description && product.description.length > 60 ? "..." : ""}</p>
                 {/* Variant Selector */}
                 {product.variants && product.variants.length > 1 && (
                   <div className="mb-4">
-                    <label className="font-semibold text-gray-800 mb-2 block">
-                      {t("select_unit")}
-                    </label>
+                    <label className="font-semibold text-gray-800 mb-2 block">{t("select_unit")}</label>
                     <div className="flex gap-2">
                       {product.variants.map((v, idx) => (
                         <button
@@ -221,7 +201,7 @@ const ProductDetailsPage = () => {
                           type="button"
                           className={`px-3 py-1 cursor-pointer rounded-lg border text-xs font-medium transition-colors whitespace-nowrap ${
                             selectedVariantIdx === idx
-                              ? "bg-green-600 text-white border-green-600"
+                              ? "bg-primary text-white border-primary"
                               : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
                           }`}
                           onClick={() => setSelectedVariantIdx(idx)}
@@ -232,40 +212,16 @@ const ProductDetailsPage = () => {
                     </div>
                   </div>
                 )}
-                {/* Price and Cart Controls */}
-                <div className="flex items-center justify-between mb-6 mt-2">
-                  <div className="flex flex-col">
-                    <section className="text-2xl flex gap-2 md:text-3xl font-bold text-green-700">
-                      <span>{currencySymbol}</span>
-                      <span>{variant.discountedPrice ?? variant.price}</span>
-                    </section>
+                {/* Price and Add Button Row */}
+                <div className="flex items-center justify-between mb-4 gap-4">
+                  <div>
+                    <span className="text-2xl font-bold text-primary">{currencySymbol}{variant.discountedPrice ?? variant.price}</span>
                     {variant.discountedPrice && (
-                      <div className=" flex gap-1">
-                      <span className="text-md text-gray-400 line-through ml-2">
-                        {t()} {currencySymbol}
-                        {variant.price}
-
-                      </span>
-                         <div>
-                      {variant.discountedPrice &&
-                        variant.discountedPrice < variant.price && (
-                          <span className="  text-gray-400 text-sm px-2 font-semibold py-1 ">
-                            {Math.round(
-                              ((variant.price - variant.discountedPrice) /
-                                variant.price) *
-                                100
-                            )}
-                            % OFF
-                          </span>
-                        )}
-                    </div>
-                      </div>
+                      <span className="line-through text-gray-400 ml-2">{currencySymbol}{variant.price}</span>
                     )}
-
-                   
-                    <div className="text-xs text-gray-500 mt-1">
-                      {t("inclusive_of_all_taxes")}
-                    </div>
+                    {variant.discountedPrice && variant.discountedPrice < variant.price && (
+                      <span className="ml-2 text-bd-red font-semibold">{Math.round(((variant.price - variant.discountedPrice) / variant.price) * 100)}% OFF</span>
+                    )}
                   </div>
                   {cartItem ? (
                     <div className="flex items-center border border-gray-300 rounded-md overflow-hidden ">
@@ -276,12 +232,10 @@ const ProductDetailsPage = () => {
                       >
                         <Minus className="w-4 h-4 text-gray-700" />
                       </button>
-                      <span className="px-3 text-gray-800">
-                        {cartItem.quantity}
-                      </span>
+                      <span className="px-3 text-gray-800">{cartItem.quantity}</span>
                       <button
                         onClick={handleIncrease}
-                        className="p-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white transition-colors duration-200"
+                        className="p-2 bg-primary cursor-pointer hover:bg-primary/80 text-white transition-colors duration-200"
                         aria-label={t("increase_quantity")}
                       >
                         <Plus className="w-4 h-4" />
@@ -289,36 +243,23 @@ const ProductDetailsPage = () => {
                     </div>
                   ) : (
                     <button
-                      className="flex items-center gap-1 cursor-pointer text-white bg-green-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
+                      className="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary/80 transition-colors"
                       onClick={handleAddToCart}
                     >
-                      <Plus className="w-4 h-4" />
-                      <span>{t("add")}</span>
+                      <Plus className="w-4 h-4 inline-block mr-1" /> {t("add")}
                     </button>
                   )}
                 </div>
+                <div className="text-xs text-gray-500 mb-2">{t("inclusive_of_all_taxes")}</div>
               </div>
               {/* Product Details Section */}
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <h2 className="text-lg font-bold text-green-800 mb-2">
-                  {t("product_details")}
-                </h2>
-                <div className="prose prose-sm max-w-none text-gray-600">
-                  {renderDescription()}
-                </div>
-                {product.description && product.description.length > 250 && (
-                  <button
-                    className="text-green-600 font-semibold text-sm mt-3 cursor-pointer"
-                    onClick={() => setShowMore((v) => !v)}
-                  >
-                    {showMore ? t("view_less_details") : t("view_more_details")}
-                  </button>
-                )}
-                <div className="mt-6">
-                  <h3 className="text-base font-bold text-gray-800">
-                    {t("unit")}
-                  </h3>
-                  <p className="text-gray-600">{variant.quantityLabel}</p>
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <h2 className="font-bold text-primary mb-2">{t("product_details")}</h2>
+                <ul className="list-disc ml-5 text-gray-600">
+                  <li>{product.description}</li>
+                </ul>
+                <div className="mt-2">
+                  <span className="font-bold">{t("unit")}:</span> {variant.quantityLabel}
                 </div>
               </div>
             </div>
@@ -326,9 +267,9 @@ const ProductDetailsPage = () => {
           {/* Related Products Section */}
         </div>
         {related.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-gray-200">
-            <h2 className="text-xl font-bold text-green-800 mb-4">
-              {t("top_10_products_in_category")}
+          <div className="mt-16 pt-8 border-t border-gray-200">
+            <h2 className="text-xl font-bold text-primary mb-4">
+              {t("Top 10 Products In Category")}
             </h2>
             <div className="flex gap-4 overflow-x-auto w-full pb-4">
               {related.map((product) => (

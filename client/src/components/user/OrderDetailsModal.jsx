@@ -28,12 +28,12 @@ const OrderStatusTracker = ({ currentStatus }) => {
               {/* Vertical Line */}
               {index < statuses.length - 1 && (
                 <div
-                  className={`absolute left-[11px] top-[18px] h-full w-0.5 ${isActive || isPast ? 'bg-[#0a614d]' : 'bg-gray-200'}`}
+                  className={`absolute left-[11px] top-[18px] h-full w-0.5 ${isActive || isPast ? 'bg-primary' : 'bg-gray-200'}`}
                 />
               )}
               {/* Circle */}
               <div
-                className={`absolute left-0 top-0 flex h-6 w-6 items-center justify-center rounded-full ${isActive || isPast ? 'bg-[#0a614d]' : 'bg-gray-200'}`}
+                className={`absolute left-0 top-0 flex h-6 w-6 items-center justify-center rounded-full ${isActive || isPast ? 'bg-primary' : 'bg-gray-200'}`}
               >
                 {(isActive || isPast) && (
                   <div className="h-2 w-2 rounded-full bg-white" />
@@ -151,7 +151,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
             className="w-full rounded-lg border border-green-500 bg-green-500 py-3 font-semibold text-white transition hover:bg-green-600 cursor-pointer mt-2"
             onClick={onClose}
           >
-            {t('close')}
+            {t('Close')}
           </button>
         </div>
       </div>
