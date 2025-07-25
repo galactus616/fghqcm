@@ -9,9 +9,30 @@ import {
   Linkedin,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import Modal from "./Modal";
+import { useState } from "react";
 
 const Footer = () => {
   const { t } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    content: "",
+  });
+
+  const openModal = (titleKey, contentKey) => {
+    setModalContent({
+      title: t(titleKey),
+      content: t(contentKey),
+    });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalContent({ title: "", content: "" });
+  };
   return (
     <footer className="bg-white border-t border-gray-100 py-12 w-full">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -67,38 +88,38 @@ const Footer = () => {
                   {t('home')}
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/products"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('products')}
                 </a>
-              </li>
+              </li> */}
               <li>
-                <a
-                  href="/cart"
+                <Link
+                  to="/checkout"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('my_cart')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/orders"
+                <Link
+                  to="/orders"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('my_orders')}
-                </a>
+                </Link>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/offers"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   Offers & Deals
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -132,45 +153,45 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="/help"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('help_center', 'help_center_content')}
+                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('help_center')}
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="/contact"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('contact_us', 'contact_us_content')}
+                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('contact_us')}
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="/faq"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('faq', 'faq_content')}
+                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('faq')}
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="/returns"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('returns_refunds', 'returns_refunds_content')}
+                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('returns_refunds')}
-                </a>
+                </button>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/track"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('track_order')}
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -204,6 +225,14 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          title={modalContent.title}
+        >
+          <p>{modalContent.content}</p>
+        </Modal>
 
         {/* Bottom Section */}
         <div className="border-t border-gray-100 pt-8">
