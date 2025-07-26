@@ -14,7 +14,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (isStoreOwnerLoggedIn) {
-      navigate('/store/dashboard/kyc', { replace: true });
+      navigate('/store/dashboard/kyc-status', { replace: true });
     }
   }, [isStoreOwnerLoggedIn, navigate]);
 

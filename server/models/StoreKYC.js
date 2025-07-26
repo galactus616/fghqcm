@@ -52,12 +52,7 @@ const StoreKYCSchema = new mongoose.Schema({
     email: String,
   },
 
-  // --- Status & Admin ---
-  status: {
-    type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending',
-  },
+  // --- Admin ---
   submittedAt: { type: Date, default: Date.now },
   reviewedAt:  { type: Date },
   remarks:     { type: String },

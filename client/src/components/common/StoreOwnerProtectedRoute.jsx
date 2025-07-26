@@ -15,13 +15,29 @@ export default function StoreOwnerProtectedRoute({ children }) {
   if (!isStoreOwnerLoggedIn) {
     return <Navigate to="/store" replace />;
   }
-  // If not KYC completed, always redirect to KYC page
-  if (!storeOwner?.kycCompleted && location.pathname !== '/store/dashboard/kyc') {
+  
+  // Check KYC status and handle routing
+  const kycStatus = storeOwner?.kycStatus;
+  
+  // If KYC not submitted and not on KYC form, redirect to KYC form
+  if (kycStatus === 'not_submitted' && location.pathname !== '/store/dashboard/kyc') {
     return <Navigate to="/store/dashboard/kyc" replace />;
   }
-  // If KYC completed and trying to access KYC page, redirect to dashboard home
-  if (storeOwner?.kycCompleted && location.pathname === '/store/dashboard/kyc') {
+  
+  // If KYC is pending and not on status page, redirect to status page
+  if (kycStatus === 'pending' && location.pathname !== '/store/dashboard/kyc-status') {
+    return <Navigate to="/store/dashboard/kyc-status" replace />;
+  }
+  
+  // If KYC is approved and trying to access KYC pages, redirect to dashboard
+  if (kycStatus === 'approved' && (location.pathname === '/store/dashboard/kyc' || location.pathname === '/store/dashboard/kyc-status')) {
     return <Navigate to="/store/dashboard" replace />;
   }
+  
+  // If KYC is rejected and not on status page, redirect to status page
+  if (kycStatus === 'rejected' && location.pathname !== '/store/dashboard/kyc-status') {
+    return <Navigate to="/store/dashboard/kyc-status" replace />;
+  }
+  
   return children;
 } 

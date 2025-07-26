@@ -43,11 +43,12 @@ const MultiStepKycForm = () => {
     }
   });
   const [currentStep, setCurrentStep] = useState(0);
-  const { logoutStoreOwner, storeOwner, isStoreOwnerLoggedIn } = useStoreOwner();
+  const { logoutStoreOwner, storeOwner, isStoreOwnerLoggedIn, refreshProfile } = useStoreOwner();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Save draft to localStorage on kycData change
   useEffect(() => {
@@ -94,33 +95,29 @@ const MultiStepKycForm = () => {
     }
     setErrors({});
     setSubmitError('');
+    setIsSubmitting(true);
     try {
       await submitKyc(kycData);
       localStorage.removeItem(LOCAL_STORAGE_KEY);
       localStorage.removeItem(LOCAL_STORAGE_STEP_KEY);
-      setSubmitted(true);
+      
+      setTimeout(async () => {
+        try {
+          const { getKycStatus } = await import('../../api/store/storeKyc');
+          await getKycStatus();
+          await refreshProfile();
+          navigate('/store/dashboard/kyc-status', { replace: true });
+        } catch (err) {
+          navigate('/store/dashboard/kyc-status', { replace: true });
+        }
+      }, 1000);
+      
     } catch (err) {
       setSubmitError(err?.response?.data?.message || 'Submission failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  if (submitted) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-green-50">
-        <div className="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center">
-          <svg className="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" /></svg>
-          <h2 className="text-2xl font-bold text-green-700 mb-2">KYC Submitted!</h2>
-          <p className="text-gray-700 mb-6 text-center max-w-md">Your KYC is under review. You will be notified by email once your account is verified.<br/>If you have questions, please contact support.</p>
-          <button
-            className="px-6 py-2 cursor-pointer rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow"
-            onClick={handleLogout}
-          >
-            Log out
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const StepComponent = stepComponents[currentStep];
 
@@ -209,8 +206,16 @@ const MultiStepKycForm = () => {
             <button
               className="px-8 py-2 rounded cursor-pointer bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow w-full max-w-xs"
               onClick={handleSubmit}
+              disabled={isSubmitting}
             >
-              Submit KYC
+              {isSubmitting ? (
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                'Submit KYC'
+              )}
             </button>
           )}
         </div>

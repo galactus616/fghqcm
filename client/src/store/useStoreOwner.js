@@ -3,12 +3,12 @@ import { requestOtp, verifyOtp } from '../api/store/storeAuth';
 import axios from 'axios';
 
 const getProfile = async () => {
-  const res = await axios.get('/api/store/auth/profile', { withCredentials: true });
+  const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/store/auth/profile`, { withCredentials: true });
   return res.data;
 };
 
 const logout = async () => {
-  await axios.post('/api/store/auth/logout', {}, { withCredentials: true });
+  await axios.post(`${import.meta.env.VITE_API_BASE_URL}/store/auth/logout`, {}, { withCredentials: true });
 };
 
 const useStoreOwner = create((set, get) => ({
@@ -23,6 +23,17 @@ const useStoreOwner = create((set, get) => ({
       set({ storeOwner: res.storeOwner, isStoreOwnerLoggedIn: true, isStoreOwnerAuthLoading: false });
     } catch (err) {
       set({ storeOwner: null, isStoreOwnerLoggedIn: false, isStoreOwnerAuthLoading: false });
+    }
+  },
+
+  async refreshProfile() {
+    try {
+      const res = await getProfile();
+      set({ storeOwner: res.storeOwner, isStoreOwnerLoggedIn: true });
+      return res.storeOwner;
+    } catch (err) {
+      console.error('Error refreshing profile:', err);
+      return null;
     }
   },
 

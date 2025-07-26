@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const StoreOwnerSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: false, // Now optional
+    required: false,
     trim: true,
   },
   email: {
@@ -23,9 +23,10 @@ const StoreOwnerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StoreKYC',
   },
-  kycCompleted: {
-    type: Boolean,
-    default: false,
+  kycStatus: {
+    type: String,
+    enum: ['not_submitted', 'pending', 'approved', 'rejected'],
+    default: 'not_submitted',
   },
   createdAt: {
     type: Date,

@@ -5,5 +5,6 @@ const storeOwnerAuthMiddleware = require('../../middleware/storeOwnerAuthMiddlew
 
 router.post('/submit', storeOwnerAuthMiddleware, kycController.submitKyc);
 router.get('/status', storeOwnerAuthMiddleware, kycController.getKycStatus);
+router.put('/:kycId/approve', kycController.approveKyc);
 
 module.exports = router; 

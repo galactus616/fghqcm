@@ -18,6 +18,7 @@ import AddressModal from "./components/common/AddressModal";
 
 // Store onboarding imports
 import LandingPage from './pages/store/LandingPage';
+import KycStatusPage from './pages/store/KycStatusPage';
 import StoreLayout from './Layouts/StoreLayout';
 import MultiStepKycForm from './components/store/MultiStepKycForm';
 import StoreOwnerProtectedRoute from './components/common/StoreOwnerProtectedRoute';
@@ -75,8 +76,24 @@ function App() {
             </StoreOwnerProtectedRoute>
           }
         />
+        <Route
+          path="/store/dashboard/kyc-status"
+          element={
+            <StoreOwnerProtectedRoute>
+              <KycStatusPage />
+            </StoreOwnerProtectedRoute>
+          }
+        />
         {/* All other dashboard routes use StoreLayout and are protected */}
         <Route path="/store/dashboard" element={<StoreLayout />}>
+          <Route
+            index
+            element={
+              <StoreOwnerProtectedRoute>
+                <div className="p-8">Dashboard Home (Coming soon...)</div>
+              </StoreOwnerProtectedRoute>
+            }
+          />
           <Route
             path="catalogue"
             element={
