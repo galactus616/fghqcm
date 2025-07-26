@@ -240,7 +240,7 @@ const Footer = () => {
                       <span>{line.substring(1).trim()}</span>
                     </div>
                   );
-                } else if (line.trim().startsWith('✅') || line.trim().startsWith('⏰') || line.trim().startsWith('📋') || line.trim().startsWith('💰') || line.trim().startsWith('❌')) {
+                } else if (line.trim().startsWith('✅') || line.trim().startsWith('⏰') || line.trim().startsWith('📋') || line.trim().startsWith('💰') || line.trim().startsWith('❌') || line.trim().startsWith('🔒') || line.trim().startsWith('📱') || line.trim().startsWith('🛡️') || line.trim().startsWith('🔗') || line.trim().startsWith('📞') || line.trim().startsWith('📧') || line.trim().startsWith('🍪') || line.trim().startsWith('📊') || line.trim().startsWith('🔐') || line.trim().startsWith('📈') || line.trim().startsWith('🎯') || line.trim().startsWith('⚙️') || line.trim().startsWith('🔧')) {
                   return (
                     <div key={index} className="font-semibold text-gray-800 mt-4">
                       {line}
@@ -267,6 +267,13 @@ const Footer = () => {
                   );
                 } else if (line.trim() === '') {
                   return <div key={index} className="h-2"></div>;
+                } else if (line.trim().match(/^\d+\./)) {
+                  return (
+                    <div key={index} className="flex items-start space-x-2">
+                      <span className="text-green-600 mt-1 font-semibold">{line.split('.')[0]}.</span>
+                      <span>{line.split('.').slice(1).join('.').trim()}</span>
+                    </div>
+                  );
                 } else {
                   return <div key={index}>{line}</div>;
                 }
@@ -280,28 +287,28 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-500 text-sm">
-                © 2024 SwiftCart. {t('all_rights_reserved')}
+                © 2025 BD qcommerce. {t('all_rights_reserved')}
               </p>
             </div>
             <div className="flex space-x-6">
-              <a
-                href="/privacy"
-                className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm"
+              <button
+                onClick={() => openModal('privacy_policy', 'privacy_policy_content')}
+                className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm cursor-pointer"
               >
                 {t('privacy_policy')}
-              </a>
-              <a
-                href="/terms"
-                className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm"
+              </button>
+              <button
+                onClick={() => openModal('terms_of_service', 'terms_of_service_content')}
+                className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm cursor-pointer"
               >
                 {t('terms_of_service')}
-              </a>
-              <a
-                href="/cookies"
-                className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm"
+              </button>
+              <button
+                onClick={() => openModal('cookie_policy', 'cookie_policy_content')}
+                className="text-gray-500 hover:text-green-600 transition-colors duration-200 text-sm cursor-pointer"
               >
                 {t('cookie_policy')}
-              </a>
+              </button>
             </div>
           </div>
         </div>
