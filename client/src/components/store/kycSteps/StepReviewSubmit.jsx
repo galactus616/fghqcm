@@ -2,14 +2,14 @@ import React from 'react';
 
 const ReviewRow = ({ label, value, isFile, required }) => (
   <div className="flex items-center gap-2 py-1">
-    <div className="w-40 text-gray-500 font-medium flex-shrink-0">{label}{required && <span className="text-red-500">*</span>}</div>
+    <div className="w-40 text-gray-500 font-medium flex-shrink-0">{label}{required && <span className="text-bd-red">*</span>}</div>
     <div className="flex-1 font-semibold">
       {isFile
         ? (typeof value === 'string' && value.trim() !== ''
             ? <span className="inline-block px-2 py-1 bg-green-100 text-green-700 rounded text-xs">File uploaded</span>
-            : <span className="text-red-500">Not provided</span>
+            : <span className="text-bd-red">Not provided</span>
           )
-        : (value ? value : <span className="text-red-500">Not provided</span>)}
+        : (value ? value : <span className="text-bd-red">Not provided</span>)}
     </div>
   </div>
 );

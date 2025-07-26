@@ -306,6 +306,11 @@ const useStore = create((set, get) => ({
   setCurrentLocation: (location) => set({ currentLocation: location }),
   isLocationModalOpen: false,
   setLocationModalOpen: (isOpen) => set({ isLocationModalOpen: isOpen }),
+
+  // Global selected address state
+  selectedAddressId: null,
+  setSelectedAddressId: (id) => set({ selectedAddressId: id }),
+  
   language: "en",
   setLanguage: (lang) => {
     set({ language: lang });

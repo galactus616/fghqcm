@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #0a614d;
+  --color-gray: #6b7280;
+  --color-gray-light: #f3f4f6;
+  --color-gray-dark: #111827;
+  --color-bd-red: #ed2b41;
+  --color-blue: #2563eb;
+  --color-amber: #f59e42;
+  --color-yellow: #facc15;
+  --color-pink: #ec4899;
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
 }

@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <img src="/qbd.png" alt="QBD Logo" className="h-[64px] object-contain p-1" draggable={false} />
+              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain p-1" draggable={false} />
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
               {t('trusted_partner')}
@@ -287,7 +287,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-500 text-sm">
-                © 2025 BD qcommerce. {t('all_rights_reserved')}
+                © 2025 ForgeHive Solutions. {t('all_rights_reserved')}
               </p>
             </div>
             <div className="flex space-x-6">

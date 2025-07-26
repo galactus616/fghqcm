@@ -68,13 +68,13 @@ const ProductCard = ({ product }) => {
   };
   return (
     <section className="relative">
-      <div className=" rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all border-1 border-green-300 duration-200 hover:shadow-md hover:border-gray-200">
+      <div className=" rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className=" ">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
               <div className="absolute top-0 sm:top-[1px] right-2 sm:right-3 z-10">
                 <div className="absolute top-0 right-0 z-10">
-                  <div className="bg-[#ed2b41] text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg shadow-lg">
+                  <div className="bg-bd-red text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg shadow-lg">
                     {Math.round(
                       ((variant.price - variant.discountedPrice) /
                         variant.price) *
@@ -139,8 +139,8 @@ const ProductCard = ({ product }) => {
                       type="button"
                       className={`px-2 sm:px-3 py-1 rounded-lg cursor-pointer border text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap ${
                         selectedVariantIdx === idx
-                          ? "bg-green-600 text-white border-green-600"
-                          : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                          ? "bg-primary text-white border-primary"
+                          : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:border-primary"
                       }`}
                       onClick={() => setSelectedVariantIdx(idx)}
                     >
@@ -150,7 +150,7 @@ const ProductCard = ({ product }) => {
                 </div>
               ) : (
                 product.variants && (
-                  <span className="inline-block bg-green-600 text-white text-[10px] sm:text-xs font-medium px-2 sm:px-3 py-1 rounded-lg border border-green-600">
+                  <span className="inline-block bg-primary text-white text-[10px] sm:text-xs font-medium px-2 sm:px-3 py-1 rounded-lg border border-primary">
                     {product.variants[0].quantityLabel}
                   </span>
                 )
@@ -161,7 +161,7 @@ const ProductCard = ({ product }) => {
             <div className="flex items-center justify-between mt-auto pt-1 flex-nowrap">
               <div className="flex flex-col">
                 <div className="flex items-center flex-col-reverse">
-                  <section className="text-[14px] flex gap-1 sm:text-[16px] md:text-[18px] font-bold text-green-700">
+                  <section className="text-[14px] flex gap-1 sm:text-[16px] md:text-[18px] font-bold text-primary">
                     <span>{currencySymbol}</span>
                     <span>{variant.discountedPrice ?? variant.price}</span>
                   </section>
@@ -174,7 +174,7 @@ const ProductCard = ({ product }) => {
                 </div>
               </div>
               {cartItem ? (
-                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden ">
+                <div className="flex items-center border border-primary/30 rounded-md overflow-hidden ">
                   <button
                     onClick={handleDecrease}
                     className="p-2 bg-gray-200 cursor-pointer hover:bg-gray-300 transition-colors duration-200"
@@ -187,7 +187,7 @@ const ProductCard = ({ product }) => {
                   </span>
                   <button
                     onClick={handleIncrease}
-                    className="p-2 cursor-pointer bg-green-500 hover:bg-green-600 text-white transition-colors duration-200"
+                    className="p-2 cursor-pointer bg-primary hover:bg-primary/80 text-white transition-colors duration-200"
                     aria-label={t("increase_quantity")}
                   >
                     <Plus className="w-4 h-4" />
@@ -195,7 +195,7 @@ const ProductCard = ({ product }) => {
                 </div>
               ) : (
                 <button
-                  className="flex cursor-pointer items-center gap-1 flex-nowrap border-green-600 border-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:border-green-700 transition-colors"
+                  className="flex cursor-pointer items-center gap-1 flex-nowrap border-primary border-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-semibold hover:border-primary/80 transition-colors"
                   onClick={handleAddToCart}
                 >
                   <Plus className="w-3 h-3 sm:w-4 sm:h-4" />

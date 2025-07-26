@@ -4,7 +4,7 @@ const Product = require("../../models/Product");
 
 const placeOrder = async (req, res, next) => {
   const userId = req.user._id;
-  const { deliveryAddress, phone, paymentMethod } = req.body;
+  let { deliveryAddress, phone, paymentMethod } = req.body;
 
   if (!deliveryAddress || !phone) {
     const error = new Error("Delivery address and phone are required.");
@@ -18,6 +18,25 @@ const placeOrder = async (req, res, next) => {
   }
 
   try {
+    // If deliveryAddress is an object with _id, treat as address ID; else, use as object
+    if (typeof deliveryAddress === 'string' || (deliveryAddress && deliveryAddress._id)) {
+      // Fetch user and address
+      const user = await require('../../models/User').findById(userId);
+      let addressObj = null;
+      if (typeof deliveryAddress === 'string') {
+        addressObj = user.addresses.id(deliveryAddress);
+      } else {
+        addressObj = user.addresses.id(deliveryAddress._id);
+      }
+      if (!addressObj) {
+        const error = new Error("Selected address not found.");
+        error.statusCode = 400;
+        return next(error);
+      }
+      deliveryAddress = addressObj.toObject();
+      delete deliveryAddress._id; // Remove subdoc id for cleanliness
+    }
+
     const userCart = await Cart.findOne({ userId }).populate("items.productId");
 
     if (!userCart || userCart.items.length === 0) {

@@ -4,6 +4,6 @@ const orderController = require('../../controllers/store/orderController');
 const storeOwnerAuthMiddleware = require('../../middleware/storeOwnerAuthMiddleware');
 
 router.get('/', storeOwnerAuthMiddleware, orderController.getStoreOrders);
-router.put('/:orderId/item/:itemId/status', storeOwnerAuthMiddleware, orderController.updateOrderItemStatus);
+router.put('/:orderId/status', storeOwnerAuthMiddleware, orderController.updateOrderStatus);
 
 module.exports = router;

@@ -21,14 +21,14 @@ exports.getStoreOrders = async (req, res) => {
   res.json({ orders: filteredOrders });
 };
 
-// Update the status of a specific order item for the current store owner's store
-// Route: PUT /api/store/orders/:orderId/item/:itemId/status
+// Update the status of an order for the current store owner's store
+// Route: PUT /api/store/orders/:orderId/status
 // Access: Private (StoreOwner)
 // Body: { status }
-// Returns: { message, item }
-exports.updateOrderItemStatus = async (req, res) => {
+// Returns: { message, order }
+exports.updateOrderStatus = async (req, res) => {
   const storeOwnerId = req.storeOwner.id;
-  const { orderId, itemId } = req.params;
+  const { orderId } = req.params;
   const { status } = req.body;
 
   const store = await Store.findOne({ owner: storeOwnerId });
@@ -37,13 +37,11 @@ exports.updateOrderItemStatus = async (req, res) => {
   const order = await Order.findById(orderId);
   if (!order) return res.status(404).json({ message: 'Order not found' });
 
-  const item = order.items.id(itemId);
-  if (!item || item.storeId.toString() !== store._id.toString()) {
-    return res.status(404).json({ message: 'Order item not found for this store' });
-  }
+  // Optionally, check if the order contains items from this store
+  // (if multi-store orders are supported)
 
-  item.status = status;
+  order.status = status;
   await order.save();
 
-  res.json({ message: 'Order item status updated', item });
+  res.json({ message: 'Order status updated', order });
 };
