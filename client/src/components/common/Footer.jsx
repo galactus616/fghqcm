@@ -155,7 +155,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => openModal('help_center', 'help_center_content')}
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('help_center')}
                 </button>
@@ -163,7 +163,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => openModal('contact_us', 'contact_us_content')}
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('contact_us')}
                 </button>
@@ -171,7 +171,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => openModal('faq', 'faq_content')}
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('faq')}
                 </button>
@@ -179,7 +179,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => openModal('returns_refunds', 'returns_refunds_content')}
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('returns_refunds')}
                 </button>
@@ -203,9 +203,8 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-green-600" />
-                <span className="text-gray-600 text-sm">
-                  info@forgehivesolutions.com
-                </span>
+                
+                <a href="mailto:info@forgehivesolutions.com" className="text-gray-600 text-sm hover:text-green-600 transition-colors duration-200">info@forgehivesolutions.com</a>  
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-green-600" />
@@ -231,7 +230,49 @@ const Footer = () => {
           onClose={closeModal}
           title={modalContent.title}
         >
-          <p>{modalContent.content}</p>
+          <div className="space-y-4">
+            <div className="prose prose-sm max-w-none">
+              {modalContent.content.split('\n').map((line, index) => {
+                if (line.trim().startsWith('•')) {
+                  return (
+                    <div key={index} className="flex items-start space-x-2">
+                      <span className="text-green-600 mt-1">•</span>
+                      <span>{line.substring(1).trim()}</span>
+                    </div>
+                  );
+                } else if (line.trim().startsWith('✅') || line.trim().startsWith('⏰') || line.trim().startsWith('📋') || line.trim().startsWith('💰') || line.trim().startsWith('❌')) {
+                  return (
+                    <div key={index} className="font-semibold text-gray-800 mt-4">
+                      {line}
+                    </div>
+                  );
+                } else if (line.trim().startsWith('Q:') || line.trim().startsWith('প্র:')) {
+                  return (
+                    <div key={index} className="font-semibold text-gray-800 mt-4">
+                      {line}
+                    </div>
+                  );
+                } else if (line.trim().startsWith('A:') || line.trim().startsWith('উ:')) {
+                  return (
+                    <div key={index} className="ml-4 text-gray-600 mb-2">
+                      {line}
+                    </div>
+                  );
+                } else if (line.trim().startsWith('📧') || line.trim().startsWith('📞') || line.trim().startsWith('📍')) {
+                  return (
+                    <div key={index} className="flex items-center space-x-2">
+                      <span>{line.substring(0, 2)}</span>
+                      <span>{line.substring(2)}</span>
+                    </div>
+                  );
+                } else if (line.trim() === '') {
+                  return <div key={index} className="h-2"></div>;
+                } else {
+                  return <div key={index}>{line}</div>;
+                }
+              })}
+            </div>
+          </div>
         </Modal>
 
         {/* Bottom Section */}

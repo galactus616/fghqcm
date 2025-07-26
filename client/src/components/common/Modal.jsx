@@ -23,7 +23,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
           &times;
         </button>
         <h2 className="text-2xl font-bold mb-4 border-b pb-2">{title}</h2>
-        <div className="mt-4 text-gray-700 text-sm leading-relaxed overflow-y-auto max-h-[70vh]">
+        <div className="mt-4 text-gray-700 text-sm leading-relaxed overflow-y-auto max-h-[70vh] whitespace-pre-line">
           {children}
         </div>
       </div>
