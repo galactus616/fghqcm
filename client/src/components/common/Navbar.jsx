@@ -478,12 +478,12 @@ export default function Navbar() {
                 </div>
               ) : (
                 <>
-                  <div className="bg-green-50 bg-opacity-80 text-green-700 font-medium p-3 rounded-lg flex justify-between items-center text-sm">
-                    <span>{t("your_total_savings") || "Your total savings"}</span>
+                  <div className="bg-primary/10 bg-opacity-80 text-primary font-medium p-3 rounded-lg flex justify-between items-center text-sm">
+                    <span>{"Your total savings"}</span>
                     <span>{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
                   </div>
 
-                  <div className="flex items-center bg-blue-50 bg-opacity-80 text-blue-700 p-3 rounded-lg text-sm">
+                  <div className="flex items-center bg-blue-50 bg-opacity-80 text-primary p-3 rounded-lg text-sm">
                     <span className="mr-2">📦</span>
                     <span>
                       Shipment of {cartItems.length} item
@@ -526,7 +526,7 @@ export default function Navbar() {
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
-                            className="p-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white transition-colors duration-200"
+                            className="p-2 bg-primary cursor-pointer hover:bg-primary-dark text-white transition-colors duration-200"
                             aria-label={`Increase quantity of ${item.name || 'Unavailable'}`}
                           >
                             <Plus className="w-4 h-4" />
@@ -545,13 +545,13 @@ export default function Navbar() {
                       </div>
                       <div className="flex justify-between">
                         <span>{t("saved")}</span>
-                        <span className="text-green-600">
+                        <span className="text-primary">
                           {currencySymbol}{cartTotals.totalSavings.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t("delivery_charge")}</span>
-                        <span className="text-green-600">FREE</span>
+                        <span className="text-primary">FREE</span>
                       </div>
                       {cartItems.length > 0 && (
                         <div className="flex justify-between">
@@ -610,7 +610,7 @@ export default function Navbar() {
 
             <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0 left-0 right-0 shadow-lg">
               <button
-                className="w-full bg-green-500 text-white py-3 px-4 cursor-pointer rounded-lg flex items-center justify-between shadow-md hover:bg-green-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-primary text-white py-3 px-4 cursor-pointer rounded-lg flex items-center justify-between shadow-md hover:bg-primary-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={async () => {
                   if (!isLoggedIn) {
                     setAuthMessage("You need to login to proceed to checkout.");

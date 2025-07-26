@@ -192,7 +192,7 @@ const CheckoutPage = () => {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <button
-            className="flex items-center cursor-pointer gap-2 text-green-700 hover:underline font-medium text-base"
+            className="flex items-center cursor-pointer gap-2 text-primary hover:underline font-medium text-base"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -200,17 +200,17 @@ const CheckoutPage = () => {
           </button>
           <a
             href="/"
-            className="text-green-700 hover:underline font-medium text-base"
+            className="text-primary hover:underline font-medium text-base"
           >
             {t('continue_shopping')}
           </a>
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">{t('checkout')}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-primary mb-6">{t('checkout')}</h1>
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Cart Items List */}
           <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-green-100">
-              <h2 className="text-lg font-semibold text-green-700 mb-4">{t('shopping_cart', { count: cartItems.length })}</h2>
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-primary/10">
+              <h2 className="text-lg font-semibold text-primary mb-4">{t('shopping_cart', { count: cartItems.length })}</h2>
               {cartItems.length === 0 ? (
                 <div className="text-gray-500">{t('your_cart_is_empty')}</div>
               ) : (
@@ -231,7 +231,7 @@ const CheckoutPage = () => {
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
-                            className="p-1 bg-gray-200 cursor-pointer hover:bg-gray-300 rounded"
+                            className="p-1 bg-primary/10 cursor-pointer hover:bg-primary/20 rounded"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="w-4 h-4" />
@@ -239,7 +239,7 @@ const CheckoutPage = () => {
                           <span className="px-2 text-gray-800 font-medium">{item.quantity}</span>
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, 1)}
-                            className="p-1 bg-green-500 cursor-pointer hover:bg-green-600 text-white rounded"
+                            className="p-1 bg-primary cursor-pointer hover:bg-primary-dark text-white rounded"
                             aria-label="Increase quantity"
                           >
                             <Plus className="w-4 h-4" />
@@ -247,7 +247,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="font-bold text-green-700 text-lg">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="font-bold text-primary text-lg">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</div>
                         <button
                           className="flex cursor-pointer items-center gap-1 text-red-500 hover:underline text-xs"
                           onClick={() => removeFromCart(item.productId, item.variantIndex)}
@@ -263,12 +263,12 @@ const CheckoutPage = () => {
           </div>
           {/* Order Summary Card */}
           <div className="w-full lg:w-[400px] flex-shrink-0">
-            <div className="bg-white rounded-xl shadow-md p-6 border border-green-100 sticky top-28">
+            <div className="bg-white rounded-xl shadow-md p-6 border border-primary/10 sticky top-28">
               {/* Address & Phone */}
               <div className="mb-6">
                 <div className="mb-3 flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-green-600" />
-                  <span className="font-semibold text-green-700 text-lg">Delivery Address</span>
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <span className="font-semibold text-primary text-lg">Delivery Address</span>
                 </div>
                 <div className="bg-white border border-gray-100 rounded-xl p-4 mb-4">
                   <div className="flex flex-col gap-2">
@@ -278,8 +278,8 @@ const CheckoutPage = () => {
                         <label
                           key={addr._id}
                           className={`flex items-center gap-3 cursor-pointer rounded-lg px-3 py-2 border transition-all duration-150
-                            ${isSelected ? 'border-green-600 bg-green-50 shadow-sm' : 'border-gray-200 bg-white'}
-                            hover:border-green-400 focus-within:ring-2 focus-within:ring-green-200`}
+                            ${isSelected ? 'border-primary bg-primary/10 shadow-sm' : 'border-gray-200 bg-white'}
+                            hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20`}
                           htmlFor={`address-radio-${idx}`}
                           style={{ position: 'relative', minHeight: 48 }}
                           tabIndex={0}
@@ -296,7 +296,7 @@ const CheckoutPage = () => {
                             }
                           }}
                         >
-                          <span className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${isSelected ? 'border-green-600 bg-green-600' : 'border-gray-300 bg-white'} transition-all`}>
+                          <span className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${isSelected ? 'border-primary bg-primary' : 'border-gray-300 bg-white'} transition-all`}>
                             {isSelected && <span className="w-2.5 h-2.5 bg-white rounded-full block" />}
                           </span>
                           <input
@@ -340,7 +340,7 @@ const CheckoutPage = () => {
                     })}
                     {addresses.length > 3 && (
                       <button
-                        className="text-green-700 cursor-pointer text-xs mt-1 hover:underline self-start"
+                        className="text-primary cursor-pointer text-xs mt-1 hover:underline self-start"
                         onClick={() => setExpanded(e => !e)}
                       >
                         {expanded ? 'Show less' : `Show all addresses (${addresses.length})`}
@@ -350,7 +350,7 @@ const CheckoutPage = () => {
                   {/* Modern button row */}
                   <div className="flex flex-row gap-2 mt-4">
                     <button
-                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-green-100 hover:bg-green-200 text-green-700 px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-200 border border-green-200"
+                      className="flex-1 flex cursor-pointer items-center justify-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-0 py-2 rounded-full shadow-sm font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20 border border-primary/20"
                       onClick={() => {
                         setShowAddressModal(true);
                       }}
@@ -365,7 +365,7 @@ const CheckoutPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
                   <input
                     type="tel"
-                    className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+                    className="w-full px-4 py-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/5 placeholder-gray-400"
                     placeholder="Enter your phone number"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
@@ -380,14 +380,14 @@ const CheckoutPage = () => {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    className="flex-1 px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+                    className="flex-1 px-4 py-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/5 placeholder-gray-400"
                     placeholder="Enter coupon (coming soon)"
                     value={coupon}
                     onChange={e => setCoupon(e.target.value)}
                     disabled
                   />
                   <button
-                    className="bg-green-200 text-green-700 px-4 py-2 rounded-lg font-semibold cursor-not-allowed"
+                    className="bg-primary/20 text-primary px-4 py-2 rounded-lg font-semibold cursor-not-allowed"
                     disabled
                   >Apply</button>
                 </div>
@@ -400,7 +400,7 @@ const CheckoutPage = () => {
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Your savings</span>
-                  <span className="text-green-600">-{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
+                  <span className="text-primary">-{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Delivery</span>
@@ -410,14 +410,14 @@ const CheckoutPage = () => {
                   <span>Handling Charge</span>
                   <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between font-bold text-green-800 text-lg border-t border-green-100 pt-2 mt-2">
+                <div className="flex justify-between font-bold text-primary text-lg border-t border-primary/10 pt-2 mt-2">
                   <span>Grand Total</span>
                   <span>{currencySymbol}{cartTotals.grandTotal.toFixed(2)}</span>
                 </div>
               </div>
               {/* Payment Method */}
               <div className="mb-6">
-                <h2 className="text-base font-semibold text-green-700 mb-2">Payment Method</h2>
+                <h2 className="text-base font-semibold text-primary mb-2">Payment Method</h2>
                 <div className="flex flex-col gap-3">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -425,17 +425,17 @@ const CheckoutPage = () => {
                       name="payment"
                       checked={paymentMethod === 'cod'}
                       onChange={() => setPaymentMethod('cod')}
-                      className="accent-green-600"
+                      className="accent-primary"
                     />
-                    <span className="font-semibold text-green-700">Cash on Delivery (COD)</span>
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <span className="font-semibold text-primary">Cash on Delivery (COD)</span>
+                    <CheckCircle className="w-5 h-5 text-primary" />
                   </label>
                   <label className="flex items-center gap-3 cursor-not-allowed opacity-60">
                     <input
                       type="radio"
                       name="payment"
                       disabled
-                      className="accent-green-600"
+                      className="accent-primary"
                     />
                     <span className="font-semibold text-gray-400">UPI / Card / Netbanking (Coming Soon)</span>
                     <XCircle className="w-5 h-5 text-gray-400" />
@@ -444,7 +444,7 @@ const CheckoutPage = () => {
               </div>
               {/* Place Order Button */}
               <button
-                className="w-full cursor-pointer bg-green-600 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full cursor-pointer bg-primary text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:bg-primary-dark transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handlePlaceOrder}
                 disabled={placingOrder || cartItems.length === 0 || selectedAddressIdx === null}
               >
