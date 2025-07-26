@@ -99,8 +99,10 @@ export default function Navbar() {
   };
 
   const toggleProfileDropdown = () => {
-    closeAllOverlays();
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+    // Close other overlays, but not the profile dropdown itself
+    setLocationModalOpen(false);
+    setIsCartOpen(false);
+    setIsProfileDropdownOpen((prev) => !prev);
   };
 
   const toggleCart = () => {
@@ -309,7 +311,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder={t("search_placeholder")}
-                className="w-full py-3 pl-10 pr-4 bg-transparent text-gray-800 placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm"
+                className=" text-ellipsis w-full py-3 pl-10 pr-4 bg-transparent text-gray-800 placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm"
                 onKeyDown={e => {
                   if (e.key === 'Enter' && e.target.value.trim()) {
                     navigate(`/search?q=${encodeURIComponent(e.target.value.trim())}`);
@@ -320,7 +322,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Profile */}
-          <div className="hidden md:flex items-center ml-6 order-4 min-w-[140px] gap-2">
+          <div className="hidden md:flex items-center ml-3 lg:ml-6 order-4 min-w-[140px] gap-2">
             {/* Language Toggle for Desktop */}
             <button
               onClick={() => setLanguage(language === "en" ? "bn" : "en")}
@@ -367,6 +369,7 @@ export default function Navbar() {
                         onMouseDown={e => {
                           e.stopPropagation();
                           item.action();
+                          setIsProfileDropdownOpen(false);
                         }}
                         className={`flex items-center cursor-pointer w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           item.isDestructive
@@ -401,35 +404,40 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Profile Dropdown or Login Button */}
-        {isLoggedIn && isProfileDropdownOpen && (
-          <div
-            className="md:hidden mt-4 border-t border-gray-200 pt-4"
-            style={{ pointerEvents: "auto", zIndex: 9999 }}
-          >
-            <div className="flex flex-col space-y-3">
-              <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
-                {minimalProfileMenuItems.map((item, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.stopPropagation();
-                      item.action();
-                    }}
-                    className={`block w-full cursor-pointer text-left px-4 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                      item.isDestructive
-                        ? "text-red-600 hover:bg-red-50"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                    tabIndex={0}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+          {isLoggedIn && isProfileDropdownOpen && (
+            <div
+              className="md:hidden absolute top-full left-0 w-full bg-white rounded-b-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
+              style={{ pointerEvents: "auto", zIndex: 9999 }}
+            >
+              <div className="flex flex-col space-y-3">
+                <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
+                  {minimalProfileMenuItems.map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                          item.action();
+                          setIsProfileDropdownOpen(false);
+                        }}
+                        className={`flex items-center cursor-pointer w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                          item.isDestructive
+                            ? "text-red-600 hover:bg-red-50"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                        tabIndex={0}
+                      >
+                        <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
+                        <span>{t(item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
       </nav>
 
       {/* Profile Dropdown Overlay */}
@@ -507,9 +515,9 @@ export default function Navbar() {
                             {item.name || 'Unavailable'}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            {currencySymbol}{(item.price ?? 0).toFixed(2)}{' '}
+                            {currencySymbol} {(item.price ?? 0).toFixed(2)}{' '}
                             <span className="line-through text-gray-400">
-                              {currencySymbol}{(item.originalPrice ?? 0).toFixed(2)}
+                              {currencySymbol} {(item.originalPrice ?? 0).toFixed(2)}
                             </span>
                           </p>
                         </div>
@@ -541,7 +549,7 @@ export default function Navbar() {
                     <div className="space-y-2 text-sm text-gray-700">
                       <div className="flex justify-between">
                         <span>{t("items_total")}</span>
-                        <span>{currencySymbol}{cartTotals.itemsTotal.toFixed(2)}</span>
+                        <span>{currencySymbol} {cartTotals.itemsTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t("saved")}</span>
@@ -556,14 +564,14 @@ export default function Navbar() {
                       {cartItems.length > 0 && (
                         <div className="flex justify-between">
                           <span>{t("handling_charge")}</span>
-                          <span>{currencySymbol}{cartTotals.handlingCharge.toFixed(2)}</span>
+                          <span>{currencySymbol} {cartTotals.handlingCharge.toFixed(2)}</span>
                         </div>
                       )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
                         <span>{t("grand_total")}</span>
                         <span>
-                          {currencySymbol}
-                          {cartItems.length > 0
+                          
+                         {currencySymbol} {cartItems.length > 0
                             ? cartTotals.grandTotal.toFixed(2)
                             : "0.00"}
                         </span>
@@ -585,7 +593,7 @@ export default function Navbar() {
                           key={amount}
                           className="flex-1  min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                         >
-                          {currencySymbol}{amount}
+                          {currencySymbol} {amount}
                         </button>
                       ))}
                       <button className="flex-1 min-w-[80px] py-2 px-3 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer duration-200">
@@ -624,7 +632,7 @@ export default function Navbar() {
                 disabled={cartItems.length === 0}
               >
                 <span className="font-bold text-lg">
-                  {currencySymbol}{cartTotals.grandTotal.toFixed(2)}
+                  {currencySymbol} {cartTotals.grandTotal.toFixed(2)}
                 </span>
                 <span className="flex items-center">
                   Proceed{' '}

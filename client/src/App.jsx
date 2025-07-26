@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import UserLayout from "./Layouts/UserLayout";
 import HomePage from "./pages/user/HomePage";
-import CartPage from "./pages/user/CartPage";
+// import CartPage from "./pages/user/CartPage";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import CategoryPage from "./pages/user/CategoryPage";
 import SearchResultPage from './pages/user/SearchResultPage';
@@ -42,7 +42,7 @@ function App() {
         {/* User routes */}
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="cart" element={<CartPage />} />
+          {/* <Route path="cart" element={<CartPage />} /> */}
           <Route path="checkout" element={
             <ProtectedRoute>
               <CheckoutPage />

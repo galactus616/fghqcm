@@ -9,9 +9,30 @@ import {
   Linkedin,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import Modal from "./Modal";
+import { useState } from "react";
 
 const Footer = () => {
   const { t } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    content: "",
+  });
+
+  const openModal = (titleKey, contentKey) => {
+    setModalContent({
+      title: t(titleKey),
+      content: t(contentKey),
+    });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalContent({ title: "", content: "" });
+  };
   return (
     <footer className="bg-white border-t border-gray-100 py-12 w-full">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -67,38 +88,38 @@ const Footer = () => {
                   {t('home')}
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/products"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('products')}
                 </a>
-              </li>
+              </li> */}
               <li>
-                <a
-                  href="/cart"
+                <Link
+                  to="/checkout"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('my_cart')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/orders"
+                <Link
+                  to="/orders"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('my_orders')}
-                </a>
+                </Link>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/offers"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   Offers & Deals
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -132,45 +153,45 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="/help"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('help_center', 'help_center_content')}
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('help_center')}
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="/contact"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('contact_us', 'contact_us_content')}
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('contact_us')}
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="/faq"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('faq', 'faq_content')}
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('faq')}
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="/returns"
-                  className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
+                <button
+                  onClick={() => openModal('returns_refunds', 'returns_refunds_content')}
+                  className=" cursor-pointer text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm text-left w-full"
                 >
                   {t('returns_refunds')}
-                </a>
+                </button>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/track"
                   className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm"
                 >
                   {t('track_order')}
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -182,9 +203,8 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-green-600" />
-                <span className="text-gray-600 text-sm">
-                  info@forgehivesolutions.com
-                </span>
+                
+                <a href="mailto:info@forgehivesolutions.com" className="text-gray-600 text-sm hover:text-green-600 transition-colors duration-200">info@forgehivesolutions.com</a>  
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-green-600" />
@@ -204,6 +224,56 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          title={modalContent.title}
+        >
+          <div className="space-y-4">
+            <div className="prose prose-sm max-w-none">
+              {modalContent.content.split('\n').map((line, index) => {
+                if (line.trim().startsWith('•')) {
+                  return (
+                    <div key={index} className="flex items-start space-x-2">
+                      <span className="text-green-600 mt-1">•</span>
+                      <span>{line.substring(1).trim()}</span>
+                    </div>
+                  );
+                } else if (line.trim().startsWith('✅') || line.trim().startsWith('⏰') || line.trim().startsWith('📋') || line.trim().startsWith('💰') || line.trim().startsWith('❌')) {
+                  return (
+                    <div key={index} className="font-semibold text-gray-800 mt-4">
+                      {line}
+                    </div>
+                  );
+                } else if (line.trim().startsWith('Q:') || line.trim().startsWith('প্র:')) {
+                  return (
+                    <div key={index} className="font-semibold text-gray-800 mt-4">
+                      {line}
+                    </div>
+                  );
+                } else if (line.trim().startsWith('A:') || line.trim().startsWith('উ:')) {
+                  return (
+                    <div key={index} className="ml-4 text-gray-600 mb-2">
+                      {line}
+                    </div>
+                  );
+                } else if (line.trim().startsWith('📧') || line.trim().startsWith('📞') || line.trim().startsWith('📍')) {
+                  return (
+                    <div key={index} className="flex items-center space-x-2">
+                      <span>{line.substring(0, 2)}</span>
+                      <span>{line.substring(2)}</span>
+                    </div>
+                  );
+                } else if (line.trim() === '') {
+                  return <div key={index} className="h-2"></div>;
+                } else {
+                  return <div key={index}>{line}</div>;
+                }
+              })}
+            </div>
+          </div>
+        </Modal>
 
         {/* Bottom Section */}
         <div className="border-t border-gray-100 pt-8">
