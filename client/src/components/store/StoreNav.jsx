@@ -3,7 +3,7 @@ import React from "react";
 
 const StoreNav = () => {
   return (
-    <nav className="border-b h-16 z-10 bg-white flex items-center justify-between">
+    <nav className="border-b border-gray-400 h-16 z-10 bg-white flex items-center justify-between px-4">
       <section className="flex items-center">
         <div className="w-64">
           <img
@@ -13,7 +13,7 @@ const StoreNav = () => {
             draggable={false}
           />
         </div>
-        <h3 className="pl-2 text-xl font-semibold"> Products Management</h3>
+        <h3 className="text-xl font-semibold"> Products Management</h3>
       </section>
       <section className="flex items-center justify-between gap-4">
         <BellRing className="w-6 h-6" />

@@ -21,19 +21,13 @@ import LandingPage from "./pages/store/LandingPage";
 import StoreLayout from "./Layouts/StoreLayout";
 import MultiStepKycForm from "./components/store/MultiStepKycForm";
 import StoreOwnerProtectedRoute from "./components/common/StoreOwnerProtectedRoute";
+import StoreProducts from "./components/store/Store_Components/StoreProducts";
+import Inventory from "./components/store/Store_Components/Inventory";
+import StoreOrder from "./components/store/Store_Components/StoreOrder";
+import StoreFinances from "./components/store/Store_Components/StoreFinances";
+import StoreAccount from "./components/store/Store_Components/StoreAccount";
+import StoreDashboard from "./components/store/Store_Components/StoreDashboard";
 // Placeholder components for other sections
-const CataloguePage = () => (
-  <div className="p-8">Catalogue (Coming soon...)</div>
-);
-const InventoryPage = () => (
-  <div className="p-8">Inventory (Coming soon...)</div>
-);
-const StoreOrdersPage = () => (
-  <div className="p-8">Orders (Coming soon...)</div>
-);
-const StoreAccountPage = () => (
-  <div className="p-8">Account (Coming soon...)</div>
-);
 
 function App() {
   const { fetchProfile } = useStore();
@@ -94,10 +88,12 @@ function App() {
         />
         {/* All other dashboard routes use StoreLayout and are protected */}
         <Route path="/store/dashboard" element={<StoreLayout />}>
-          <Route path="catalogue" element={<CataloguePage />} />
-          <Route path="inventory" element={<InventoryPage />} />
-          <Route path="orders" element={<StoreOrdersPage />} />
-          <Route path="account" element={<StoreAccountPage />} />
+          <Route path="dashboard" element={<StoreDashboard />} />
+          <Route path="store_products" element={<StoreProducts />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="store_orders" element={<StoreOrder />} />
+          <Route path="finances" element={<StoreFinances />} />
+          <Route path="store_account" element={<StoreAccount />} />
         </Route>
       </Routes>
     </>
