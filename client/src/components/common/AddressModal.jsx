@@ -125,7 +125,7 @@ export default function AddressModal({ isOpen, onClose, onSave, address }) {
             {ADDRESS_TYPES.map(type => (
               <button
                 key={type.label}
-                className={`flex items-center gap-1 px-3 py-1 rounded-full border font-semibold text-sm transition-all ${addressType === type.label ? "bg-green-100 border-green-500 text-green-700" : "bg-white border-gray-200 text-gray-600"}`}
+                className={`flex items-center gap-1 px-3 py-1 rounded-full border font-semibold text-sm transition-all cursor-pointer ${addressType === type.label ? "bg-primary/10 border-primary text-primary" : "bg-white border-gray-200 text-gray-600"}`}
                 onClick={() => setAddressType(type.label)}
                 type="button"
               >
@@ -135,7 +135,7 @@ export default function AddressModal({ isOpen, onClose, onSave, address }) {
           </div>
           {/* Detect location button */}
           <button
-            className="flex items-center gap-2 mb-4 px-4 py-2 bg-green-50 border border-green-200 rounded-lg text-green-700 font-semibold hover:bg-green-100 transition disabled:opacity-60"
+            className="flex items-center gap-2 mb-4 px-4 py-2 bg-primary/5 border border-primary/20 rounded-lg text-primary font-semibold hover:bg-primary/10 transition disabled:opacity-60 cursor-pointer"
             onClick={handleDetectLocation}
             disabled={detecting}
             type="button"
@@ -145,35 +145,35 @@ export default function AddressModal({ isOpen, onClose, onSave, address }) {
           <div className="space-y-4">
             <input
               type="text"
-              className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/5 placeholder-gray-400"
               placeholder="Flat / House no / Building name"
               value={flat}
               onChange={e => setFlat(e.target.value)}
             />
             <input
               type="text"
-              className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/5 placeholder-gray-400"
               placeholder="Floor (optional)"
               value={floor}
               onChange={e => setFloor(e.target.value)}
             />
             <input
               type="text"
-              className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/5 placeholder-gray-400"
               placeholder="Area / Sector / Locality"
               value={area}
               onChange={e => setArea(e.target.value)}
             />
             <input
               type="text"
-              className="w-full px-4 py-2 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-green-50 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/5 placeholder-gray-400"
               placeholder="Nearby landmark (optional)"
               value={landmark}
               onChange={e => setLandmark(e.target.value)}
             />
             <button
               type="submit"
-              className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition"
+              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary/90 transition cursor-pointer"
             >{address ? "Update Address" : "Save Address"}</button>
           </div>
         </form>

@@ -8,6 +8,7 @@ import LocationModal from '../../components/common/LocationModal';
 import AddressModal from '../../components/common/AddressModal';
 import { useTranslation } from "react-i18next";
 import { useCurrencySymbol } from "../../utils/currencyUtils";
+import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 const CheckoutPage = () => {
   // Use the currency symbol hook for reactive updates
@@ -34,6 +35,13 @@ const CheckoutPage = () => {
     setPendingAddress(addressObj);
     handleAddAddress(addressObj);
   };
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { name: 'Home', link: '/' },
+    { name: 'My Cart', link: '/cart' },
+    { name: 'Checkout' }
+  ];
 
   // Fetch addresses from backend
   React.useEffect(() => {
@@ -206,6 +214,7 @@ const CheckoutPage = () => {
           </a>
         </div>
         <h1 className="text-2xl md:text-3xl font-bold text-primary mb-6">{t('checkout')}</h1>
+        <Breadcrumbs items={breadcrumbItems} />
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Cart Items List */}
           <div className="flex-1 min-w-0">

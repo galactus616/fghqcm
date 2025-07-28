@@ -5,6 +5,7 @@ import { X, ShoppingBag, ArrowRight, Loader2, Truck, CheckCircle2, Clock, Ban, M
 import axios from 'axios';
 import OrderDetailsModal from '../../components/user/OrderDetailsModal';
 import { useTranslation } from "react-i18next";
+import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 const OrdersPage = () => {
   const currencySymbol = useCurrencySymbol();
@@ -14,6 +15,12 @@ const OrdersPage = () => {
   const [error, setError] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { t } = useTranslation();
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { name: 'Home', link: '/' },
+    { name: 'My Orders' }
+  ];
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -98,6 +105,7 @@ const OrdersPage = () => {
   return (
     <main className="font-sans bg-gray-100 min-h-screen">
       <div className="container mx-auto px-2 sm:px-4 lg:px-8 py-8">
+        <Breadcrumbs items={breadcrumbItems} />
         <h1 className="text-3xl font-bold text-primary mb-8">{t('my_orders') || 'My Orders'}</h1>
         {loading ? (
           <section className="space-y-8" aria-label="Order list loading">

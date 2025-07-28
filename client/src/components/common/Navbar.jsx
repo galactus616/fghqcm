@@ -379,7 +379,7 @@ export default function Navbar() {
                         tabIndex={0}
                       >
                         <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
-                        <span>{t(item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
+                        <span>{t(item.label === "Log Out" ? "logout" : item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
 
                       </button>
                     );
@@ -430,7 +430,7 @@ export default function Navbar() {
                         tabIndex={0}
                       >
                         <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
-                        <span>{t(item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
+                        <span>{t(item.label === "Log Out" ? "logout" : item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
                       </button>
                     );
                   })}

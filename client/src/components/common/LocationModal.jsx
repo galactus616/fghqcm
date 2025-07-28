@@ -113,9 +113,9 @@ export default function LocationModal() {
                 {addresses.map(addr => (
                   <button
                     key={addr._id}
-                    className={`flex flex-col items-start text-left p-3 rounded-lg border transition-all duration-150 w-full
-                      ${selectedAddressId === addr._id ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white'}
-                      hover:border-green-400`}
+                    className={`flex flex-col items-start text-left p-3 rounded-lg border transition-all duration-150 w-full cursor-pointer
+                      ${selectedAddressId === addr._id ? 'border-primary bg-primary/5' : 'border-gray-200 bg-white'}
+                      hover:border-primary/60`}
                     onClick={() => {
                       setSelectedAddressId(addr._id);
                       setCurrentLocation([
@@ -128,7 +128,7 @@ export default function LocationModal() {
                     }}
                   >
                     <span className="font-semibold text-gray-800 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-green-600" /> {addr.label}
+                      <MapPin className="w-4 h-4 text-primary" /> {addr.label}
                     </span>
                     <span className="text-xs text-gray-500 mt-0.5">
                       { [addr.flat, addr.floor, addr.area, addr.landmark].filter(Boolean).join(', ') }
@@ -139,7 +139,7 @@ export default function LocationModal() {
             )}
             <button
               onClick={handleDetectLocation}
-              className={`w-full flex items-center justify-center bg-green-500 text-white py-3 px-4 rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${locationLoading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-green-600'}`}
+              className={`w-full flex items-center justify-center bg-primary text-white py-3 px-4 rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer ${locationLoading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-primary/90'}`}
               disabled={locationLoading}
             >
               <MapPin className="w-5 h-5 mr-2" />
@@ -159,7 +159,7 @@ export default function LocationModal() {
               <div className="text-red-600 text-sm text-center">{locationError}</div>
             )}
             {currentLocation && currentLocation !== 'Select location' && (
-              <div className="text-green-700 text-center text-sm font-medium border border-green-100 bg-green-50 rounded-lg p-3">
+              <div className="text-primary text-center text-sm font-medium border border-primary/20 bg-primary/5 rounded-lg p-3">
                 Detected Address: {currentLocation}
               </div>
             )}
