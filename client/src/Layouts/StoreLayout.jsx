@@ -1,6 +1,6 @@
 import Sidebar from "../components/store/Sidebar";
 import { Outlet } from "react-router-dom";
-import StoreNav from "../components/store/StoreNav";
+import StoreNav from './../components/store/StoreNav';
 
 const StoreLayout = () => {
   return (
