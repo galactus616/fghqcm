@@ -280,11 +280,11 @@ const StoreProducts = () => {
               <div className="">
                 <h4 className="font-semibold text-gray-800">{product.name}</h4>
                 <p className="text-xs text-gray-500">
-                  SKU: {product.sku} | ID: #{product.id}
+                  SKU: {product.sku} | ID: # {product.id}
                 </p>
                 <div className="flex justify-between items-center">
-                  <p className="text-lg font-bold text-gray-800">
-                    ৳ {product.price}
+                  <p className="text-lg font-semibold text-gray-800">
+                    <span className="text-2xl font-bold text-gray-800">৳ </span>{product.price}
                   </p>
                   <p className="text-sm text-primary font-medium">
                     In Stock: {product.stock}
@@ -306,10 +306,10 @@ const StoreProducts = () => {
                 {/* Action Buttons */}
                 <div className="flex gap-2 mt-3">
                   <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-primary/50  duration-200 cursor-pointer">
-                    Edit
+                    View
                   </button>
                   <button className="flex-1 px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">
-                    View
+                    Add +
                   </button>
                 </div>
               </div>
