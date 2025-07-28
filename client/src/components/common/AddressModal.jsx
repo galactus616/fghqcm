@@ -55,7 +55,7 @@ export default function AddressModal({ isOpen, onClose, onSave, address }) {
         try {
           // Call backend route to avoid CORS
           const response = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/location?lat=${latitude}&lon=${longitude}`
+            `http://localhost:5000/api/location?lat=${latitude}&lon=${longitude}`
           );
           if (!response.ok) throw new Error("Failed to fetch address");
           const data = await response.json();

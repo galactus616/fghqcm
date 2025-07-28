@@ -84,8 +84,24 @@ function App() {
             </StoreOwnerProtectedRoute>
           }
         />
+        <Route
+          path="/store/dashboard/kyc-status"
+          element={
+            <StoreOwnerProtectedRoute>
+              <KycStatusPage />
+            </StoreOwnerProtectedRoute>
+          }
+        />
         {/* All other dashboard routes use StoreLayout and are protected */}
         <Route path="/store/dashboard" element={<StoreLayout />}>
+          <Route
+            index
+            element={
+              <StoreOwnerProtectedRoute>
+                <div className="p-8">Dashboard Home (Coming soon...)</div>
+              </StoreOwnerProtectedRoute>
+            }
+          />
           <Route
             index
             element={
