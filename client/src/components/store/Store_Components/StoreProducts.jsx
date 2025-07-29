@@ -29,6 +29,11 @@ const StoreProducts = () => {
     { value: "stationery", label: "Stationery" },
     { value: "chocolate", label: "Chocolate" },
     { value: "instant_food", label: "Instant Food" },
+    { value: "instant", label: "Instant Food" },
+    { value: "food", label: "Instant Food" },
+    { value: "water", label: "Instant Food" },
+    { value: "late_food", label: "Instant Food" },
+    { value: "istant_satisfecton", label: "Instant Food" },
   ];
 
   const statuses = [

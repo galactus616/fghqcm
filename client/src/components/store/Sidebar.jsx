@@ -42,12 +42,12 @@ const navItems = [
 ];
 
 const Sidebar = () => (
-  <aside className="w-64 bg-white flex flex-col min-h-screen ">
-    <div className="flex justify-center items-center">
+  <aside className="w-64 bg-white flex flex-col min-h-screen  ">
+    <div className="flex px-6 items-center border-b-gray-400 border-b-1">
       <img
         src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg"
         alt="QBD Logo"
-        className="h-[68px] object-contain"
+        className="h-[63px] object-contain"
         draggable={false}
       />
     </div>

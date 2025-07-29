@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const StoreCategoriesFilter = ({ categories, selectedCategory, onCategorySelect }) => {
+const StoreCategoriesFilter = ({
+  categories,
+  selectedCategory,
+  onCategorySelect,
+}) => {
+  const scrollContainerRef = useRef(null);
+
   // Category images mapping - using the actual images from public/storeimages
   const categoryImages = {
     vegetables: "/storeimages/vegitables.png",
@@ -16,13 +23,59 @@ const StoreCategoriesFilter = ({ categories, selectedCategory, onCategorySelect 
     stationery: "/storeimages/stetonary.png",
     chocolate: "/storeimages/chocklets.png",
     instant_food: "/storeimages/instant food.png",
+    instant: "/storeimages/instant food.png",
+    food: "/storeimages/instant food.png",
+    water: "/storeimages/instant food.png",
+    late_food: "/storeimages/instant food.png",
+    istant_satisfecton: "/storeimages/instant food.png",
+  };
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -200,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 200,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
-    <section className="w-full py-3">
-      <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar scroll-smooth px-1">
+    <section className="w-full py-3 ">
+      <section className="flex items-center justify-between mb-3">
+        <span className="text-lg font-medium">Categories</span>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={scrollLeft}
+            className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors duration-200"
+          >
+            <ChevronLeft className="text-primary" />
+          </button>
+          <button 
+            onClick={scrollRight}
+            className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors duration-200"
+          >
+            <ChevronRight className="text-primary" />
+          </button>
+        </div>
+      </section>
+      <div 
+        ref={scrollContainerRef}
+        className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar scroll-smooth px-1"
+      >
         {categories
-          .filter((category) => category.value !== "all" && categoryImages[category.value])
+          .filter(
+            (category) =>
+              category.value !== "all" && categoryImages[category.value]
+          )
           .map((category) => (
             <button
               key={category.value}
@@ -78,4 +131,4 @@ style.innerHTML = `
   scroll-behavior: smooth;
 }
 `;
-document.head.appendChild(style); 
+document.head.appendChild(style);
