@@ -54,7 +54,7 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-white flex flex-col h-full shadow-sm">
       {/* Logo section */}
-      <div className="flex items-center border-b px-5 pb-1 border-gray-200">
+      <div className="flex items-center border-b px-5 h-18 pb-1 border-gray-200">
         <img
           src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg"
           alt="QBD Logo"
@@ -91,7 +91,7 @@ const Sidebar = () => {
       </nav>
       
       {/* Bottom: Logout/email */}
-      <div className="p-3 border-t border-gray-200 flex items-center gap-2">
+      <div className="p-3 border-t border-gray-200 flex items-center gap-2 h-14">
         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <circle cx="12" cy="7" r="4" />
           <path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2" />
