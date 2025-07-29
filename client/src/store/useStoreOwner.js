@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { requestOtp, verifyOtp } from '../api/store/storeAuth';
 import { getStoreCategories } from '../api/store/storeCategories';
+import { getStoreProducts, getStoreProductsByCategory } from '../api/store/storeProducts';
 import axios from 'axios';
 
 const getProfile = async () => {
@@ -21,6 +22,11 @@ const useStoreOwner = create((set, get) => ({
   categories: [],
   loadingCategories: false,
   categoriesError: null,
+
+  // Products state
+  products: [],
+  loadingProducts: false,
+  productsError: null,
 
   async fetchStoreOwnerProfile() {
     set({ isStoreOwnerAuthLoading: true });
@@ -72,6 +78,33 @@ const useStoreOwner = create((set, get) => ({
     } catch (err) {
       set({ categories: [], loadingCategories: false, categoriesError: 'Failed to load categories' });
       console.error('Failed to fetch categories:', err);
+    }
+  },
+
+  // Products functions
+  async fetchProducts() {
+    set({ loadingProducts: true, productsError: null });
+    try {
+      const data = await getStoreProducts();
+      set({ products: Array.isArray(data) ? data : [], loadingProducts: false });
+    } catch (err) {
+      set({ products: [], loadingProducts: false, productsError: 'Failed to load products' });
+      console.error('Failed to fetch products:', err);
+    }
+  },
+
+  async fetchProductsByCategory(categoryId) {
+    if (categoryId === 'all') {
+      return get().fetchProducts();
+    }
+    
+    set({ loadingProducts: true, productsError: null });
+    try {
+      const data = await getStoreProductsByCategory(categoryId);
+      set({ products: Array.isArray(data) ? data : [], loadingProducts: false });
+    } catch (err) {
+      set({ products: [], loadingProducts: false, productsError: 'Failed to load products for this category' });
+      console.error('Failed to fetch products by category:', err);
     }
   },
 }));
