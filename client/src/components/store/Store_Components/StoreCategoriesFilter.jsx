@@ -80,7 +80,7 @@ const StoreCategoriesFilter = ({
             <button
               key={category.value}
               onClick={() => onCategorySelect(category.value)}
-              className={`flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-22 lg:h-22 p-2 rounded-lg border-2 transition-all duration-200 cursor-pointer group shrink-0 ${
+              className={`flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 transition-all duration-200 cursor-pointer group shrink-0 ${
                 selectedCategory === category.value
                   ? "border-primary bg-primary/10 shadow-md transform "
                   : "border-gray-200 hover:border-primary/40 hover:bg-gray-50 "

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Search,
   Filter,
@@ -54,7 +54,7 @@ const StoreProducts = () => {
     { value: "name_za", label: "Name: Z to A" },
   ];
 
-  // Sample products data - replace with actual data from your API
+  // Sample products data with descriptions - replace with actual data from your API
   const sampleProducts = [
     {
       id: 1,
@@ -63,9 +63,10 @@ const StoreProducts = () => {
       price: 75.99,
       stock: 30,
       status: "active",
+      description: "Fresh and juicy oranges, perfect for juicing or eating. Rich in vitamin C and antioxidants.",
       image:
         "https://images.unsplash.com/photo-1547514701-42782101795e?w=200&h=200&fit=crop",
-      tags: ["Seasonal", "Fresh"],
+      tags: ["Seasonal", "Fresh", "Vitamin C"],
     },
     {
       id: 2,
@@ -74,9 +75,10 @@ const StoreProducts = () => {
       price: 45.5,
       stock: 25,
       status: "active",
+      description: "Organic carrots rich in beta-carotene. Perfect for salads, soups, or as a healthy snack.",
       image:
         "../../../../public/storeimages/storeproductimages/25_Best_Companion_Plants_For_Peppers_+_What_To_Avoid__Printable_Chart__-_Grow_Hot_Peppers-removebg-preview 1.png",
-      tags: ["Fresh", "Organic"],
+      tags: ["Fresh", "Organic", "Beta-carotene"],
     },
     {
       id: 3,
@@ -85,9 +87,10 @@ const StoreProducts = () => {
       price: 120.0,
       stock: 15,
       status: "active",
+      description: "Sweet and ripe mangoes, the king of fruits. Perfect for desserts, smoothies, or eating fresh.",
       image:
         "https://images.unsplash.com/photo-1553279768-865429fa0078?w=200&h=200&fit=crop",
-      tags: ["Seasonal", "Fresh"],
+      tags: ["Seasonal", "Fresh", "Sweet"],
     },
     {
       id: 4,
@@ -96,9 +99,10 @@ const StoreProducts = () => {
       price: 8999.0,
       stock: 8,
       status: "active",
+      description: "Classic Adidas Samba sneakers. Comfortable, stylish, and perfect for casual wear.",
       image:
         "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=200&h=200&fit=crop",
-      tags: ["Premium", "Limited"],
+      tags: ["Premium", "Limited", "Sneakers"],
     },
     {
       id: 5,
@@ -107,66 +111,146 @@ const StoreProducts = () => {
       price: 65.0,
       stock: 20,
       status: "active",
+      description: "Fresh broccoli florets, rich in vitamins and minerals. Great for stir-fries and salads.",
       image:
         "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=200&h=200&fit=crop",
-      tags: ["Fresh", "Healthy"],
+      tags: ["Fresh", "Healthy", "Vitamins"],
     },
     {
       id: 6,
-      name: "Orange 500g",
-      sku: "Orange-005",
-      price: 75.99,
-      stock: 30,
+      name: "Apple Juice 1L",
+      sku: "Apple-Juice-001",
+      price: 150.0,
+      stock: 12,
       status: "active",
+      description: "Pure apple juice made from fresh apples. No added sugar, 100% natural.",
       image:
         "https://images.unsplash.com/photo-1547514701-42782101795e?w=200&h=200&fit=crop",
-      tags: ["Seasonal", "Fresh"],
+      tags: ["Beverage", "Natural", "No Sugar"],
     },
     {
       id: 7,
-      name: "Carrots 1kg",
-      sku: "Carrot-001",
-      price: 45.5,
+      name: "Chocolate Cookies",
+      sku: "Choc-Cookie-001",
+      price: 85.5,
       stock: 25,
       status: "active",
+      description: "Delicious chocolate chip cookies. Perfect with tea or coffee, made with premium ingredients.",
       image:
         "../../../../public/storeimages/storeproductimages/25_Best_Companion_Plants_For_Peppers_+_What_To_Avoid__Printable_Chart__-_Grow_Hot_Peppers-removebg-preview 1.png",
-      tags: ["Fresh", "Organic"],
+      tags: ["Bakery", "Chocolate", "Sweet"],
     },
     {
       id: 8,
-      name: "Mangoes 3pcs",
-      sku: "Mango-003",
-      price: 120.0,
-      stock: 15,
+      name: "Green Tea 100g",
+      sku: "Green-Tea-001",
+      price: 200.0,
+      stock: 18,
       status: "active",
+      description: "Premium green tea leaves. Rich in antioxidants and perfect for daily consumption.",
       image:
         "https://images.unsplash.com/photo-1553279768-865429fa0078?w=200&h=200&fit=crop",
-      tags: ["Seasonal", "Fresh"],
+      tags: ["Tea", "Antioxidants", "Healthy"],
     },
     {
       id: 9,
-      name: "Adidas Samba",
-      sku: "Samba-001",
-      price: 8999.0,
-      stock: 8,
+      name: "Notebook A4",
+      sku: "Notebook-A4-001",
+      price: 120.0,
+      stock: 30,
       status: "active",
+      description: "High-quality A4 notebook with lined pages. Perfect for students and professionals.",
       image:
         "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=200&h=200&fit=crop",
-      tags: ["Premium", "Limited"],
+      tags: ["Stationery", "Paper", "Writing"],
     },
     {
       id: 10,
-      name: "Broccoli 500g",
-      sku: "Broccoli-002",
-      price: 65.0,
-      stock: 20,
+      name: "Instant Noodles",
+      sku: "Noodles-001",
+      price: 45.0,
+      stock: 50,
       status: "active",
+      description: "Quick and easy instant noodles. Ready in 3 minutes, perfect for a quick meal.",
       image:
         "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=200&h=200&fit=crop",
-      tags: ["Fresh", "Healthy"],
+      tags: ["Instant", "Quick", "Meal"],
     },
   ];
+
+  // Search functionality - searches across ALL fields including numbers, status, and any data
+  const filteredProducts = useMemo(() => {
+    let filtered = [...sampleProducts];
+
+    // Search filter - now searches across ALL fields
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(product => {
+        // Create a comprehensive searchable text from ALL product fields
+        const searchableText = [
+          product.name,
+          product.description,
+          product.sku,
+          product.status,
+          product.price.toString(),
+          product.stock.toString(),
+          product.id.toString(),
+          ...product.tags
+        ].join(' ').toLowerCase();
+        
+        // Also check for exact number matches
+        const exactMatches = [
+          product.price === parseFloat(query),
+          product.stock === parseInt(query),
+          product.id === parseInt(query)
+        ];
+        
+        return searchableText.includes(query) || exactMatches.some(match => match);
+      });
+    }
+
+    // Category filter
+    if (selectedCategory !== "all") {
+      // For now, we'll use tags to simulate category filtering
+      // In real implementation, you'd have a category field
+      filtered = filtered.filter(product => 
+        product.tags.some(tag => 
+          tag.toLowerCase().includes(selectedCategory.replace('_', ' '))
+        )
+      );
+    }
+
+    // Status filter
+    if (selectedStatus !== "all") {
+      filtered = filtered.filter(product => product.status === selectedStatus);
+    }
+
+    // Sort filter
+    switch (selectedFilter) {
+      case "newest":
+        filtered.sort((a, b) => b.id - a.id);
+        break;
+      case "oldest":
+        filtered.sort((a, b) => a.id - b.id);
+        break;
+      case "price_low":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "price_high":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "name_az":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name_za":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [searchQuery, selectedCategory, selectedStatus, selectedFilter]);
 
   const handleCategorySelect = (categoryValue) => {
     setSelectedCategory(categoryValue);
@@ -189,7 +273,7 @@ const StoreProducts = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
-                placeholder="Search your products"
+                placeholder="Search by name, description, SKU, price, stock, status, ID, or tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
@@ -253,9 +337,19 @@ const StoreProducts = () => {
           onCategorySelect={handleCategorySelect}
         />
 
+        {/* Search Results Info */}
+        {searchQuery.trim() && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <p className="text-blue-800 text-sm">
+              Found <span className="font-semibold">{filteredProducts.length}</span> product{filteredProducts.length !== 1 ? 's' : ''} 
+              matching "<span className="font-semibold">{searchQuery}</span>"
+            </p>
+          </div>
+        )}
+
         {/* Products Grid */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-          {sampleProducts.map((product) => (
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-5">
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
               className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 "
@@ -322,6 +416,22 @@ const StoreProducts = () => {
             </div>
           ))}
         </section>
+
+        {/* No Results Message */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Search className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-600 mb-2">No products found</h3>
+            <p className="text-gray-500">
+              {searchQuery.trim() 
+                ? `No products match "${searchQuery}". Try adjusting your search terms.`
+                : "No products match the current filters. Try adjusting your selection."
+              }
+            </p>
+          </div>
+        )}
       </section>
     </>
   );
