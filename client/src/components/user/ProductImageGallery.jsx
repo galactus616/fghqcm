@@ -5,6 +5,7 @@ const ProductImageGallery = ({
   productName,
   selectedImageIdx,
   setSelectedImageIdx,
+  zoomLevel = 200, // Default to 2x zoom (200%)
 }) => {
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [magnifierPosition, setMagnifierPosition] = useState({ x: 0, y: 0 });
@@ -80,7 +81,7 @@ const ProductImageGallery = ({
             className="w-full h-full relative overflow-hidden"
             style={{
               backgroundImage: `url(${imageList[selectedImageIdx]})`,
-              backgroundSize: '400%',
+              backgroundSize: `${zoomLevel}%`,
               backgroundPosition: `${magnifierPosition.x}% ${magnifierPosition.y}%`,
               backgroundRepeat: 'no-repeat'
             }}
