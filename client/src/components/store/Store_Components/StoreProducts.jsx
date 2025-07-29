@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -8,6 +8,7 @@ import {
   Eye,
 } from "lucide-react";
 import StoreCategoriesFilter from "./StoreCategoriesFilter";
+import useStoreOwner from "../../../store/useStoreOwner";
 
 const StoreProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,26 +16,26 @@ const StoreProducts = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedFilter, setSelectedFilter] = useState("newest");
 
-  const categories = [
-    { value: "all", label: "All Categories" },
-    { value: "vegetables", label: "Vegetables" },
-    { value: "meat", label: "Meat" },
-    { value: "fruits", label: "Fruits" },
-    { value: "beverages", label: "Beverages" },
-    { value: "snacks", label: "Snacks" },
-    { value: "cookies", label: "Cookies" },
-    { value: "coffee", label: "Tea & Coffee" },
-    { value: "electronics", label: "Electronics" },
-    { value: "clothing", label: "Fashion" },
-    { value: "stationery", label: "Stationery" },
-    { value: "chocolate", label: "Chocolate" },
-    { value: "instant_food", label: "Instant Food" },
-    { value: "instant", label: "Instant Food" },
-    { value: "food", label: "Instant Food" },
-    { value: "water", label: "Instant Food" },
-    { value: "late_food", label: "Instant Food" },
-    { value: "istant_satisfecton", label: "Instant Food" },
-  ];
+  // Get categories from store state
+  const { categories, loadingCategories, categoriesError, fetchCategories } = useStoreOwner();
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  // Transform API categories to match the expected format
+  const transformedCategories = useMemo(() => {
+    const allCategories = [
+      { value: "all", label: "All Categories" },
+      ...categories.map(cat => ({
+        value: cat.id || cat._id,
+        label: cat.name,
+        imageUrl: cat.imageUrl
+      }))
+    ];
+    return allCategories;
+  }, [categories]);
 
   const statuses = [
     { value: "all", label: "All Status" },
@@ -77,7 +78,7 @@ const StoreProducts = () => {
       status: "active",
       description: "Organic carrots rich in beta-carotene. Perfect for salads, soups, or as a healthy snack.",
       image:
-        "../../../../public/storeimages/storeproductimages/25_Best_Companion_Plants_For_Peppers_+_What_To_Avoid__Printable_Chart__-_Grow_Hot_Peppers-removebg-preview 1.png",
+        "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=200&h=200&fit=crop",
       tags: ["Fresh", "Organic", "Beta-carotene"],
     },
     {
@@ -137,7 +138,7 @@ const StoreProducts = () => {
       status: "active",
       description: "Delicious chocolate chip cookies. Perfect with tea or coffee, made with premium ingredients.",
       image:
-        "../../../../public/storeimages/storeproductimages/25_Best_Companion_Plants_For_Peppers_+_What_To_Avoid__Printable_Chart__-_Grow_Hot_Peppers-removebg-preview 1.png",
+        "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=200&h=200&fit=crop",
       tags: ["Bakery", "Chocolate", "Sweet"],
     },
     {
@@ -301,13 +302,20 @@ const StoreProducts = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
+                disabled={loadingCategories}
+                className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                  loadingCategories ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                }`}
               >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
+                {loadingCategories ? (
+                  <option value="all">Loading categories...</option>
+                ) : (
+                  transformedCategories.map((category) => (
+                    <option key={category.value} value={category.value}>
+                      {category.label}
+                    </option>
+                  ))
+                )}
               </select>
               <ChevronDown className="absolute text-primary right-3 top-1/2 transform -translate-y-1/2  w-4 h-4 pointer-events-none" />
             </div>
@@ -347,11 +355,38 @@ const StoreProducts = () => {
         </section>
 
         {/* Category Icons Filter */}
-        <StoreCategoriesFilter
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategorySelect={handleCategorySelect}
-        />
+        {loadingCategories ? (
+          <section className="w-full py-3">
+            <section className="flex items-center justify-between mb-3">
+              <span className="text-lg font-medium">Categories</span>
+            </section>
+            <div className="flex gap-3 overflow-x-auto pb-2 px-1">
+              {[...Array(6)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 border-gray-200 animate-pulse"
+                >
+                  <div className="w-full h-3/4 bg-gray-200 rounded mb-1"></div>
+                  <div className="w-full h-3 bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : categoriesError ? (
+          <section className="w-full py-3">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-red-800 text-sm">
+                Error loading categories: {categoriesError}
+              </p>
+            </div>
+          </section>
+        ) : (
+          <StoreCategoriesFilter
+            categories={transformedCategories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={handleCategorySelect}
+          />
+        )}
 
         {/* Search Results Info */}
         {searchQuery.trim() && (
