@@ -4,6 +4,7 @@ import ProductCard from '../../components/user/ProductCard';
 import { ArrowLeft } from 'lucide-react';
 import useStore from '../../store/useStore';
 import { useTranslation } from 'react-i18next';
+import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 const CategoryPage = () => {
   const { categoryId } = useParams();
@@ -13,6 +14,13 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { t } = useTranslation();
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { name: 'Home', link: '/' },
+    { name: 'Categories', link: '/' },
+    { name: category?.name || 'Category' }
+  ];
 
   useEffect(() => {
     const fetchCategoryAndProducts = async () => {
@@ -43,6 +51,7 @@ const CategoryPage = () => {
   return (
     <div className="font-sans bg-[#0a614d]/5 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 pt-8">
+        <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-center justify-between mb-4">
           <button
             className="flex items-center gap-2 cursor-pointer text-green-700 hover:underline font-medium text-base"

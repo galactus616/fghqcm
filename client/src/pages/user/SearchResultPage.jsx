@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ProductCard from '../../components/user/ProductCard';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -16,6 +17,12 @@ const SearchResultPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { t } = useTranslation();
+
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { name: 'Home', link: '/' },
+    { name: `Search Results for "${searchTerm}"` }
+  ];
 
   useEffect(() => {
     if (!searchTerm) {
@@ -57,6 +64,7 @@ const SearchResultPage = () => {
             {t('continue_shopping')}
           </a>
         </div>
+        <Breadcrumbs items={breadcrumbItems} />
         <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">
           {t('search_results')}{searchTerm ? ` ${t('for')} "${searchTerm}"` : ''}
         </h1>

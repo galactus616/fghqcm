@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import useStoreOwner from "../../store/useStoreOwner";
 import {
   LayoutDashboard,
   Package,
@@ -41,42 +42,70 @@ const navItems = [
   },
 ];
 
-const Sidebar = () => (
-  <aside className="w-64 bg-white flex flex-col min-h-screen  ">
-    <div className="flex px-6 items-center border-b-gray-400 border-b-1">
-      <img
-        src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg"
-        alt="QBD Logo"
-        className="h-[63px] object-contain"
-        draggable={false}
-      />
-    </div>
-    <nav className="flex-1 py-6">
-      <ul className="space-y-2 px-4">
-        {navItems.map((item) => {
-          const IconComponent = item.icon;
-          return (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium ${
-                    isActive
-                      ? "bg-green-100 text-primary border-l-4 border-primary"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                  }`
-                }
-                end={item.to === "/store/dashboard"}
-              >
-                <IconComponent className="w-5 h-5" />
-                {item.label}
-              </NavLink>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  </aside>
-);
+const Sidebar = () => {
+  const { logoutStoreOwner, storeOwner } = useStoreOwner();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutStoreOwner();
+    navigate('/store');
+  };
+
+  return (
+    <aside className="w-64 bg-white flex flex-col h-full shadow-sm">
+      {/* Logo section */}
+      <div className="flex items-center border-b px-5 pb-1 border-gray-200">
+        <img
+          src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg"
+          alt="QBD Logo"
+          className="h-16 object-contain"
+          draggable={false}
+        />
+      </div>
+      
+      {/* Navigation: non-scrollable */}
+      <nav className="flex-1 py-4">
+        <ul className="space-y-1 px-3">
+          {navItems.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 font-medium cursor-pointer ${
+                      isActive
+                        ? "bg-green-100 text-primary border-l-4 border-primary"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    }`
+                  }
+                  end={item.to === "/store/dashboard"}
+                >
+                  <IconComponent className="w-5 h-5" />
+                  {item.label}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+      
+      {/* Bottom: Logout/email */}
+      <div className="p-3 border-t border-gray-200 flex items-center gap-2">
+        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="7" r="4" />
+          <path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2" />
+        </svg>
+        <span className="text-xs truncate flex-1 text-gray-600">{storeOwner?.email}</span>
+        <button
+          className="px-3 py-1.5 bg-gray-100 text-gray-700 cursor-pointer rounded-md font-medium hover:bg-gray-200 hover:text-gray-800 transition-colors duration-200 text-xs border border-gray-200"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
+    </aside>
+  );
+};
 
 export default Sidebar;
