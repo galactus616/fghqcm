@@ -28,7 +28,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="w-full bg-white shadow-md py-6 px-10 flex items-center justify-between z-10 border-b border-green-100">
         <div className="flex items-center gap-4">
-          <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain rounded-lg bg-green-50 p-2 shadow" />
+          <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg" alt="QBD Logo" className="h-[68px] object-contain rounded-lg bg-green-50 p-2 shadow" />
           <div className="font-extrabold text-2xl text-green-800 tracking-tight">store hub</div>
         </div>
         <div className="hidden md:block text-green-400 text-base font-medium italic tracking-wide">Empowering local stores across Bangladesh</div>

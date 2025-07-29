@@ -54,9 +54,9 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-white flex flex-col h-full shadow-sm">
       {/* Logo section */}
-      <div className="flex items-center border-b px-5 h-18 pb-1 border-gray-200">
+      <div className="flex items-center border-b px-5 h-18 border-gray-200">
         <img
-          src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg"
+          src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg"
           alt="QBD Logo"
           className="h-16 object-contain"
           draggable={false}
@@ -65,7 +65,7 @@ const Sidebar = () => {
       
       {/* Navigation: non-scrollable */}
       <nav className="flex-1 py-4">
-        <ul className="space-y-1 px-3">
+        <ul className="space-y-2 px-3">
           {navItems.map((item) => {
             const IconComponent = item.icon;
             return (

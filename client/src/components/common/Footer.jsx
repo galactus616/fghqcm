@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain p-1" draggable={false} />
+              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg" alt="QBD Logo" className="h-[68px] object-contain p-1" draggable={false} />
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
               {t('trusted_partner')}
