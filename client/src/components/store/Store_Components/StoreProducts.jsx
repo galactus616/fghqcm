@@ -39,8 +39,8 @@ const StoreProducts = () => {
   const statuses = [
     { value: "all", label: "All Status" },
     { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-    { value: "out_of_stock", label: "Out of Stock" },
+    { value: "Inactive", label: "Inactive" },
+    { value: "Out of Stock", label: "Out of Stock" },
     { value: "draft", label: "Draft" },
   ];
 
@@ -158,7 +158,7 @@ const StoreProducts = () => {
       sku: "Notebook-A4-001",
       price: 120.0,
       stock: 30,
-      status: "active",
+      status: "Out of Stock",
       description: "High-quality A4 notebook with lined pages. Perfect for students and professionals.",
       image:
         "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=200&h=200&fit=crop",
@@ -170,7 +170,7 @@ const StoreProducts = () => {
       sku: "Noodles-001",
       price: 45.0,
       stock: 50,
-      status: "active",
+      status: "Inactive",
       description: "Quick and easy instant noodles. Ready in 3 minutes, perfect for a quick meal.",
       image:
         "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=200&h=200&fit=crop",
@@ -254,6 +254,22 @@ const StoreProducts = () => {
 
   const handleCategorySelect = (categoryValue) => {
     setSelectedCategory(categoryValue);
+  };
+
+  // Function to get status color based on status value
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "active":
+        return "text-green-600 bg-green-50 border-green-200";
+      case "inactive":
+        return "text-red-600 bg-red-50 border-red-200";
+      case "out of stock":
+        return "text-gray-500 bg-gray-50 border-gray-200";
+      case "draft":
+        return "text-black bg-gray-100 border-gray-300";
+      default:
+        return "text-gray-600 bg-gray-50 border-gray-200";
+    }
   };
 
   return (
@@ -357,8 +373,8 @@ const StoreProducts = () => {
                   <section className="bg-[#E4FFCB]  p-4 rounded-t-lg">
               {/* Product Header */}
               <div className="flex items-center justify-between mb-2">
-                <span className="px-2 py-1 border-primary bg-white text-primary text-xs font-medium rounded-full">
-                  {product.status === "active" ? "Active" : product.status}
+                <span className={`px-2 py-1 border text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
+                  {product.status}
                 </span>
                 <button className="p-1 hover:bg-gray-100 rounded cursor-pointer">
                   <MoreHorizontal className="w-4 h-4 bg-white p-1 rounded-full" />
