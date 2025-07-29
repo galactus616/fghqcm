@@ -4,10 +4,10 @@ import HomePage from "./pages/user/HomePage";
 // import CartPage from "./pages/user/CartPage";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import CategoryPage from "./pages/user/CategoryPage";
-import SearchResultPage from './pages/user/SearchResultPage';
+import SearchResultPage from "./pages/user/SearchResultPage";
 import OrdersPage from "./pages/user/OrdersPage";
-import OrderSuccessPage from './pages/user/OrderSuccessPage';
-import ScrollToTop from './components/user/ScrollToTop';
+import OrderSuccessPage from "./pages/user/OrderSuccessPage";
+import ScrollToTop from "./components/user/ScrollToTop";
 import ProductDetailsPage from "./pages/user/ProductDetailsPage";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AccountPage from "./pages/user/AccountPage";
@@ -17,16 +17,17 @@ import useStoreOwner from "./store/useStoreOwner";
 import AddressModal from "./components/common/AddressModal";
 
 // Store onboarding imports
-import LandingPage from './pages/store/LandingPage';
-import KycStatusPage from './pages/store/KycStatusPage';
-import StoreLayout from './Layouts/StoreLayout';
-import MultiStepKycForm from './components/store/MultiStepKycForm';
-import StoreOwnerProtectedRoute from './components/common/StoreOwnerProtectedRoute';
+import LandingPage from "./pages/store/LandingPage";
+import StoreLayout from "./Layouts/StoreLayout";
+import MultiStepKycForm from "./components/store/MultiStepKycForm";
+import StoreOwnerProtectedRoute from "./components/common/StoreOwnerProtectedRoute";
+import StoreProducts from "./components/store/Store_Components/StoreProducts";
+import Inventory from "./components/store/Store_Components/Inventory";
+import StoreOrder from "./components/store/Store_Components/StoreOrder";
+import StoreFinances from "./components/store/Store_Components/StoreFinances";
+import StoreAccount from "./components/store/Store_Components/StoreAccount";
+import StoreDashboard from "./components/store/Store_Components/StoreDashboard";
 // Placeholder components for other sections
-const CataloguePage = () => <div className="p-8">Catalogue (Coming soon...)</div>;
-const InventoryPage = () => <div className="p-8">Inventory (Coming soon...)</div>;
-const StoreOrdersPage = () => <div className="p-8">Orders (Coming soon...)</div>;
-const StoreAccountPage = () => <div className="p-8">Account (Coming soon...)</div>;
 
 function App() {
   const { fetchProfile } = useStore();
@@ -44,25 +45,34 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
           {/* <Route path="cart" element={<CartPage />} /> */}
-          <Route path="checkout" element={
-            <ProtectedRoute>
-              <CheckoutPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="category/:categoryId" element={<CategoryPage />} />
           <Route path="/search" element={<SearchResultPage />} />
-          <Route path="orders" element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="orders"
+            element={
+              <ProtectedRoute>
+                <OrdersPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/order-success" element={<OrderSuccessPage />} />
           <Route path="product/:productId" element={<ProductDetailsPage />} />
-          <Route path="account" element={
-            <ProtectedRoute>
-              <AccountPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* Store onboarding/flow routes */}
@@ -76,72 +86,14 @@ function App() {
             </StoreOwnerProtectedRoute>
           }
         />
-        <Route
-          path="/store/dashboard/kyc-status"
-          element={
-            <StoreOwnerProtectedRoute>
-              <KycStatusPage />
-            </StoreOwnerProtectedRoute>
-          }
-        />
-        <Route
-          path="/store/dashboard/kyc-status"
-          element={
-            <StoreOwnerProtectedRoute>
-              <KycStatusPage />
-            </StoreOwnerProtectedRoute>
-          }
-        />
         {/* All other dashboard routes use StoreLayout and are protected */}
         <Route path="/store/dashboard" element={<StoreLayout />}>
-          <Route
-            index
-            element={
-              <StoreOwnerProtectedRoute>
-                <div className="p-8">Dashboard Home (Coming soon...)</div>
-              </StoreOwnerProtectedRoute>
-            }
-          />
-          <Route
-            index
-            element={
-              <StoreOwnerProtectedRoute>
-                <div className="p-8">Dashboard Home (Coming soon...)</div>
-              </StoreOwnerProtectedRoute>
-            }
-          />
-          <Route
-            path="catalogue"
-            element={
-              <StoreOwnerProtectedRoute>
-                <CataloguePage />
-              </StoreOwnerProtectedRoute>
-            }
-          />
-          <Route
-            path="inventory"
-            element={
-              <StoreOwnerProtectedRoute>
-                <InventoryPage />
-              </StoreOwnerProtectedRoute>
-            }
-          />
-          <Route
-            path="orders"
-            element={
-              <StoreOwnerProtectedRoute>
-                <StoreOrdersPage />
-              </StoreOwnerProtectedRoute>
-            }
-          />
-          <Route
-            path="account"
-            element={
-              <StoreOwnerProtectedRoute>
-                <StoreAccountPage />
-              </StoreOwnerProtectedRoute>
-            }
-          />
+          <Route path="dashboard" element={<StoreDashboard />} />
+          <Route path="store_products" element={<StoreProducts />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="store_orders" element={<StoreOrder />} />
+          <Route path="finances" element={<StoreFinances />} />
+          <Route path="store_account" element={<StoreAccount />} />
         </Route>
       </Routes>
     </>

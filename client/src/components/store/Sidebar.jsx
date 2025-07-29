@@ -1,48 +1,56 @@
 import { NavLink } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Package, 
-  Package2, 
-  ShoppingCart, 
-  DollarSign, 
-  User 
+import {
+  LayoutDashboard,
+  Package,
+  Package2,
+  ShoppingCart,
+  DollarSign,
+  User,
 } from "lucide-react";
 
 const navItems = [
-  { 
-    label: "Dashboard", 
-    to: "/store/dashboard", 
-    icon: LayoutDashboard 
+  {
+    label: "Dashboard",
+    to: "/store/dashboard",
+    icon: LayoutDashboard,
   },
-  { 
-    label: "Products", 
-    to: "/store/dashboard/store_products", 
-    icon: Package 
+  {
+    label: "Products",
+    to: "/store/dashboard/store_products",
+    icon: Package,
   },
-  { 
-    label: "Inventory", 
-    to: "/store/dashboard/inventory", 
-    icon: Package2 
+  {
+    label: "Inventory",
+    to: "/store/dashboard/inventory",
+    icon: Package2,
   },
-  { 
-    label: "Orders", 
-    to: "/store/dashboard/store_orders", 
-    icon: ShoppingCart 
+  {
+    label: "Orders",
+    to: "/store/dashboard/store_orders",
+    icon: ShoppingCart,
   },
-  { 
-    label: "Finances", 
-    to: "/store/dashboard/finances", 
-    icon: DollarSign 
+  {
+    label: "Finances",
+    to: "/store/dashboard/finances",
+    icon: DollarSign,
   },
-  { 
-    label: "Account", 
-    to: "/store/dashboard/store_account", 
-    icon: User 
+  {
+    label: "Account",
+    to: "/store/dashboard/store_account",
+    icon: User,
   },
 ];
 
 const Sidebar = () => (
-  <aside className="w-64 bg-white flex flex-col min-h-screen border-r border-gray-400">
+  <aside className="w-64 bg-white flex flex-col min-h-screen ">
+    <div className="flex justify-center items-center">
+      <img
+        src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg"
+        alt="QBD Logo"
+        className="h-[68px] object-contain"
+        draggable={false}
+      />
+    </div>
     <nav className="flex-1 py-6">
       <ul className="space-y-2 px-4">
         {navItems.map((item) => {
