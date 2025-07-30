@@ -24,6 +24,15 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
   display: none;
 }
 
+/* Scrollbar hide utility class */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Prevent caret/cursor on buttons and clickable elements */
 button, [role="button"], .cursor-pointer {
   user-select: none;
