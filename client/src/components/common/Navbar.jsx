@@ -230,7 +230,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 order-1 mr-4">
             <Link to="/" className="flex items-center space-x-3 group">
-              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753344029/qbd_logo_svg_onzssf.svg" alt="QBD Logo" className="h-[68px] object-contain" draggable={false} />
+              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg" alt="QBD Logo" className="h-[68px] object-contain" draggable={false} />
             </Link>
           </div>
 

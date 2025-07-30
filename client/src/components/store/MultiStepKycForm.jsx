@@ -128,7 +128,7 @@ const MultiStepKycForm = () => {
         {/* Top: Logo, tagline, onboarding, info */}
         <div className="p-6 pb-0">
           <div className="flex items-center gap-3 mb-2">
-            <img src="/qbd.png" alt="QBD Logo" className="h-10 object-contain rounded bg-white p-1" />
+            <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg" alt="QBD Logo" className="h-10 object-contain rounded bg-white p-1" />
             <div>
               <div className="font-extrabold text-xl leading-tight">store hub</div>
               <div className="text-xs text-green-200 font-medium">by QBD</div>

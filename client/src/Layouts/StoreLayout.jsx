@@ -1,6 +1,7 @@
 import Sidebar from "../components/store/Sidebar";
 import { Outlet } from "react-router-dom";
 import StoreNav from "../components/store/StoreNav";
+import StoreFooter from "../components/store/StoreFooter";
 
 const StoreLayout = () => {
   return (
@@ -12,8 +13,11 @@ const StoreLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         <StoreNav />
-        <main className="flex-1 overflow-y-auto p-3 md:p-6">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-3 md:p-6">
+            <Outlet />
+          </div>
+          <StoreFooter />
         </main>
       </div>
     </div>
