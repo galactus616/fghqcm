@@ -3,11 +3,12 @@ import {
   Search,
   Filter,
   ChevronDown,
-  MoreHorizontal,
   Edit,
   Eye,
+  Plus,
 } from "lucide-react";
 import StoreCategoriesFilter from "./StoreCategoriesFilter";
+import StoreProductsModal from "../StoreProductsModal";
 import useStoreOwner from "../../../store/useStoreOwner";
 
 const StoreProducts = () => {
@@ -15,6 +16,9 @@ const StoreProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedFilter, setSelectedFilter] = useState("newest");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedVariants, setSelectedVariants] = useState({});
 
   // Get categories and products from store state
   const { 
@@ -59,19 +63,37 @@ const StoreProducts = () => {
 
   // Transform API products to match the expected format
   const transformedProducts = useMemo(() => {
+    if (!products || !Array.isArray(products)) return [];
+    
     return products.map(product => ({
-      // id: product.id || product._id,
+      id: product._id,
       name: product.name,
-      sku: product.sku || 'comming soon' || product._id,
-      price: product.variants?.[0]?.price || product.price || 0,
-      stock: product.stock || 0,
-      status: product.status || "active",
+      sku: product._id,
+      price: product.price,
+      discountedPrice: product.discountedPrice,
+      stock: 0,
+      status: "active",
       description: product.description,
-      image: product.imageUrl || product.images?.[0] || "https://images.unsplash.com/photo-1547514701-42782101795e?w=200&h=200&fit=crop",
-      tags: product.tags || [],
-      category: product.category
+      image: product.imageUrl,
+      images: product.images,
+      category: product.category,
+      variants: product.variants,
+      isBestSeller: product.isBestSeller,
+      isFeatured: product.isFeatured,
+      createdAt: product.createdAt
     }));
   }, [products]);
+
+  // Initialize selected variants with first variant selected for each product
+  useEffect(() => {
+    const initialVariants = {};
+    transformedProducts.forEach(product => {
+      if (product.variants && product.variants.length > 0) {
+        initialVariants[product.id] = 0; // First variant (index 0) is selected by default
+      }
+    });
+    setSelectedVariants(initialVariants);
+  }, [transformedProducts]);
 
   const statuses = [
     { value: "all", label: "All Status" },
@@ -142,6 +164,24 @@ const StoreProducts = () => {
 
   const handleCategorySelect = (categoryValue) => {
     setSelectedCategory(categoryValue);
+  };
+
+  const handleViewProduct = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleVariantSelect = (productId, variantIndex) => {
+    // Update visual state immediately for better UX
+    setSelectedVariants(prev => ({
+      ...prev,
+      [productId]: variantIndex
+    }));
   };
 
   // Function to get status color based on status value
@@ -345,16 +385,25 @@ const StoreProducts = () => {
                 <section className=" p-4 rounded-t-lg">
                   {/* Product Header */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`px-2 py-1 border text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
-                      {product.status}
-                    </span>
-                    <button className="p-1 hover:bg-gray-100 rounded cursor-pointer">
-                      <MoreHorizontal className="w-4 h-4 bg-white p-1 rounded-full" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 border text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
+                        {product.status}
+                      </span>
+                      {product.isBestSeller && (
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full border border-yellow-200">
+                          Best Seller
+                        </span>
+                      )}
+                      {product.isFeatured && (
+                        <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full border border-purple-200">
+                          Featured
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Product Image */}
-                  <div className=" mx-auto w-48 h-48 rounded-lg mb-2 flex items-center justify-center">
+                  <div className=" mx-auto w-40 h-40 rounded-lg  flex items-center justify-center">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -372,34 +421,79 @@ const StoreProducts = () => {
                     <p className="text-xs text-gray-500">
                       SKU: {product.sku} 
                     </p>
-                    <div className="flex justify-between items-center">
-                      <p className="text-lg font-semibold text-gray-800">
-                        <span className="text-2xl font-bold text-gray-800">৳ </span>{product.price}
-                      </p>
+                    
+                    {/* Variants Display */}
+                    {(product.variants || []).length > 0 && (
+                      <div className="mt-2">
+                        <div className="flex flex-wrap gap-1">
+                                                  {(product.variants || []).slice(0, 2).map((variant, index) => {
+                          const isSelected = selectedVariants[product.id] === index;
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handleVariantSelect(product.id, index)}
+                              className={`px-2 py-1 text-xs rounded-full transition-all duration-150 ${
+                                isSelected
+                                  ? 'bg-primary text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {variant.quantityLabel}
+                            </button>
+                          );
+                        })}
+                          {(product.variants || []).length > 2 && (
+                            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                              +{(product.variants || []).length - 2} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="flex items-center gap-1">
+                        {(() => {
+                          const selectedVariantIndex = selectedVariants[product.id] || 0;
+                          const currentVariant = product.variants?.[selectedVariantIndex] || {};
+                          const currentPrice = currentVariant.price || product.price || 0;
+                          const currentDiscountedPrice = currentVariant.discountedPrice || product.discountedPrice;
+                          const displayPrice = currentDiscountedPrice && currentDiscountedPrice < currentPrice ? currentDiscountedPrice : currentPrice;
+                          const originalPrice = currentDiscountedPrice && currentDiscountedPrice < currentPrice ? currentPrice : null;
+                          
+                          return (
+                            <>
+                              <span className="text-lg font-semibold text-gray-800 transition-all duration-150">
+                                ৳{displayPrice.toFixed(2)}
+                              </span>
+                              {originalPrice && (
+                                <span className="text-sm text-gray-500 line-through transition-all duration-150">
+                                  ৳{originalPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </div>
                       <p className="text-sm text-primary font-medium">
-                        In Stock: {product.stock}
+                        Stock: {product.stock}
                       </p>
                     </div>
 
-                    {/* Tags */}
-                    <div className="flex gap-1 flex-wrap">
-                      {product.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+
 
                     {/* Action Buttons */}
                     <div className="flex gap-2 mt-3">
-                      <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-primary/50 duration-200 cursor-pointer">
+                      <button 
+                        onClick={() => handleViewProduct(product)}
+                        className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-primary/50 hover:bg-gray-50 duration-200 cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <Eye className="size-4" />
                         View
                       </button>
-                      <button className="flex-1 px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">
-                        Add +
+                      <button className="flex-1 px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 group">
+                        <Plus className="size-4 group-hover:scale-110 transition-transform duration-200" />
+                        Add
                       </button>
                     </div>
                   </div>
@@ -425,6 +519,13 @@ const StoreProducts = () => {
           </div>
         )}
       </section>
+
+      {/* Product Modal */}
+      <StoreProductsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
     </>
   );
 };
