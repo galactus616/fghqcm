@@ -6,7 +6,12 @@ const ProductSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  category: {
+  mainCategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+  },
+  subCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
     required: true,
@@ -48,10 +53,19 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+// Indexes for efficient queries
+ProductSchema.index({ mainCategory: 1, subCategory: 1, isActive: 1 });
+ProductSchema.index({ isBestSeller: 1, isActive: 1 });
+ProductSchema.index({ isFeatured: 1, isActive: 1 });
 
 module.exports = mongoose.model("Product", ProductSchema);
