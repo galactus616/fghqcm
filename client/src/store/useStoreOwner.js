@@ -40,8 +40,9 @@ const useStoreOwner = create((set, get) => ({
   async loginWithOtp(email, otp) {
     set({ isStoreOwnerAuthLoading: true });
     try {
-      await verifyOtp(email, otp);
+      const response = await verifyOtp(email, otp);
       await get().fetchStoreOwnerProfile();
+      return response;
     } catch (err) {
       set({ storeOwner: null, isStoreOwnerLoggedIn: false, isStoreOwnerAuthLoading: false });
       throw err;

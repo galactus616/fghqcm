@@ -55,7 +55,12 @@ exports.verifyOtp = async (req, res) => {
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
   );
-  res.cookie('store_owner_token', token, { httpOnly: true, sameSite: 'lax' });
+  res.cookie('store_owner_token', token, { 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  });
   res.json({
     message: 'Login successful',
     storeOwner: {
@@ -67,7 +72,11 @@ exports.verifyOtp = async (req, res) => {
 
 // Logout a store owner
 exports.logout = async (req, res) => {
-  res.clearCookie('store_owner_token');
+  res.clearCookie('store_owner_token', { 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  });
   res.json({ message: 'Logout successful' });
 };
 

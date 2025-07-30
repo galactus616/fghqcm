@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { registerStoreOwner, requestOtp, verifyOtp } from '../../api/store/storeAuth';
+import { registerStoreOwner, requestOtp } from '../../api/store/storeAuth';
+import useStoreOwner from '../../store/useStoreOwner';
 
 const StoreAuthModal = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -7,6 +8,7 @@ const StoreAuthModal = ({ onClose }) => {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { loginWithOtp } = useStoreOwner();
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -35,11 +37,11 @@ const StoreAuthModal = ({ onClose }) => {
     setLoading(true);
     setError('');
     try {
-      await verifyOtp(email, otp);
+      await loginWithOtp(email, otp);
       setStep(3);
-      setTimeout(onClose, 1200);
+      setTimeout(() => onClose(true), 1200);
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid OTP.');
+      setError(err.message || 'Invalid OTP.');
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,7 @@ const StoreAuthModal = ({ onClose }) => {
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative animate-fadeIn">
         <button
           className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl font-bold"
-          onClick={onClose}
+          onClick={() => onClose(false)}
         >
           &times;
         </button>

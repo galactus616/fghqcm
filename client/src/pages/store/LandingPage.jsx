@@ -18,9 +18,12 @@ const LandingPage = () => {
     }
   }, [isStoreOwnerLoggedIn, navigate]);
 
-  const handleAuthModalClose = () => {
+  const handleAuthModalClose = (didLogin) => {
     setShowAuthModal(false);
-    navigate('/store/dashboard/kyc');
+    if (didLogin) {
+      // The navigation will be handled by the useEffect that watches isStoreOwnerLoggedIn
+      // No need to navigate here as the store state will trigger the redirect
+    }
   };
 
   return (

@@ -20,6 +20,7 @@ import AddressModal from "./components/common/AddressModal";
 import LandingPage from "./pages/store/LandingPage";
 import StoreLayout from "./Layouts/StoreLayout";
 import MultiStepKycForm from "./components/store/MultiStepKycForm";
+import KycStatusPage from "./pages/store/KycStatusPage";
 import StoreOwnerProtectedRoute from "./components/common/StoreOwnerProtectedRoute";
 import StoreProducts from "./components/store/Store_Components/StoreProducts";
 import Inventory from "./components/store/Store_Components/Inventory";
@@ -77,12 +78,20 @@ function App() {
 
         {/* Store onboarding/flow routes */}
         <Route path="/store" element={<LandingPage />} />
-        {/* KYC route is separate and not inside StoreLayout */}
+        {/* KYC routes are separate and not inside StoreLayout */}
         <Route
           path="/store/dashboard/kyc"
           element={
             <StoreOwnerProtectedRoute>
               <MultiStepKycForm />
+            </StoreOwnerProtectedRoute>
+          }
+        />
+        <Route
+          path="/store/dashboard/kyc-status"
+          element={
+            <StoreOwnerProtectedRoute>
+              <KycStatusPage />
             </StoreOwnerProtectedRoute>
           }
         />
