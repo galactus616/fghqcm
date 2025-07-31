@@ -133,9 +133,12 @@ const StoreProductsModal = ({ isOpen, onClose, product }) => {
               {/* Product Header */}
               <div>
                 {/* Category */}
-                {product.category && (
+                {(product.mainCategory || product.category) && (
                   <div className="text-sm text-primary font-medium mb-2">
-                    {product.category.name || 'Product'}
+                    {product.mainCategory?.name || product.category?.name || 'Product'}
+                    {product.subCategory && (
+                      <span className="text-gray-500 ml-2">› {product.subCategory.name}</span>
+                    )}
                   </div>
                 )}
                 

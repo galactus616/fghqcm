@@ -249,8 +249,10 @@ const useStore = create((set, get) => ({
 
   // Product/category slice
   categories: [],
+  subCategories: {}, // Store subcategories for each main category
   categoryProducts: {},
   loadingCategories: false,
+  loadingSubCategories: false,
   loadingProducts: false,
   productError: null,
   async fetchCategories() {
@@ -260,6 +262,28 @@ const useStore = create((set, get) => ({
       set({ categories: Array.isArray(data) ? data : [], loadingCategories: false });
     } catch (err) {
       set({ categories: [], loadingCategories: false, productError: 'Failed to load categories' });
+    }
+  },
+  async fetchSubCategories(mainCategoryId) {
+    set({ loadingSubCategories: true });
+    try {
+      const { getSubCategories } = await import('../api/user/categories');
+      const data = await getSubCategories(mainCategoryId);
+      set(state => ({
+        subCategories: {
+          ...state.subCategories,
+          [mainCategoryId]: Array.isArray(data) ? data : []
+        },
+        loadingSubCategories: false
+      }));
+    } catch (err) {
+      set(state => ({
+        subCategories: {
+          ...state.subCategories,
+          [mainCategoryId]: []
+        },
+        loadingSubCategories: false
+      }));
     }
   },
   async fetchProductsForCategories() {

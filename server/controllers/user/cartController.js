@@ -7,7 +7,10 @@ const getCart = async (req, res, next) => {
     let cart = await Cart.findOne({ userId })
       .populate({
         path: "items.productId",
-        populate: { path: "category", select: "name" }
+        populate: [
+          { path: "mainCategory", select: "name slug" },
+          { path: "subCategory", select: "name slug" }
+        ]
       });
 
     if (!cart) {
@@ -37,9 +40,16 @@ const getCart = async (req, res, next) => {
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
-        category: typeof product.category === 'object' && product.category !== null
-          ? { id: product.category._id, name: product.category.name }
-          : product.category,
+        mainCategory: product.mainCategory ? {
+          id: product.mainCategory._id,
+          name: product.mainCategory.name,
+          slug: product.mainCategory.slug
+        } : null,
+        subCategory: product.subCategory ? {
+          id: product.subCategory._id,
+          name: product.subCategory.name,
+          slug: product.subCategory.slug
+        } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,
@@ -63,7 +73,9 @@ const addToCart = async (req, res, next) => {
   }
 
   try {
-    const product = await Product.findById(productId).populate("category", "name");
+    const product = await Product.findById(productId)
+      .populate("mainCategory", "name slug")
+      .populate("subCategory", "name slug");
     if (!product) {
       const error = new Error("Product not found");
       error.statusCode = 404;
@@ -94,7 +106,10 @@ const addToCart = async (req, res, next) => {
     await cart.save();
     await cart.populate({
       path: "items.productId",
-      populate: { path: "category", select: "name" }
+      populate: [
+        { path: "mainCategory", select: "name slug" },
+        { path: "subCategory", select: "name slug" }
+      ]
     });
     
     // Filter out items with null productId and map valid items
@@ -113,9 +128,16 @@ const addToCart = async (req, res, next) => {
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
-        category: typeof product.category === 'object' && product.category !== null
-          ? { id: product.category._id, name: product.category.name }
-          : product.category,
+        mainCategory: product.mainCategory ? {
+          id: product.mainCategory._id,
+          name: product.mainCategory.name,
+          slug: product.mainCategory.slug
+        } : null,
+        subCategory: product.subCategory ? {
+          id: product.subCategory._id,
+          name: product.subCategory.name,
+          slug: product.subCategory.slug
+        } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,
@@ -146,7 +168,10 @@ const updateCartItemQuantity = async (req, res, next) => {
     const cart = await Cart.findOne({ userId })
       .populate({
         path: "items.productId",
-        populate: { path: "category", select: "name" }
+        populate: [
+          { path: "mainCategory", select: "name slug" },
+          { path: "subCategory", select: "name slug" }
+        ]
       });
 
     if (!cart) {
@@ -174,7 +199,10 @@ const updateCartItemQuantity = async (req, res, next) => {
     await cart.save();
     await cart.populate({
       path: "items.productId",
-      populate: { path: "category", select: "name" }
+      populate: [
+        { path: "mainCategory", select: "name slug" },
+        { path: "subCategory", select: "name slug" }
+      ]
     });
     
     // Filter out items with null productId and map valid items
@@ -193,9 +221,16 @@ const updateCartItemQuantity = async (req, res, next) => {
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
-        category: typeof product.category === 'object' && product.category !== null
-          ? { id: product.category._id, name: product.category.name }
-          : product.category,
+        mainCategory: product.mainCategory ? {
+          id: product.mainCategory._id,
+          name: product.mainCategory.name,
+          slug: product.mainCategory.slug
+        } : null,
+        subCategory: product.subCategory ? {
+          id: product.subCategory._id,
+          name: product.subCategory.name,
+          slug: product.subCategory.slug
+        } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,
@@ -219,7 +254,10 @@ const removeFromCart = async (req, res, next) => {
     const cart = await Cart.findOne({ userId })
       .populate({
         path: "items.productId",
-        populate: { path: "category", select: "name" }
+        populate: [
+          { path: "mainCategory", select: "name slug" },
+          { path: "subCategory", select: "name slug" }
+        ]
       });
 
     if (!cart) {
@@ -242,7 +280,10 @@ const removeFromCart = async (req, res, next) => {
     await cart.save();
     await cart.populate({
       path: "items.productId",
-      populate: { path: "category", select: "name" }
+      populate: [
+        { path: "mainCategory", select: "name slug" },
+        { path: "subCategory", select: "name slug" }
+      ]
     });
     
     // Filter out items with null productId and map valid items
@@ -261,9 +302,16 @@ const removeFromCart = async (req, res, next) => {
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
-        category: typeof product.category === 'object' && product.category !== null
-          ? { id: product.category._id, name: product.category.name }
-          : product.category,
+        mainCategory: product.mainCategory ? {
+          id: product.mainCategory._id,
+          name: product.mainCategory.name,
+          slug: product.mainCategory.slug
+        } : null,
+        subCategory: product.subCategory ? {
+          id: product.subCategory._id,
+          name: product.subCategory.name,
+          slug: product.subCategory.slug
+        } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,
@@ -323,7 +371,10 @@ const mergeCart = async (req, res, next) => {
     await cart.save();
     await cart.populate({
       path: "items.productId",
-      populate: { path: "category", select: "name" }
+      populate: [
+        { path: "mainCategory", select: "name slug" },
+        { path: "subCategory", select: "name slug" }
+      ]
     });
 
     // Filter out items with null productId and map valid items
@@ -342,9 +393,16 @@ const mergeCart = async (req, res, next) => {
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
-        category: typeof product.category === 'object' && product.category !== null
-          ? { id: product.category._id, name: product.category.name }
-          : product.category,
+        mainCategory: product.mainCategory ? {
+          id: product.mainCategory._id,
+          name: product.mainCategory.name,
+          slug: product.mainCategory.slug
+        } : null,
+        subCategory: product.subCategory ? {
+          id: product.subCategory._id,
+          name: product.subCategory.name,
+          slug: product.subCategory.slug
+        } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
         isFeatured: product.isFeatured,

@@ -35,10 +35,16 @@ const CategoryPage = () => {
         }
         const cat = cats.find(c => c.id === categoryId || c._id === categoryId || c.name === categoryId);
         setCategory(cat);
-        // Fetch products for this category
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/categories/${cat?.id || cat?._id || categoryId}/products`);
-        const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
+        
+        // Fetch products for this category using the API function
+        try {
+          const { getProductsByCategory } = await import('../../api/user/products');
+          const data = await getProductsByCategory(cat?.id || cat?._id || categoryId);
+          setProducts(Array.isArray(data) ? data : []);
+        } catch (err) {
+          console.error('Failed to fetch products:', err);
+          setProducts([]);
+        }
       } catch (err) {
         setError(t('failed_to_load_category_or_products'));
       } finally {

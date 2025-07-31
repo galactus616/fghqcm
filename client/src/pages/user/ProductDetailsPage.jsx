@@ -74,9 +74,9 @@ const ProductDetailsPage = () => {
   const breadcrumbItems = [
     { name: t("home"), link: "/" },
     {
-      name: product.category?.name || t("categories"),
-      link: product.category
-        ? `/category/${product.category.id || product.category._id}`
+      name: product.mainCategory?.name || product.category?.name || t("categories"),
+      link: product.mainCategory?.id || product.mainCategory?._id || product.category?.id || product.category?._id
+        ? `/category/${product.mainCategory?.id || product.mainCategory?._id || product.category?.id || product.category?._id}`
         : "/#categories",
     },
     { name: product.name },

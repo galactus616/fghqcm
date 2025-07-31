@@ -20,7 +20,9 @@ const useStoreOwner = create((set, get) => ({
 
   // Categories state
   categories: [],
+  subCategories: {}, // Store subcategories for each main category
   loadingCategories: false,
+  loadingSubCategories: false,
   categoriesError: null,
 
   // Products state
@@ -79,6 +81,30 @@ const useStoreOwner = create((set, get) => ({
     } catch (err) {
       set({ categories: [], loadingCategories: false, categoriesError: 'Failed to load categories' });
       console.error('Failed to fetch categories:', err);
+    }
+  },
+
+  async fetchSubCategories(mainCategoryId) {
+    set({ loadingSubCategories: true });
+    try {
+      const { getSubCategories } = await import('../api/user/categories');
+      const data = await getSubCategories(mainCategoryId);
+      set(state => ({
+        subCategories: {
+          ...state.subCategories,
+          [mainCategoryId]: Array.isArray(data) ? data : []
+        },
+        loadingSubCategories: false
+      }));
+    } catch (err) {
+      set(state => ({
+        subCategories: {
+          ...state.subCategories,
+          [mainCategoryId]: []
+        },
+        loadingSubCategories: false
+      }));
+      console.error('Failed to fetch sub categories:', err);
     }
   },
 

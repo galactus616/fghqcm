@@ -18,7 +18,7 @@ const ProductSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true,
+    required: false, // Deprecated: use variants array instead
     min: 0,
   },
   imageUrl: {
@@ -33,6 +33,7 @@ const ProductSchema = new mongoose.Schema({
   discountedPrice: {
     type: Number,
     min: 0,
+    required: false, // Deprecated: use variants array instead
   },
   variants: [
     {

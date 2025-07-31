@@ -55,7 +55,8 @@ const StoreProducts = () => {
       ...categories.map(cat => ({
         value: cat.id || cat._id,
         label: cat.name,
-        imageUrl: cat.imageUrl
+        imageUrl: cat.imageUrl,
+        level: cat.level || 1
       }))
     ];
     return allCategories;
@@ -66,9 +67,9 @@ const StoreProducts = () => {
     if (!products || !Array.isArray(products)) return [];
     
     return products.map(product => ({
-      id: product._id,
+      id: product._id || product.id,
       name: product.name,
-      sku: product._id,
+      sku: product._id || product.id,
       price: product.price,
       discountedPrice: product.discountedPrice,
       stock: 0,
@@ -76,7 +77,9 @@ const StoreProducts = () => {
       description: product.description,
       image: product.imageUrl,
       images: product.images,
-      category: product.category,
+      mainCategory: product.mainCategory,
+      subCategory: product.subCategory,
+      category: product.mainCategory?.name || product.category?.name || "Category", // Backward compatibility
       variants: product.variants,
       isBestSeller: product.isBestSeller,
       isFeatured: product.isFeatured,

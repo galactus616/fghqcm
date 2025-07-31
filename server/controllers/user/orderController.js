@@ -37,7 +37,13 @@ const placeOrder = async (req, res, next) => {
       delete deliveryAddress._id; // Remove subdoc id for cleanliness
     }
 
-    const userCart = await Cart.findOne({ userId }).populate("items.productId");
+    const userCart = await Cart.findOne({ userId }).populate({
+      path: "items.productId",
+      populate: [
+        { path: "mainCategory", select: "name slug" },
+        { path: "subCategory", select: "name slug" }
+      ]
+    });
 
     if (!userCart || userCart.items.length === 0) {
       const error = new Error("Cannot place order with an empty cart.");
@@ -45,13 +51,33 @@ const placeOrder = async (req, res, next) => {
       return next(error);
     }
 
+    // Validate that all cart items have valid products and variants
+    const invalidItems = userCart.items.filter(item => 
+      !item.productId || 
+      !item.productId.variants || 
+      !item.productId.variants[item.variantIndex]
+    );
+
+    if (invalidItems.length > 0) {
+      const error = new Error("Some items in your cart are no longer available. Please review your cart.");
+      error.statusCode = 400;
+      return next(error);
+    }
+
     const populatedItems = userCart.items.map((item) => {
+      // Get the variant for this cart item
+      const variant = item.productId.variants[item.variantIndex];
+      if (!variant) {
+        throw new Error(`Invalid variant index ${item.variantIndex} for product ${item.productId.name}`);
+      }
+      
       return {
         productId: item.productId._id.toString(),
         name: item.productId.name,
-        price: item.productId.price,
+        price: variant.price,
         imageUrl: item.productId.imageUrl,
         quantity: item.quantity,
+        variantLabel: variant.quantityLabel || 'Default',
       };
     });
 
@@ -93,6 +119,7 @@ const placeOrder = async (req, res, next) => {
             imageUrl: item.imageUrl,
           },
           quantity: item.quantity,
+          variantLabel: item.variantLabel,
         })),
       },
     });
@@ -121,6 +148,7 @@ const getOrders = async (req, res, next) => {
           imageUrl: item.imageUrl,
         },
         quantity: item.quantity,
+        variantLabel: item.variantLabel,
       })),
     }));
     res.json(mappedOrders);
@@ -150,12 +178,13 @@ const getOrderById = async (req, res, next) => {
       phone: order.phone,
       items: order.items.map((item) => ({
         product: {
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          imageUrl: item.product.imageUrl,
+          id: item.productId,
+          name: item.name,
+          price: item.price,
+          imageUrl: item.imageUrl,
         },
         quantity: item.quantity,
+        variantLabel: item.variantLabel,
       })),
     });
   } catch (err) {

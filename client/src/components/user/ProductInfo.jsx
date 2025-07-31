@@ -25,14 +25,20 @@ const ProductInfo = ({
           className="text-sm font-semibold text-primary hover:underline cursor-pointer"
           onClick={() => {
             const categoryId =
+              product.mainCategory?.id || product.mainCategory?._id || 
               product.category?.id || product.category?._id || product.category;
             if (categoryId) {
               navigate(`/category/${categoryId}`);
             }
           }}
         >
-          {product.category?.name || "Category"}
+          {product.mainCategory?.name || product.category?.name || "Category"}
         </span>
+        {product.subCategory && (
+          <span className="text-sm text-gray-500 ml-2">
+            › {product.subCategory.name}
+          </span>
+        )}
       </div>
       <h1 className="text-3xl lg:text-4xl font-bold text-primary mb-2">
         {product.name}

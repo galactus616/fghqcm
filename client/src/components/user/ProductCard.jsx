@@ -114,9 +114,9 @@ const ProductCard = ({ product }) => {
           <div className="mt-2 sm:mt-3 flex flex-col flex-1">
             {/* Category */}
             <span className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider">
-              {typeof product.category === "object"
-                ? product.category.name
-                : product.category}
+              {product.mainCategory?.name || 
+               (typeof product.category === "object" ? product.category.name : product.category) || 
+               "Category"}
             </span>
 
             {/* Product Name */}
