@@ -16,11 +16,6 @@ const ProductSchema = new mongoose.Schema({
     ref: "Category",
     required: true,
   },
-  price: {
-    type: Number,
-    required: false, // Deprecated: use variants array instead
-    min: 0,
-  },
   imageUrl: {
     type: String,
     default: "https://placehold.co/400x300/F0FDF4/1C6F40?text=Product",
@@ -29,11 +24,6 @@ const ProductSchema = new mongoose.Schema({
     type: [String],
     validate: [arr => arr.length >= 4, 'At least 4 images required'],
     required: true,
-  },
-  discountedPrice: {
-    type: Number,
-    min: 0,
-    required: false, // Deprecated: use variants array instead
   },
   variants: [
     {
@@ -68,5 +58,27 @@ const ProductSchema = new mongoose.Schema({
 ProductSchema.index({ mainCategory: 1, subCategory: 1, isActive: 1 });
 ProductSchema.index({ isBestSeller: 1, isActive: 1 });
 ProductSchema.index({ isFeatured: 1, isActive: 1 });
+
+// Virtual properties for backward compatibility
+ProductSchema.virtual('price').get(function() {
+  return this.variants && this.variants.length > 0 ? this.variants[0].price : 0;
+});
+
+ProductSchema.virtual('discountedPrice').get(function() {
+  return this.variants && this.variants.length > 0 ? this.variants[0].discountedPrice : 0;
+});
+
+// Include virtuals in JSON output
+ProductSchema.set('toJSON', { virtuals: true });
+ProductSchema.set('toObject', { virtuals: true });
+
+// Instance method to get related products
+ProductSchema.methods.getRelatedProducts = function(limit = 4) {
+  return this.model('Product').find({
+    subCategory: this.subCategory,
+    _id: { $ne: this._id },
+    isActive: true
+  }).limit(limit);
+};
 
 module.exports = mongoose.model("Product", ProductSchema);

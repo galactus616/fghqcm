@@ -6,10 +6,16 @@ const CategorySchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  displayName: {
+    type: String,
+    trim: true,
+    // If not provided, defaults to name
+  },
   slug: {
     type: String,
     required: true,
     lowercase: true,
+    unique: true,
   },
   imageUrl: {
     type: String,
@@ -44,6 +50,21 @@ const CategorySchema = new mongoose.Schema({
 CategorySchema.index({ parentCategory: 1, level: 1, isActive: 1 });
 CategorySchema.index({ slug: 1 });
 
+// Auto-generate slug if not provided
+CategorySchema.pre('save', function(next) {
+  if (!this.slug) {
+    this.slug = this.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+  // Don't update slug if it already exists (prevents breaking URLs)
+  
+  // Set displayName to name if not provided
+  if (!this.displayName) {
+    this.displayName = this.name;
+  }
+  
+  next();
+});
+
 // Virtual for checking if it's a main category
 CategorySchema.virtual('isMainCategory').get(function() {
   return this.level === 1;
@@ -53,5 +74,20 @@ CategorySchema.virtual('isMainCategory').get(function() {
 CategorySchema.virtual('isSubCategory').get(function() {
   return this.level === 2;
 });
+
+// Virtual for getting the display name
+CategorySchema.virtual('getDisplayName').get(function() {
+  return this.displayName || this.name;
+});
+
+// Static method to get main categories
+CategorySchema.statics.getMainCategories = function() {
+  return this.find({ level: 1, isActive: true }).sort('sortOrder');
+};
+
+// Instance method to get subcategories
+CategorySchema.methods.getSubcategories = function() {
+  return this.model('Category').find({ parentCategory: this._id, isActive: true }).sort('sortOrder');
+};
 
 module.exports = mongoose.model("Category", CategorySchema);
