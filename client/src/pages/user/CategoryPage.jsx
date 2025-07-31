@@ -7,7 +7,6 @@ import { ArrowLeft } from 'lucide-react';
 import useStore from '../../store/useStore';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../../components/common/Breadcrumbs';
-import { useSubcategoryNavigation } from '../../hooks/useSubcategoryNavigation';
 import { getSubcategoryIcon } from '../../utils/subcategoryIcons';
 
 const CategoryPage = () => {
@@ -22,15 +21,6 @@ const CategoryPage = () => {
   const [loadingSubcategories, setLoadingSubcategories] = useState(false);
   const [error, setError] = useState('');
   const { t } = useTranslation();
-
-  // Custom hook for subcategory navigation
-  const {
-    currentSubcategoryIndex,
-    goToPreviousSubcategory,
-    goToNextSubcategory,
-    canGoPreviousSubcategory,
-    canGoNextSubcategory,
-  } = useSubcategoryNavigation(subcategories, selectedSubcategory, setSelectedSubcategory);
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -151,7 +141,7 @@ const CategoryPage = () => {
         <Breadcrumbs items={breadcrumbItems} />
         
         {/* Navigation Header */}
-        <div className="md:flex hidden items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4">
           <button
             className="flex items-center gap-2 cursor-pointer text-green-700 hover:underline font-medium text-base"
             onClick={() => navigate(-1)}
@@ -178,12 +168,7 @@ const CategoryPage = () => {
           <MobileSubcategorySection
             subcategories={subcategories}
             selectedSubcategory={selectedSubcategory}
-            currentSubcategoryIndex={currentSubcategoryIndex}
             onSubcategorySelect={handleSubcategorySelect}
-            onPrevious={goToPreviousSubcategory}
-            onNext={goToNextSubcategory}
-            canGoPrevious={canGoPreviousSubcategory}
-            canGoNext={canGoNextSubcategory}
             getSubcategoryIcon={getSubcategoryIcon}
           />
 
