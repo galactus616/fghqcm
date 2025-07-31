@@ -7,7 +7,7 @@ const Breadcrumbs = ({ items }) => {
     return null;
   }
   return (
-    <nav className="flex items-center text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
+    <nav className="flex items-center text-sm text-gray-500 mb-3 md:mb-8" aria-label="Breadcrumb">
       {items.map((item, index) => (
         <React.Fragment key={index}>
           {index > 0 && <ChevronRight className="w-4 h-4 mx-1 flex-shrink-0" />}
