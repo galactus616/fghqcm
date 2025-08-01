@@ -499,9 +499,8 @@ const dummyData = async () => {
         const variants = makeVariants(prod.basePrice, prod.variants);
         productDefs.push({
           name: prod.name,
-          category: cat,
-          price: variants[0].price,
-          discountedPrice: variants[0].discountedPrice,
+          mainCategory: cat, // This will be mapped to mainCategory
+          subCategory: cat,  // This will be mapped to subCategory (you may want to adjust this)
           imageUrl: prod.img,
           images: makeImages(prod.img),
           description: `Fresh ${prod.name} from our ${cat} section.`,
@@ -515,15 +514,15 @@ const dummyData = async () => {
     // Validate and map product categories
     const validProducts = [];
     productDefs.forEach(p => {
-      if (!categoryMap[p.category]) {
+      if (!categoryMap[p.mainCategory]) {
         // skip, but with new categories this should not happen
       } else {
         validProducts.push({
           ...p,
-          category: categoryMap[p.category],
+          mainCategory: categoryMap[p.mainCategory],
+          subCategory: categoryMap[p.subCategory] || categoryMap[p.mainCategory], // Fallback to main category
           images: p.images || makeImages(p.imageUrl),
-          discountedPrice: p.discountedPrice || Math.round(p.price * 0.9),
-          variants: p.variants || [{ quantityLabel: "Default", price: p.price, discountedPrice: Math.round(p.price * 0.9) }],
+          variants: p.variants || [{ quantityLabel: "Default", price: 100, discountedPrice: 90 }],
         });
       }
     });

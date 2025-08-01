@@ -48,7 +48,6 @@ const CategorySchema = new mongoose.Schema({
 
 // Indexes for efficient queries
 CategorySchema.index({ parentCategory: 1, level: 1, isActive: 1 });
-CategorySchema.index({ slug: 1 });
 
 // Auto-generate slug if not provided
 CategorySchema.pre('save', function(next) {

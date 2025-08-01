@@ -42,12 +42,12 @@ const getCart = async (req, res, next) => {
         variantLabel: variant.quantityLabel || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
-          name: product.mainCategory.name,
+          name: product.mainCategory.displayName || product.mainCategory.name,
           slug: product.mainCategory.slug
         } : null,
         subCategory: product.subCategory ? {
           id: product.subCategory._id,
-          name: product.subCategory.name,
+          name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
         } : null,
         description: product.description,
@@ -130,12 +130,12 @@ const addToCart = async (req, res, next) => {
         variantLabel: variant.quantityLabel || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
-          name: product.mainCategory.name,
+          name: product.mainCategory.displayName || product.mainCategory.name,
           slug: product.mainCategory.slug
         } : null,
         subCategory: product.subCategory ? {
           id: product.subCategory._id,
-          name: product.subCategory.name,
+          name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
         } : null,
         description: product.description,
@@ -223,12 +223,12 @@ const updateCartItemQuantity = async (req, res, next) => {
         variantLabel: variant.quantityLabel || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
-          name: product.mainCategory.name,
+          name: product.mainCategory.displayName || product.mainCategory.name,
           slug: product.mainCategory.slug
         } : null,
         subCategory: product.subCategory ? {
           id: product.subCategory._id,
-          name: product.subCategory.name,
+          name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
         } : null,
         description: product.description,
@@ -304,12 +304,12 @@ const removeFromCart = async (req, res, next) => {
         variantLabel: variant.quantityLabel || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
-          name: product.mainCategory.name,
+          name: product.mainCategory.displayName || product.mainCategory.name,
           slug: product.mainCategory.slug
         } : null,
         subCategory: product.subCategory ? {
           id: product.subCategory._id,
-          name: product.subCategory.name,
+          name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
         } : null,
         description: product.description,
@@ -395,12 +395,12 @@ const mergeCart = async (req, res, next) => {
         variantLabel: variant.quantityLabel || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
-          name: product.mainCategory.name,
+          name: product.mainCategory.displayName || product.mainCategory.name,
           slug: product.mainCategory.slug
         } : null,
         subCategory: product.subCategory ? {
           id: product.subCategory._id,
-          name: product.subCategory.name,
+          name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
         } : null,
         description: product.description,

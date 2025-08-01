@@ -6,9 +6,12 @@ const getAllProducts = async (req, res, next) => {
   let query = { isActive: true };
 
   if (search) {
-    // Find matching categories by name
+    // Find matching categories by name or displayName
     const categories = await Category.find({ 
-      name: { $regex: search, $options: "i" },
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { displayName: { $regex: search, $options: "i" } }
+      ],
       isActive: true 
     });
     const categoryIds = categories.map(c => c._id);
@@ -26,20 +29,20 @@ const getAllProducts = async (req, res, next) => {
 
   try {
     const products = await Product.find(query)
-      .populate("mainCategory", "name slug")
-      .populate("subCategory", "name slug");
+      .populate("mainCategory", "name displayName slug")
+      .populate("subCategory", "name displayName slug");
     
     const mappedProducts = products.map((p) => ({
       id: p._id,
       name: p.name,
       mainCategory: p.mainCategory ? { 
         id: p.mainCategory._id, 
-        name: p.mainCategory.name,
+        name: p.mainCategory.displayName || p.mainCategory.name,
         slug: p.mainCategory.slug 
       } : null,
       subCategory: p.subCategory ? { 
         id: p.subCategory._id, 
-        name: p.subCategory.name,
+        name: p.subCategory.displayName || p.subCategory.name,
         slug: p.subCategory.slug 
       } : null,
       imageUrl: p.imageUrl,
@@ -60,8 +63,8 @@ const getProductById = async (req, res, next) => {
   const { id } = req.params;
   try {
     const product = await Product.findById(id)
-      .populate("mainCategory", "name slug")
-      .populate("subCategory", "name slug");
+      .populate("mainCategory", "name displayName slug")
+      .populate("subCategory", "name displayName slug");
     
     if (!product) {
       const error = new Error("Product not found");
@@ -74,12 +77,12 @@ const getProductById = async (req, res, next) => {
       name: product.name,
       mainCategory: product.mainCategory ? { 
         id: product.mainCategory._id, 
-        name: product.mainCategory.name,
+        name: product.mainCategory.displayName || product.mainCategory.name,
         slug: product.mainCategory.slug 
       } : null,
       subCategory: product.subCategory ? { 
         id: product.subCategory._id, 
-        name: product.subCategory.name,
+        name: product.subCategory.displayName || product.subCategory.name,
         slug: product.subCategory.slug 
       } : null,
       imageUrl: product.imageUrl,
@@ -104,7 +107,7 @@ const getMainCategories = async (req, res, next) => {
     
     const mappedCategories = categories.map((c) => ({
       id: c._id,
-      name: c.name,
+      name: c.displayName || c.name,
       slug: c.slug,
       imageUrl: c.imageUrl,
       createdAt: c.createdAt,
@@ -135,7 +138,7 @@ const getSubCategories = async (req, res, next) => {
     
     const mappedSubCategories = subCategories.map((c) => ({
       id: c._id,
-      name: c.name,
+      name: c.displayName || c.name,
       slug: c.slug,
       imageUrl: c.imageUrl,
       parentCategory: c.parentCategory,
@@ -174,20 +177,20 @@ const getProductsByCategoryId = async (req, res, next) => {
     }
 
     const products = await Product.find(query)
-      .populate("mainCategory", "name slug")
-      .populate("subCategory", "name slug");
+      .populate("mainCategory", "name displayName slug")
+      .populate("subCategory", "name displayName slug");
     
     const mappedProducts = products.map((p) => ({
       id: p._id,
       name: p.name,
       mainCategory: p.mainCategory ? { 
         id: p.mainCategory._id, 
-        name: p.mainCategory.name,
+        name: p.mainCategory.displayName || p.mainCategory.name,
         slug: p.mainCategory.slug 
       } : null,
       subCategory: p.subCategory ? { 
         id: p.subCategory._id, 
-        name: p.subCategory.name,
+        name: p.subCategory.displayName || p.subCategory.name,
         slug: p.subCategory.slug 
       } : null,
       imageUrl: p.imageUrl,

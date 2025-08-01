@@ -40,8 +40,8 @@ const placeOrder = async (req, res, next) => {
     const userCart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
       populate: [
-        { path: "mainCategory", select: "name slug" },
-        { path: "subCategory", select: "name slug" }
+        { path: "mainCategory", select: "name displayName slug" },
+        { path: "subCategory", select: "name displayName slug" }
       ]
     });
 
