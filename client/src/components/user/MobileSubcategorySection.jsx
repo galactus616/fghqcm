@@ -6,7 +6,8 @@ const MobileSubcategorySection = ({
   subcategories,
   selectedSubcategory,
   onSubcategorySelect,
-  getSubcategoryIcon
+  getSubcategoryIcon,
+  category
 }) => {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -77,11 +78,11 @@ const MobileSubcategorySection = ({
 
   return (
     <div className="lg:hidden">
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div className="bg-white rounded-lg border-1 border-primary/30 p-4 pb-0">
         {/* Navigation Buttons for Horizontal Scroll */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-green-800">
-            Filter by Subcategory
+            {category ? category.name : t('category')}
           </h3>
           <div className="flex gap-2">
             <button
