@@ -22,16 +22,6 @@ const MobileSubcategorySection = ({
       
       setCanScrollLeft(newCanScrollLeft);
       setCanScrollRight(newCanScrollRight);
-      
-      // Debug logging
-      console.log('Scroll Debug:', {
-        scrollLeft,
-        scrollWidth,
-        clientWidth,
-        canScrollLeft: newCanScrollLeft,
-        canScrollRight: newCanScrollRight,
-        subcategoriesCount: subcategories.length
-      });
     }
   };
 
@@ -44,7 +34,6 @@ const MobileSubcategorySection = ({
   }, [subcategories]);
 
   const scroll = (direction) => {
-    console.log('Scroll button clicked:', direction);
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
       const scrollAmount = clientWidth * 0.6; // Reduced from 0.7 for better UX
@@ -53,8 +42,6 @@ const MobileSubcategorySection = ({
         ? Math.max(0, scrollLeft - scrollAmount)
         : scrollLeft + scrollAmount;
       
-      console.log('Scrolling to:', newScrollLeft);
-      
       scrollRef.current.scrollTo({
         left: newScrollLeft,
         behavior: "smooth",
@@ -62,8 +49,6 @@ const MobileSubcategorySection = ({
 
       // Update scroll capabilities after scrolling
       setTimeout(checkScrollCapabilities, 300);
-    } else {
-      console.log('Scroll ref is null');
     }
   };
 
@@ -78,18 +63,18 @@ const MobileSubcategorySection = ({
 
   return (
     <div className="lg:hidden">
-      <div className="bg-white rounded-lg border-1 border-primary/30 p-4 pb-0">
+      <div className="bg-white rounded-lg border border-primary/30 p-3 sm:p-4 pb-0">
         {/* Navigation Buttons for Horizontal Scroll */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-green-800">
-            {category ? category.name : t('category')}
+          <h3 className="text-base sm:text-lg font-semibold text-green-800">
+            {category ? category.name : 'Category'}
           </h3>
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2">
             <button
               aria-label="Scroll left"
               onClick={() => scroll("left")}
               disabled={!canScrollLeft}
-              className={`p-2 rounded-full shadow transition cursor-pointer ${
+              className={`p-2 sm:p-2.5 rounded-full shadow transition cursor-pointer ${
                 canScrollLeft 
                   ? 'bg-green-100 hover:bg-green-200 text-green-700' 
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -114,7 +99,7 @@ const MobileSubcategorySection = ({
               aria-label="Scroll right"
               onClick={() => scroll("right")}
               disabled={!canScrollRight}
-              className={`p-2 rounded-full shadow transition cursor-pointer ${
+              className={`p-2 sm:p-2.5 rounded-full shadow transition cursor-pointer ${
                 canScrollRight 
                   ? 'bg-green-100 hover:bg-green-200 text-green-700' 
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -144,7 +129,7 @@ const MobileSubcategorySection = ({
           style={{ 
             scrollbarWidth: 'none', 
             msOverflowStyle: 'none',
-            minHeight: '60px' // Ensure minimum height for better touch targets
+            minHeight: '70px' // Increased minimum height for better touch targets
           }}
         >
           <SubcategoryFilter

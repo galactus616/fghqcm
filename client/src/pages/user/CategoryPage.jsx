@@ -163,7 +163,7 @@ const CategoryPage = () => {
         </h1>
         
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-5 md:gap-6">
           {/* Mobile Subcategory Section */}
           <MobileSubcategorySection
             category={category}
@@ -193,7 +193,7 @@ const CategoryPage = () => {
                 }
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-3 sm:gap-4 md:gap-6">
                 {products.map(product => (
                   <ProductCard key={product.id || product._id} product={product} />
                 ))}
