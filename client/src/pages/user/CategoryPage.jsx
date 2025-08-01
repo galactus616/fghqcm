@@ -141,9 +141,9 @@ const CategoryPage = () => {
         <Breadcrumbs items={breadcrumbItems} />
         
         {/* Navigation Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="hidden md:flex items-center justify-between mb-4">
           <button
-            className="flex items-center gap-2 cursor-pointer text-green-700 hover:underline font-medium text-base"
+            className="hidden md:flex items-center gap-2 cursor-pointer text-green-700 hover:underline font-medium text-base"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -151,21 +151,22 @@ const CategoryPage = () => {
           </button>
           <a
             href="/"
-            className="text-green-700 hover:underline font-medium text-base"
+            className="text-green-700 hover:underline hidden md:block font-medium text-base"
           >
             {t('continue_shopping')}
           </a>
         </div>
 
         {/* Category Title */}
-        <h1 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">
+        <h1 className="md:block hidden text-2xl md:text-3xl font-bold text-green-800 mb-6">
           {category ? category.name : t('category')}
         </h1>
         
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-5 md:gap-6">
           {/* Mobile Subcategory Section */}
           <MobileSubcategorySection
+            category={category}
             subcategories={subcategories}
             selectedSubcategory={selectedSubcategory}
             onSubcategorySelect={handleSubcategorySelect}
@@ -192,7 +193,7 @@ const CategoryPage = () => {
                 }
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-3 sm:gap-4 md:gap-6">
                 {products.map(product => (
                   <ProductCard key={product.id || product._id} product={product} />
                 ))}

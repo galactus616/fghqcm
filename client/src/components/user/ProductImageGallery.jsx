@@ -76,7 +76,7 @@ const ProductImageGallery = ({
 
       {/* Magnifier Container - Positioned to overlay the ProductInfo area */}
       {showMagnifier && (
-        <div className="fixed lg:absolute lg:left-[calc(50%+1rem)] lg:top-1/3 lg:w-[calc(50%-6rem)] lg:h-[calc(100vh-6rem)] z-50 border-2 border-gray-300 rounded-lg overflow-hidden shadow-2xl bg-white">
+        <div className="fixed lg:absolute lg:left-[calc(50%+1rem)] lg:top-[29%] lg:w-[calc(50%-5rem)] lg:h-[calc(100vh-6rem)] border-2 border-gray-300 rounded-lg overflow-hidden  bg-white">
           <div 
             className="w-full h-full relative overflow-hidden"
             style={{
