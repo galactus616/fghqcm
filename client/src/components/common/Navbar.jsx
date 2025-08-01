@@ -225,53 +225,97 @@ export default function Navbar() {
   };
   return (
     <div className="font-sans">
-      <nav className="bg-white border-b border-[#0a614d]/30 py-2 px-4 sm:px-6 lg:px-8 w-full shadow-sm">
-        <div className="w-full flex flex-wrap items-center justify-between md:flex-nowrap">
+      <nav className="bg-white border-b border-[#0a614d]/30 py-2 px-3 sm:px-6 lg:px-8 w-full shadow-sm">
+        {/* Mobile Layout */}
+        <div className="md:hidden">
+          {/* Top Row: Logo + Action Icons */}
+          <div className="flex items-center justify-between mb-2">
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg" alt="QBD Logo" className="h-12 object-contain" draggable={false} />
+            </Link>
+
+            {/* Action Icons */}
+            <div className="flex items-center space-x-1">
+              {/* Language Toggle */}
+              <button
+                onClick={() => setLanguage(language === "en" ? "bn" : "en")}
+                className="rounded cursor-pointer text-[#0a614d] text-xs px-2 py-1.5 focus:outline-none bg-[#0a614d]/10 focus:ring-2 focus:ring-[#0a614d]"
+                aria-label="Toggle language"
+              >
+                {language === "en" ? "En" : "Bn"}
+              </button>
+              
+              {/* Profile Button */}
+              <button
+                onClick={() => {
+                  closeAllOverlays();
+                  if (isLoggedIn) {
+                    toggleProfileDropdown();
+                  } else {
+                    setLoginRedirect(null);
+                    setIsAuthModalOpen(true);
+                  }
+                }}
+                className="cursor-pointer p-1.5 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
+                aria-label="Toggle profile menu"
+              >
+                <User className="w-5 h-5" />
+              </button>
+
+              {/* Cart Button */}
+              <button
+                onClick={toggleCart}
+                className="relative cursor-pointer p-1.5 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
+                aria-label="Open cart"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {cartItems.length}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Location Bar */}
+          <div
+            className="flex items-center justify-between bg-gray-50 rounded-lg p-2 mb-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200 border border-[#0a614d]/20"
+            onClick={openLocationModal}
+          >
+            <div className="flex items-center flex-1 min-w-0">
+              <MapPin className="w-4 h-4 mr-2 text-[#0a614d] flex-shrink-0" />
+              <span className="text-sm text-gray-800 truncate" title={currentLocation}>
+                {currentLocation}
+              </span>
+            </div>
+            <ChevronDown className="w-4 h-4 text-[#0a614d] flex-shrink-0" />
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder={t("search_placeholder")}
+              className="w-full py-2.5 pl-10 pr-4 bg-gray-50 text-gray-800 placeholder-gray-400 rounded-lg border border-[#0a614d]/30 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm"
+              onKeyDown={e => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                  navigate(`/search?q=${encodeURIComponent(e.target.value.trim())}`);
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden md:flex flex-wrap items-center justify-between md:flex-nowrap">
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0 order-1 mr-4">
+          <div className="flex items-center flex-shrink-0 order-1 mr-2 md:mr-4">
             <Link to="/" className="flex items-center space-x-3 group">
               <img src="https://res.cloudinary.com/deepmitra/image/upload/v1753775167/QBD-LOGO_wehuk0.svg" alt="QBD Logo" className="h-[68px] object-contain" draggable={false} />
             </Link>
-          </div>
-
-          {/* Mobile Icons */}
-          <div className="flex items-center space-x-3 md:hidden order-2">
-            {/* Language Toggle for Mobile */}
-            <button
-              onClick={() => setLanguage(language === "en" ? "bn" : "en")}
-              className="rounded cursor-pointer text-[#0a614d] text-sm px-3 py-2 focus:outline-none bg-[#0a614d]/10 focus:ring-2 focus:ring-[#0a614d]"
-              aria-label="Toggle language"
-            >
-              {language === "en" ? "En" : "Bn"}
-            </button>
-            <button
-              onClick={() => {
-                closeAllOverlays();
-                if (isLoggedIn) {
-                  toggleProfileDropdown();
-                } else {
-                  setLoginRedirect(null);
-                  setIsAuthModalOpen(true);
-                }
-              }}
-              className="cursor-pointer p-2 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
-              aria-label="Toggle profile menu"
-            >
-              <User className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={toggleCart}
-              className="relative cursor-pointer p-2 text-[#0a614d] hover:bg-[#0a614d]/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a614d] transition-colors duration-200"
-              aria-label="Open cart"
-            >
-              <ShoppingCart className="w-6 h-6" />
-              {cartItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartItems.length}
-                </span>
-              )}
-            </button>
           </div>
 
           {/* Desktop Location */}
@@ -290,22 +334,8 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Location */}
-          <div
-            className="flex flex-col text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 w-full mt-3 md:hidden order-3 p-2 rounded-lg"
-            onClick={openLocationModal}
-          >
-            <div className="flex items-center">
-              <MapPin className="w-4 h-4 mr-1 text-green-600" />
-              <span className="text-gray-800 truncate max-w-[140px]" title={currentLocation}>
-                {currentLocation}
-              </span>
-              <ChevronDown className="w-4 h-4 ml-1 text-green-600" />
-            </div>
-          </div>
-
           {/* Search Bar */}
-          <div className="flex-1 mx-6 w-full md:w-auto mt-3 md:mt-0 order-4 md:order-3 max-w-2xl">
+          <div className="flex-1 mx-2 md:mx-6 w-full md:w-auto mt-2 md:mt-0 order-4 md:order-3 max-w-2xl">
             <div className="relative flex items-center bg-gray-50 rounded-lg overflow-hidden border border-[#0a614d]/30 hover:border-[#0a614d] transition-colors duration-200">
               <Search className="absolute left-3 text-gray-400 w-5 h-5" />
               <input
@@ -403,41 +433,41 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Profile Dropdown or Login Button */}
-          {isLoggedIn && isProfileDropdownOpen && (
-            <div
-              className="md:hidden absolute top-full left-0 w-full bg-white rounded-b-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
-              style={{ pointerEvents: "auto", zIndex: 9999 }}
-            >
-              <div className="flex flex-col space-y-3">
-                <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
-                  {minimalProfileMenuItems.map((item, index) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <button
-                        key={index}
-                        type="button"
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          item.action();
-                          setIsProfileDropdownOpen(false);
-                        }}
-                        className={`flex items-center cursor-pointer w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                          item.isDestructive
-                            ? "text-red-600 hover:bg-red-50"
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`}
-                        tabIndex={0}
-                      >
-                        <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
-                        <span>{t(item.label === "Log Out" ? "logout" : item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+        {/* Mobile Profile Dropdown */}
+        {isLoggedIn && isProfileDropdownOpen && (
+          <div
+            className="md:hidden absolute top-full left-0 w-full bg-white rounded-b-lg shadow-lg py-2 z-50 ring-1 ring-gray-200 border border-gray-200"
+            style={{ pointerEvents: "auto", zIndex: 9999 }}
+          >
+            <div className="flex flex-col space-y-3">
+              <div className="pl-6 pb-2 space-y-2 border-l border-gray-200 ml-2">
+                {minimalProfileMenuItems.map((item, index) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        item.action();
+                        setIsProfileDropdownOpen(false);
+                      }}
+                      className={`flex items-center cursor-pointer w-full text-left px-3 py-2 text-sm rounded-md my-1 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                        item.isDestructive
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                      tabIndex={0}
+                    >
+                      <IconComponent className={`w-4 h-4 mr-3 flex-shrink-0 ${item.isDestructive ? 'text-red-500' : 'text-gray-500'}`} />
+                      <span>{t(item.label === "Log Out" ? "logout" : item.label.replace(/ /g, '_').toLowerCase()) || item.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          )}
+          </div>
+        )}
       </nav>
 
       {/* Profile Dropdown Overlay */}

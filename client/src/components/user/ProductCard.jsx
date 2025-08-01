@@ -68,13 +68,13 @@ const ProductCard = ({ product }) => {
   };
   return (
     <section className="relative">
-      <div className=" rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
+      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-44 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className=" ">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
-              <div className="absolute top-0 sm:top-[1px] right-2 sm:right-3 z-10">
+              <div className="absolute top-0 sm:top-[0px] right-2 sm:right-3 z-10">
                 <div className="absolute top-0 right-0 z-10">
-                  <div className="bg-bd-red text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg shadow-lg">
+                  <div className="bg-bd-red text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg ">
                     {Math.round(
                       ((variant.price - variant.discountedPrice) /
                         variant.price) *
@@ -132,12 +132,12 @@ const ProductCard = ({ product }) => {
               className={hasMultipleVariants ? "mb-1 sm:mb-3" : "mb-1 sm:mb-3"}
             >
               {hasMultipleVariants ? (
-                <div className="flex gap-1 sm:gap-1.5 flex-nowrap overflow-x-auto pb-1">
+                <div className="flex gap-1 flex-nowrap">
                   {product.variants.map((v, idx) => (
                     <button
                       key={idx}
                       type="button"
-                      className={`px-2 sm:px-3 py-1 rounded-lg cursor-pointer border text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap ${
+                      className={`px-1.5 py-1 rounded-lg cursor-pointer border text-[9px] sm:text-[10px] font-medium transition-colors whitespace-nowrap flex-1 min-w-0 ${
                         selectedVariantIdx === idx
                           ? "bg-primary text-white border-primary"
                           : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:border-primary"
