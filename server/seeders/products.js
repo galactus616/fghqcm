@@ -72,7 +72,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Fresh and ripe bananas from local farms",
-    variants: ["6 pieces", "12 pieces", "1 dozen"],
+    variants: ["6 pc", "12 pc", "1 dz"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: false
@@ -84,7 +84,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Crisp and juicy imported apples",
-    variants: ["4 pieces", "6 pieces", "1kg"],
+    variants: ["4 pc", "6 pc", "1kg"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -96,7 +96,7 @@ const products = [
     basePrice: 100,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Sweet and tangy oranges rich in vitamin C",
-    variants: ["6 pieces", "12 pieces", "1kg"],
+    variants: ["6 pc", "12 pc", "1kg"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -108,7 +108,7 @@ const products = [
     basePrice: 90,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Fresh and sweet pineapples from local farms",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -120,7 +120,7 @@ const products = [
     basePrice: 70,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Fresh and nutritious guavas from Bangladesh",
-    variants: ["4 pieces", "6 pieces", "1kg"],
+    variants: ["4 pc", "6 pc", "1kg"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -194,7 +194,7 @@ const products = [
     basePrice: 35,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_167_fresh-cilantro-bunch-vibrant-green-herb_632498-25488_kyoigs.jpg",
     description: "Fresh cauliflower heads from local farms",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -206,7 +206,7 @@ const products = [
     basePrice: 25,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_167_fresh-cilantro-bunch-vibrant-green-herb_632498-25488_kyoigs.jpg",
     description: "Fresh and crisp cabbage heads",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -292,7 +292,7 @@ const products = [
     basePrice: 180,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Exotic star fruits with refreshing taste",
-    variants: ["4 pieces", "6 pieces", "1kg"],
+    variants: ["4 pc", "6 pc", "1kg"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -304,7 +304,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Sweet custard apples in season",
-    variants: ["4 pieces", "6 pieces", "1kg"],
+    variants: ["4 pc", "6 pc", "1kg"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -316,7 +316,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Traditional wood apples for chutney",
-    variants: ["4 pieces", "6 pieces", "1kg"],
+    variants: ["4 pc", "6 pc", "1kg"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -340,7 +340,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Sweet pomegranates rich in antioxidants",
-    variants: ["2 pieces", "4 pieces", "6 pieces"],
+    variants: ["2 pc", "4 pc", "6 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -364,7 +364,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Sweet and refreshing watermelons",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -438,7 +438,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_167_fresh-cilantro-bunch-vibrant-green-herb_632498-25488_kyoigs.jpg",
     description: "Organic cauliflower from certified farms",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -450,7 +450,7 @@ const products = [
     basePrice: 45,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_167_fresh-cilantro-bunch-vibrant-green-herb_632498-25488_kyoigs.jpg",
     description: "Organic cabbage grown naturally",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -500,7 +500,7 @@ const products = [
     basePrice: 300,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Exotic dragon fruit with unique taste",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -512,7 +512,7 @@ const products = [
     basePrice: 250,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Fresh kiwi fruits rich in vitamin C",
-    variants: ["4 pieces", "6 pieces", "1kg"],
+    variants: ["4 pc", "6 pc", "1kg"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -524,7 +524,7 @@ const products = [
     basePrice: 280,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Fresh avocados perfect for healthy eating",
-    variants: ["2 pieces", "4 pieces", "6 pieces"],
+    variants: ["2 pc", "4 pc", "6 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -596,7 +596,7 @@ const products = [
     basePrice: 320,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Exotic passion fruit with unique taste",
-    variants: ["4 pieces", "6 pieces", "8 pieces"],
+    variants: ["4 pc", "6 pc", "8 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -608,7 +608,7 @@ const products = [
     basePrice: 500,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239607/imgi_13_close-up-delicious-apple_23-2151868338_bi6uih.jpg",
     description: "Exotic mangosteen known as queen of fruits",
-    variants: ["4 pieces", "6 pieces", "8 pieces"],
+    variants: ["4 pc", "6 pc", "8 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -1236,7 +1236,7 @@ const products = [
     basePrice: 35,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Classic Coca Cola, the world's favorite soft drink",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.05,
     isBestSeller: true,
     isFeatured: true
@@ -1248,7 +1248,7 @@ const products = [
     basePrice: 32,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Refreshing Pepsi, the choice of a new generation",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -1260,7 +1260,7 @@ const products = [
     basePrice: 30,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Clear and crisp Sprite, lemon-lime refreshment",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -1272,7 +1272,7 @@ const products = [
     basePrice: 28,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Colorful Fanta, fun and fruity taste",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -1284,7 +1284,7 @@ const products = [
     basePrice: 30,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Crisp 7UP, the uncola taste",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1296,7 +1296,7 @@ const products = [
     basePrice: 35,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Mountain Dew, do the dew with extreme taste",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.05,
     isBestSeller: false,
     isFeatured: true
@@ -1308,7 +1308,7 @@ const products = [
     basePrice: 28,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Fruity Mirinda, burst of orange flavor",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1320,7 +1320,7 @@ const products = [
     basePrice: 32,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Bold Thumbs Up, taste the thunder",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1332,7 +1332,7 @@ const products = [
     basePrice: 25,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Fresh Limca, lime and lemon refreshment",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -1344,7 +1344,7 @@ const products = [
     basePrice: 30,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Juicy Slice, real fruit taste",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1480,7 +1480,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Red Bull gives you wings, energy boost drink",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.05,
     isBestSeller: true,
     isFeatured: true
@@ -1492,7 +1492,7 @@ const products = [
     basePrice: 100,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Monster Energy, unleash the beast",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -1504,7 +1504,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Power Horse energy drink, boost your energy",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1516,7 +1516,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Sting Energy, affordable energy boost",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -1528,7 +1528,7 @@ const products = [
     basePrice: 90,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Rockstar Energy, party like a rockstar",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1540,7 +1540,7 @@ const products = [
     basePrice: 110,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Bang Energy, powerful energy drink",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1552,7 +1552,7 @@ const products = [
     basePrice: 95,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "NOS Energy, high-performance energy drink",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1564,7 +1564,7 @@ const products = [
     basePrice: 85,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Full Throttle energy drink, maximum power",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -1576,7 +1576,7 @@ const products = [
     basePrice: 75,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Amp Energy, amplify your energy",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1588,7 +1588,7 @@ const products = [
     basePrice: 105,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Xyience Energy, zero calorie energy drink",
-    variants: ["250ml", "355ml", "473ml"],
+    variants: ["355ml", "473ml"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -1724,7 +1724,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Fresh orange juice, vitamin C rich",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -1736,7 +1736,7 @@ const products = [
     basePrice: 70,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Pure apple juice, naturally sweet",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -1748,7 +1748,7 @@ const products = [
     basePrice: 90,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Tropical mango juice, sweet and refreshing",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -1760,7 +1760,7 @@ const products = [
     basePrice: 85,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Tropical pineapple juice, tangy and sweet",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1772,7 +1772,7 @@ const products = [
     basePrice: 75,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Rich grape juice, antioxidant packed",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1784,7 +1784,7 @@ const products = [
     basePrice: 95,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Tart cranberry juice, urinary health support",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -1796,7 +1796,7 @@ const products = [
     basePrice: 100,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Mixed fruit juice, variety of flavors",
-    variants: ["250ml", "500ml", "1L", "2L"],
+    variants: ["500ml", "1L", "2L"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -1808,7 +1808,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Creamy strawberry smoothie, protein rich",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -1820,7 +1820,7 @@ const products = [
     basePrice: 110,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Creamy banana smoothie, potassium rich",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1832,7 +1832,7 @@ const products = [
     basePrice: 130,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752240555/imgi_14_refreshing-orange-soda-can-design-cold-drink-summer-beverage_84443-38586-removebg-preview_nsoae7.png",
     description: "Mixed berry smoothie, antioxidant rich",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.15,
     isBestSeller: true,
     isFeatured: true
@@ -1944,7 +1944,7 @@ const products = [
     basePrice: 40,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/download-removebg-preview_pobolq.png",
     description: "Soft bun bread, individual servings",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -1956,7 +1956,7 @@ const products = [
     basePrice: 35,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/download-removebg-preview_pobolq.png",
     description: "Traditional roti bread, flat and soft",
-    variants: ["10 pieces", "20 pieces", "30 pieces"],
+    variants: ["10 pc", "20 pc", "30 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -2188,7 +2188,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/download-removebg-preview_pobolq.png",
     description: "Individual chocolate pastry, flaky and rich",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -2200,7 +2200,7 @@ const products = [
     basePrice: 55,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/download-removebg-preview_pobolq.png",
     description: "Sweet apple pastry, cinnamon spiced",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -2432,7 +2432,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/download-removebg-preview_pobolq.png",
     description: "Fresh farm eggs for baking",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: false
@@ -2752,7 +2752,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Soft bristle toothbrush, gentle cleaning",
-    variants: ["1 piece", "3 pieces", "6 pieces"],
+    variants: ["1 piece", "3 pc", "6 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -2764,7 +2764,7 @@ const products = [
     basePrice: 50,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Medium bristle toothbrush, effective cleaning",
-    variants: ["1 piece", "3 pieces", "6 pieces"],
+    variants: ["1 piece", "3 pc", "6 pc"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -2776,7 +2776,7 @@ const products = [
     basePrice: 150,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Antiseptic mouthwash, kills germs",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -2788,7 +2788,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Fresh breath mouthwash, long-lasting",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -2812,7 +2812,7 @@ const products = [
     basePrice: 30,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Stainless steel tongue cleaner, hygienic",
-    variants: ["1 piece", "3 pieces", "6 pieces"],
+    variants: ["1 piece", "3 pc", "6 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -2948,7 +2948,7 @@ const products = [
     basePrice: 200,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Premium razor, smooth shaving experience",
-    variants: ["1 piece", "3 pieces", "6 pieces"],
+    variants: ["1 piece", "3 pc", "6 pc"],
     discount: 0.15,
     isBestSeller: true,
     isFeatured: true
@@ -2972,7 +2972,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Classic deodorant, long-lasting freshness",
-    variants: ["150ml", "250ml", "400ml"],
+    variants: ["150ml", "400ml"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -2984,7 +2984,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Attractive body spray, irresistible fragrance",
-    variants: ["150ml", "250ml", "400ml"],
+    variants: ["150ml", "400ml"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -3032,7 +3032,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Masculine deodorant, confident fragrance",
-    variants: ["150ml", "250ml", "400ml"],
+    variants: ["150ml", "400ml"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -3056,7 +3056,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_53_pile-raw-chicken-sits-checkered-cloth_410516-135776-removebg-preview_iarf6p.png",
     description: "Long-lasting body spray, no gas",
-    variants: ["150ml", "250ml", "400ml"],
+    variants: ["150ml", "400ml"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -3400,7 +3400,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_31_isometric-cloth-3d-isolated-render_28315-9363_darftc.jpg",
     description: "Personalized pet ID tag, engraved",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -3438,7 +3438,7 @@ const products = [
     basePrice: 180,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_31_isometric-cloth-3d-isolated-render_28315-9363_darftc.jpg",
     description: "Gentle pet shampoo, moisturizing formula",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -3450,7 +3450,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_31_isometric-cloth-3d-isolated-render_28315-9363_darftc.jpg",
     description: "Nourishing pet conditioner, soft fur",
-    variants: ["250ml", "500ml", "1L"],
+    variants: ["500ml", "1L"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -3474,7 +3474,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_31_isometric-cloth-3d-isolated-render_28315-9363_darftc.jpg",
     description: "Soft pet toothbrush, gentle cleaning",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -3596,7 +3596,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_31_isometric-cloth-3d-isolated-render_28315-9363_darftc.jpg",
     description: "Interactive laser pointer, exercise toy",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.05,
     isBestSeller: false,
     isFeatured: false
@@ -3806,7 +3806,7 @@ const products = [
     basePrice: 800,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Premium baby diapers, dry and comfortable",
-    variants: ["20 pieces", "40 pieces", "80 pieces"],
+    variants: ["20 pc", "40 pc", "80 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -3818,7 +3818,7 @@ const products = [
     basePrice: 750,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Soft baby diapers, leak protection",
-    variants: ["20 pieces", "40 pieces", "80 pieces"],
+    variants: ["20 pc", "40 pc", "80 pc"],
     discount: 0.12,
     isBestSeller: true,
     isFeatured: false
@@ -3830,7 +3830,7 @@ const products = [
     basePrice: 700,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Japanese baby diapers, super absorbent",
-    variants: ["20 pieces", "40 pieces", "80 pieces"],
+    variants: ["20 pc", "40 pc", "80 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: true
@@ -3842,7 +3842,7 @@ const products = [
     basePrice: 600,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Affordable baby diapers, good quality",
-    variants: ["20 pieces", "40 pieces", "80 pieces"],
+    variants: ["20 pc", "40 pc", "80 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: false
@@ -3854,7 +3854,7 @@ const products = [
     basePrice: 650,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Comfortable baby diapers, snug fit",
-    variants: ["20 pieces", "40 pieces", "80 pieces"],
+    variants: ["20 pc", "40 pc", "80 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -3988,7 +3988,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Safe baby nail clipper, rounded tips",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.05,
     isBestSeller: false,
     isFeatured: false
@@ -4000,7 +4000,7 @@ const products = [
     basePrice: 200,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Digital baby thermometer, accurate reading",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -4012,7 +4012,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Gentle nasal aspirator, clears congestion",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -4024,7 +4024,7 @@ const products = [
     basePrice: 70,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Silicone baby teether, soothing relief",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -4050,7 +4050,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Colorful baby rattle, developmental toy",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -4062,7 +4062,7 @@ const products = [
     basePrice: 100,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Silicone teething ring, soothing relief",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -4074,7 +4074,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Soft baby ball, safe for play",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -4098,7 +4098,7 @@ const products = [
     basePrice: 90,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Unbreakable baby mirror, self-discovery",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -4110,7 +4110,7 @@ const products = [
     basePrice: 180,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Musical baby toy, soothing melodies",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -4134,7 +4134,7 @@ const products = [
     basePrice: 200,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Soft building blocks, creative play",
-    variants: ["20 pieces", "40 pieces", "60 pieces"],
+    variants: ["20 pc", "40 pc", "60 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -4158,7 +4158,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Educational shape sorter, learning toy",
-    variants: ["1 piece", "2 pieces", "3 pieces"],
+    variants: ["1 piece", "2 pc", "3 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -4268,7 +4268,7 @@ const products = [
     basePrice: 70,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_35_samsung-phone-with-time-it_1025256-15624-removebg-preview_zcpanx.png",
     description: "Waterproof baby bib, feeding time",
-    variants: ["1 piece", "3 pieces", "5 pieces"],
+    variants: ["1 piece", "3 pc", "5 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -4418,7 +4418,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Fresh farm eggs, rich in protein",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: true
@@ -4430,7 +4430,7 @@ const products = [
     basePrice: 150,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Organic farm eggs, chemical-free",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: false
@@ -4442,7 +4442,7 @@ const products = [
     basePrice: 100,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Traditional country eggs, natural",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.05,
     isBestSeller: false,
     isFeatured: true
@@ -4454,7 +4454,7 @@ const products = [
     basePrice: 180,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Omega-3 enriched eggs, heart healthy",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -4466,7 +4466,7 @@ const products = [
     basePrice: 200,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Premium quail eggs, rich in nutrients",
-    variants: ["12 pieces", "24 pieces", "48 pieces"],
+    variants: ["12 pc", "24 pc", "48 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -4478,7 +4478,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Large duck eggs, rich and creamy",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -4490,7 +4490,7 @@ const products = [
     basePrice: 130,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Natural brown eggs, farm fresh",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -4502,7 +4502,7 @@ const products = [
     basePrice: 110,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Clean white eggs, standard quality",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.05,
     isBestSeller: false,
     isFeatured: false
@@ -4514,7 +4514,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Free range eggs, ethically raised",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -4526,7 +4526,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_37_colorful-pencils-orange-holder-bright-cheerful-image-perfect-back-school-art-projects_632498-32320_ddgwyl.jpg",
     description: "Extra large jumbo eggs, more protein",
-    variants: ["6 pieces", "12 pieces", "24 pieces"],
+    variants: ["6 pc", "12 pc", "24 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -5783,7 +5783,7 @@ const products = [
     subCategory: "Chocolate Sweets",
     basePrice: 100,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_14_realistic-flavored-chocolate-bar-pack-template-with-orange-nuts-picture-vector-illustration_1284-68296-removebg-preview_lboeyh.png",
-    description: "Fudgy chocolate brownie, walnut pieces",
+    description: "Fudgy chocolate brownie, walnut pc",
     variants: ["100g", "200g", "500g"],
     discount: 0.1,
     isBestSeller: false,
@@ -5856,7 +5856,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_14_realistic-flavored-chocolate-bar-pack-template-with-orange-nuts-picture-vector-illustration_1284-68296-removebg-preview_lboeyh.png",
     description: "Moist chocolate cupcake, frosted",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -5868,7 +5868,7 @@ const products = [
     basePrice: 70,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_14_realistic-flavored-chocolate-bar-pack-template-with-orange-nuts-picture-vector-illustration_1284-68296-removebg-preview_lboeyh.png",
     description: "Chocolate glazed donut, soft",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -5953,7 +5953,7 @@ const products = [
     basePrice: 80,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Fresh blueberry muffin, moist",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -5965,7 +5965,7 @@ const products = [
     basePrice: 60,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Buttery croissant, flaky layers",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: true
@@ -5977,7 +5977,7 @@ const products = [
     basePrice: 70,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Sweet danish pastry, fruit filling",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: false
@@ -5989,7 +5989,7 @@ const products = [
     basePrice: 90,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Chocolate eclair, cream filled",
-    variants: ["1 piece", "6 pieces", "12 pieces"],
+    variants: ["1 piece", "6 pc", "12 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -6126,7 +6126,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Classic black tea bags, strong flavor",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -6138,7 +6138,7 @@ const products = [
     basePrice: 110,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Popular red label tea, rich taste",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: true,
     isFeatured: false
@@ -6150,7 +6150,7 @@ const products = [
     basePrice: 130,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Premium Taj Mahal tea, aromatic",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: true
@@ -6162,7 +6162,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "International Tetley tea, smooth taste",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -6174,7 +6174,7 @@ const products = [
     basePrice: 125,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Local Duncan tea, traditional flavor",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: false
@@ -6186,7 +6186,7 @@ const products = [
     basePrice: 115,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Ispahani brand tea, classic taste",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -6198,7 +6198,7 @@ const products = [
     basePrice: 105,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Garden fresh tea, natural flavor",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -6210,7 +6210,7 @@ const products = [
     basePrice: 135,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Sylhet region tea, premium quality",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.05,
     isBestSeller: true,
     isFeatured: true
@@ -6222,7 +6222,7 @@ const products = [
     basePrice: 120,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Chittagong hills tea, strong brew",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -6234,7 +6234,7 @@ const products = [
     basePrice: 150,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Premium Darjeeling tea, floral notes",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: true,
     isFeatured: true
@@ -6248,7 +6248,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Lipton green tea, antioxidant rich",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: true,
     isFeatured: true
@@ -6260,7 +6260,7 @@ const products = [
     basePrice: 170,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Tetley green tea, natural benefits",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -6272,7 +6272,7 @@ const products = [
     basePrice: 180,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Organic green tea, pure and natural",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -6284,7 +6284,7 @@ const products = [
     basePrice: 190,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Jasmine scented green tea, fragrant",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -6296,7 +6296,7 @@ const products = [
     basePrice: 165,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Lemon flavored green tea, refreshing",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: false
@@ -6308,7 +6308,7 @@ const products = [
     basePrice: 175,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Mint infused green tea, cooling",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -6320,7 +6320,7 @@ const products = [
     basePrice: 185,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Honey flavored green tea, sweet",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: false
@@ -6332,7 +6332,7 @@ const products = [
     basePrice: 170,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Ginger green tea, warming",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: true,
     isFeatured: true
@@ -6344,7 +6344,7 @@ const products = [
     basePrice: 195,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Chamomile green tea, calming",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: true
@@ -6356,7 +6356,7 @@ const products = [
     basePrice: 200,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Rose petal green tea, romantic",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -6492,7 +6492,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Chamomile herbal tea, calming",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -6504,7 +6504,7 @@ const products = [
     basePrice: 150,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Peppermint herbal tea, refreshing",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -6516,7 +6516,7 @@ const products = [
     basePrice: 130,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Lemon grass herbal tea, citrusy",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.08,
     isBestSeller: true,
     isFeatured: false
@@ -6528,7 +6528,7 @@ const products = [
     basePrice: 145,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Ginger herbal tea, warming",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -6540,7 +6540,7 @@ const products = [
     basePrice: 135,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Tulsi herbal tea, medicinal",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: false
@@ -6552,7 +6552,7 @@ const products = [
     basePrice: 155,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Cinnamon herbal tea, spicy",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -6564,7 +6564,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Lavender herbal tea, relaxing",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.08,
     isBestSeller: false,
     isFeatured: true
@@ -6576,7 +6576,7 @@ const products = [
     basePrice: 165,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Rose herbal tea, romantic",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.15,
     isBestSeller: true,
     isFeatured: true
@@ -6588,7 +6588,7 @@ const products = [
     basePrice: 140,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Hibiscus herbal tea, tangy",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.1,
     isBestSeller: false,
     isFeatured: false
@@ -6600,7 +6600,7 @@ const products = [
     basePrice: 150,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239609/imgi_46_package-tea-bag-is-countertop_665346-103951-removebg-preview_ts6u2j.png",
     description: "Fennel herbal tea, digestive",
-    variants: ["25 pcs", "50 pcs", "100 pcs"],
+    variants: ["25 pc", "50 pc", "100 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true
@@ -7054,7 +7054,7 @@ const products = [
     basePrice: 200,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_44_instant-noodles-package_665346-103951-removebg-preview_ts6u2j.png",
     description: "Frozen samosas, traditional snack",
-    variants: ["10 pcs", "20 pcs", "30 pcs"],
+    variants: ["10 pc", "20 pc", "30 pc"],
     discount: 0.15,
     isBestSeller: false,
     isFeatured: true
@@ -7066,7 +7066,7 @@ const products = [
     basePrice: 220,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_44_instant-noodles-package_665346-103951-removebg-preview_ts6u2j.png",
     description: "Frozen spring rolls, Asian style",
-    variants: ["12 pcs", "24 pcs", "36 pcs"],
+    variants: ["12 pc", "24 pc", "36 pc"],
     discount: 0.1,
     isBestSeller: true,
     isFeatured: true
@@ -7090,7 +7090,7 @@ const products = [
     basePrice: 160,
     imageUrl: "https://res.cloudinary.com/deepmitra/image/upload/v1752239608/imgi_44_instant-noodles-package_665346-103951-removebg-preview_ts6u2j.png",
     description: "Frozen parathas, ready to cook",
-    variants: ["6 pcs", "12 pcs", "18 pcs"],
+    variants: ["6 pc", "12 pc", "18 pc"],
     discount: 0.12,
     isBestSeller: false,
     isFeatured: true

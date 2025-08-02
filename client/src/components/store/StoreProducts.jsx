@@ -392,12 +392,11 @@ const StoreProducts = () => {
                       <span className={`px-2 py-1 border text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
                         {product.status}
                       </span>
-                      {product.isBestSeller && (
+                      {product.isBestSeller ? (
                         <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full border border-yellow-200">
                           Best Seller
                         </span>
-                      )}
-                      {product.isFeatured && (
+                      ) : product.isFeatured && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full border border-purple-200">
                           Featured
                         </span>
@@ -429,25 +428,25 @@ const StoreProducts = () => {
                     {(product.variants || []).length > 0 && (
                       <div className="mt-2">
                         <div className="flex flex-wrap gap-1">
-                                                  {(product.variants || []).slice(0, 2).map((variant, index) => {
-                          const isSelected = selectedVariants[product.id] === index;
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => handleVariantSelect(product.id, index)}
-                              className={`px-2 py-1 text-xs rounded-full transition-all duration-150 ${
-                                isSelected
-                                  ? 'bg-primary text-white'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                              }`}
-                            >
-                              {variant.quantityLabel}
-                            </button>
-                          );
-                        })}
-                          {(product.variants || []).length > 2 && (
+                          {(product.variants || []).slice(0, 3).map((variant, index) => {
+                            const isSelected = selectedVariants[product.id] === index;
+                            return (
+                              <button
+                                key={index}
+                                onClick={() => handleVariantSelect(product.id, index)}
+                                className={`px-2 py-1 text-xs rounded-full transition-all duration-150 ${
+                                  isSelected
+                                    ? 'bg-primary text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                }`}
+                              >
+                                {variant.quantityLabel}
+                              </button>
+                            );
+                          })}
+                          {(product.variants || []).length > 3 && (
                             <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
-                              +{(product.variants || []).length - 2} more
+                              +{(product.variants || []).length - 3} more
                             </span>
                           )}
                         </div>

@@ -68,13 +68,13 @@ const ProductCard = ({ product }) => {
   };
   return (
     <section>
-      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-38 md:w-52 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
+      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-37 sm:w-40 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className=" ">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
-              <div className="absolute top-0 sm:top-[1px] right-2 sm:right-3 z-10">
+              <div className="absolute top-0 right-2 sm:right-3 z-10">
                 <div className="absolute top-0 right-0 z-10">
-                  <div className="bg-bd-red text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg shadow-lg">
+                  <div className="bg-bd-red text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg">
                     {Math.round(
                       ((variant.price - variant.discountedPrice) /
                         variant.price) *
@@ -120,38 +120,38 @@ const ProductCard = ({ product }) => {
             </span>
 
             {/* Product Name */}
-            <Link
-              to={`/product/${product.id || product._id}`}
-              className="text-[13px] sm:text-[14px] md:text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-1 sm:mb-2 line-clamp-2"
-            >
-              {product.name}
-            </Link>
+             <Link
+               to={`/product/${product.id || product._id}`}
+               className="text-[11px] sm:text-[14px] md:text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-1 sm:mb-2 line-clamp-1 sm:line-clamp-2"
+             >
+               {product.name}
+             </Link>
 
             {/* Variant Selector - Always rendered but with conditional spacing */}
             <div
               className={hasMultipleVariants ? "mb-1 sm:mb-3" : "mb-1 sm:mb-3"}
             >
               {hasMultipleVariants ? (
-                <div className="flex gap-1 sm:gap-1.5 flex-nowrap overflow-x-auto pb-1">
+                <div className="flex gap-1 lg:gap-2 flex-nowrap overflow-x-auto">
                   {product.variants.map((v, idx) => (
                     <button
                       key={idx}
                       type="button"
-                      className={`px-2 sm:px-3 py-1 rounded-lg cursor-pointer border text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap ${
+                      className={`px-3 py-1 rounded-md cursor-pointer border text-[8px] sm:text-[10px] font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         selectedVariantIdx === idx
                           ? "bg-primary text-white border-primary"
                           : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:border-primary"
                       }`}
                       onClick={() => setSelectedVariantIdx(idx)}
                     >
-                      {v.quantityLabel}
+                      {v.quantityLabel?.length > 6 ? v.quantityLabel.substring(0, 6) + '...' : v.quantityLabel}
                     </button>
                   ))}
                 </div>
               ) : (
                 product.variants && (
-                  <span className="inline-block bg-primary text-white text-[10px] sm:text-xs font-medium px-2 sm:px-3 py-1 rounded-lg border border-primary">
-                    {product.variants[0].quantityLabel}
+                  <span className="inline-block bg-primary text-white text-[8px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md border border-primary">
+                    {product.variants[0].quantityLabel?.length > 6 ? product.variants[0].quantityLabel.substring(0, 6) + '...' : product.variants[0].quantityLabel}
                   </span>
                 )
               )}

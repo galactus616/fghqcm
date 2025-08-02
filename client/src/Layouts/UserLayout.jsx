@@ -10,7 +10,7 @@ const UserLayout = () => {
         <Navbar />
       </div>
       {/* Add padding top equal to navbar height (e.g., 64px) */}
-      <main className="flex-grow pt-44 md:pt-22">
+      <main className="flex-grow pt-37 md:pt-20">
         <Outlet />
       </main>
       <Footer />

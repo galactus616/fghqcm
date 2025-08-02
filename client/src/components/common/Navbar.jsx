@@ -225,7 +225,7 @@ export default function Navbar() {
   };
   return (
     <div className="font-sans">
-      <nav className="bg-white border-b border-[#0a614d]/30 py-2 px-3 sm:px-6 lg:px-8 w-full shadow-sm">
+      <nav className="bg-white border-b border-[#0a614d]/30 pt-2 pb-3 md:pb-2 px-3 sm:px-6 lg:px-8 w-full shadow-sm">
         {/* Mobile Layout */}
         <div className="md:hidden">
           {/* Top Row: Logo + Action Icons */}
@@ -281,16 +281,16 @@ export default function Navbar() {
 
           {/* Location Bar */}
           <div
-            className="flex items-center justify-between bg-gray-50 rounded-lg p-2 mb-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200 border border-[#0a614d]/20"
+            className="flex items-center justify-between py-1 mb-2 cursor-pointer"
             onClick={openLocationModal}
           >
             <div className="flex items-center flex-1 min-w-0">
-              <MapPin className="w-4 h-4 mr-2 text-[#0a614d] flex-shrink-0" />
-              <span className="text-sm text-gray-800 truncate" title={currentLocation}>
+              <MapPin className="w-3 h-3 mr-1 text-[#0a614d] flex-shrink-0" />
+              <span className="text-xs text-gray-600 truncate" title={currentLocation}>
                 {currentLocation}
               </span>
             </div>
-            <ChevronDown className="w-4 h-4 text-[#0a614d] flex-shrink-0" />
+            <ChevronDown className="w-3 h-3 text-[#0a614d] flex-shrink-0" />
           </div>
 
           {/* Search Bar */}
