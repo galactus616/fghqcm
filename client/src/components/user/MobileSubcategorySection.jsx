@@ -66,7 +66,7 @@ const MobileSubcategorySection = ({
       <div className="bg-white rounded-lg border border-primary/30 p-3 sm:p-4 pb-0">
         {/* Navigation Buttons for Horizontal Scroll */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-base sm:text-lg font-semibold text-green-800">
+          <h3 className="text-base sm:text-lg font-semibold text-primary">
             {category ? category.name : 'Category'}
           </h3>
           <div className="flex gap-1 sm:gap-2">
@@ -76,7 +76,7 @@ const MobileSubcategorySection = ({
               disabled={!canScrollLeft}
               className={`p-2 sm:p-2.5 rounded-full shadow transition cursor-pointer ${
                 canScrollLeft 
-                  ? 'bg-green-100 hover:bg-green-200 text-green-700' 
+                  ? 'bg-green-100 hover:bg-green-200 text-primary' 
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
             >
@@ -101,7 +101,7 @@ const MobileSubcategorySection = ({
               disabled={!canScrollRight}
               className={`p-2 sm:p-2.5 rounded-full shadow transition cursor-pointer ${
                 canScrollRight 
-                  ? 'bg-green-100 hover:bg-green-200 text-green-700' 
+                  ? 'bg-green-100 hover:bg-green-200 text-primary' 
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
             >

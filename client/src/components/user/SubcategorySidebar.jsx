@@ -97,17 +97,17 @@ const SubcategorySidebar = ({
 
   return (
     <div className="w-64 bg-white rounded-lg shadow-md p-4 sticky top-24">
-      <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+      <div className="space-y-2 overflow-y-auto custom-scrollbar">
         {/* "All" option to show all products */}
         <button
           onClick={() => onSubcategorySelect(null)}
           className={`w-full flex items-center space-x-3 p-3 cursor-pointer rounded-lg transition-all duration-200 hover:bg-green-50 ${
             selectedSubcategory === null 
-              ? 'bg-green-100 text-green-800 border-l-4 border-green-600' 
+              ? 'bg-green-100 text-primary border-l-4 border-primary' 
               : 'text-gray-700 hover:text-green-700'
           }`}
         >
-          <span className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full text-green-600">
+          <span className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full text-primary">
             🛒
           </span>
           <span className="font-medium">{t('all_products')}</span>
@@ -120,7 +120,7 @@ const SubcategorySidebar = ({
             onClick={() => onSubcategorySelect(subcategory)}
             className={`w-full flex items-center space-x-3 p-3 cursor-pointer rounded-lg transition-all duration-200 hover:bg-green-50 ${
               selectedSubcategory && (selectedSubcategory.id || selectedSubcategory._id) === (subcategory.id || subcategory._id)
-                ? 'bg-green-100 text-green-800 border-l-4 border-green-600' 
+                ? 'bg-green-100 text-primary border-l-4 border-primary' 
                 : 'text-gray-700 hover:text-green-700'
             }`}
           >

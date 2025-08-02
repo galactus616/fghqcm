@@ -171,6 +171,11 @@ const ProductCard = ({ product }) => {
                       <span>{variant.price}</span>
                     </span>
                   )}
+                  <section className="text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-bold text-primary">
+                    <span>{currencySymbol}</span>
+                    <span>{variant.discountedPrice ?? variant.price}</span>
+                  </section>
+                 
                 </div>
               </div>
               {cartItem ? (

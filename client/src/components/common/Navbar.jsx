@@ -341,7 +341,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder={t("search_placeholder")}
-                className=" text-ellipsis w-full py-3 pl-10 pr-4 bg-transparent text-gray-800 placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm"
+                className=" text-ellipsis w-full py-3 pl-10 pr-4 bg-transparent text-gray-800 placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 text-sm"
                 onKeyDown={e => {
                   if (e.key === 'Enter' && e.target.value.trim()) {
                     navigate(`/search?q=${encodeURIComponent(e.target.value.trim())}`);
