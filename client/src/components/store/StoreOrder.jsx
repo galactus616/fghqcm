@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import useStoreOwner from '../../../store/useStoreOwner';
-import OrderReportCards from './OrderReportCards';
-import OrderFilters from './OrderFilters';
-import OrderTable from './OrderTable';
-import ExportSuccessModal from './ExportSuccessModal';
-import { exportOrdersToExcel } from './OrderExportService';
+import useStoreOwner from '../../store/useStoreOwner';
+import OrderReportCards from './storeDashboardComponents/OrderReportCards';
+import OrderFilters from './storeDashboardComponents/OrderFilters';
+import OrderTable from './storeDashboardComponents/OrderTable';
+import ExportSuccessModal from './storeDashboardComponents/ExportSuccessModal';
+import { exportOrdersToExcel } from '../../utils/OrderExportService';
 
 const StoreOrder = () => {
   const [searchQuery, setSearchQuery] = useState('');

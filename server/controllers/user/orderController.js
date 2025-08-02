@@ -1,6 +1,7 @@
 const Order = require("../../models/Order");
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
+const logger = require("../../config/logger");
 
 const placeOrder = async (req, res, next) => {
   const userId = req.user._id;
@@ -100,6 +101,15 @@ const placeOrder = async (req, res, next) => {
 
     userCart.items = [];
     await userCart.save();
+
+    // Log successful order creation
+    logger.info("Order placed successfully", {
+      orderId: newOrder.orderId,
+      userId: userId.toString(),
+      total: newOrder.total,
+      itemCount: populatedItems.length,
+      paymentMethod
+    });
 
     res.status(201).json({
       message: "Order placed successfully!",

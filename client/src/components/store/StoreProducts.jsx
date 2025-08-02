@@ -7,9 +7,9 @@ import {
   Eye,
   Plus,
 } from "lucide-react";
-import StoreCategoriesFilter from "./StoreCategoriesFilter";
-import StoreProductsModal from "../StoreProductsModal";
-import useStoreOwner from "../../../store/useStoreOwner";
+import StoreCategoriesFilter from "./storeDashboardComponents/StoreCategoriesFilter";
+import StoreProductsModal from "./storeDashboardComponents/StoreProductsModal";
+import useStoreOwner from "../../store/useStoreOwner";
 
 const StoreProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");

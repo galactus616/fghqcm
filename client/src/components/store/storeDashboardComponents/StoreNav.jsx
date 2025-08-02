@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import useStoreOwner from "../../store/useStoreOwner";
+import useStoreOwner from "../../../store/useStoreOwner";
 import { Menu, Bell, Search } from "lucide-react";
 
 const StoreNav = ({ toggleSidebar }) => {

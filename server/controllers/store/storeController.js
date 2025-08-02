@@ -1,5 +1,6 @@
 const Store = require('../../models/Store');
 const StoreKYC = require('../../models/StoreKYC');
+const logger = require('../../config/logger');
 
 //
 // Create a new store for the current store owner (if KYC approved)
@@ -23,6 +24,14 @@ exports.createStore = async (req, res) => {
   await store.save();
   kyc.storeId = store._id;
   await kyc.save();
+  
+  // Log store creation
+  logger.info("Store created successfully", {
+    storeId: store._id.toString(),
+    storeOwnerId: storeOwnerId.toString(),
+    storeName: name
+  });
+  
   res.json({ message: 'Store created', store });
 };
 

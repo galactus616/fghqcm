@@ -22,12 +22,12 @@ import StoreLayout from "./Layouts/StoreLayout";
 import MultiStepKycForm from "./components/store/MultiStepKycForm";
 import KycStatusPage from "./pages/store/KycStatusPage";
 import StoreOwnerProtectedRoute from "./components/common/StoreOwnerProtectedRoute";
-import StoreProducts from "./components/store/Store_Components/StoreProducts";
-import Inventory from "./components/store/Store_Components/Inventory";
-import StoreOrder from "./components/store/Store_Components/StoreOrder";
-import StoreFinances from "./components/store/Store_Components/StoreFinances";
-import StoreAccount from "./components/store/Store_Components/StoreAccount";
-import StoreDashboard from "./components/store/Store_Components/StoreDashboard";
+import StoreProducts from "./components/store/StoreProducts";
+import Inventory from "./components/store/StoreInventory";
+import StoreOrder from "./components/store/StoreOrder";
+import StoreFinances from "./components/store/StoreFinances";
+import StoreAccount from "./components/store/StoreAccount";
+import StoreDashboard from "./components/store/StoreDashboard";
 // Placeholder components for other sections
 
 function App() {

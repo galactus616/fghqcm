@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const logger = require("../config/logger");
 
 const authenticateToken = async (req, res, next) => {
   // Check for token in cookie first, then Authorization header
@@ -25,7 +26,10 @@ const authenticateToken = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    console.error("JWT verification error:", err.message);
+    logger.error("JWT verification failed", {
+      error: err.message,
+      token: token ? 'present' : 'missing'
+    });
     const error = new Error("Invalid or expired token");
     error.statusCode = 403;
     next(error);

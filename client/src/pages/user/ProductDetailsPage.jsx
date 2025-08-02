@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById, getProductsByCategory } from "../../api/user/products";
+import { getProductById, getRelatedProducts } from "../../api/user/products";
 import { Star, ShieldCheck, Truck, MessageSquareQuote } from "lucide-react";
 import toast from "react-hot-toast";
 import useStore from "../../store/useStore";
@@ -19,6 +19,7 @@ const ProductDetailsPage = () => {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [related, setRelated] = useState([]);
+  const [loadingRelated, setLoadingRelated] = useState(false);
   const {
     addToCart,
     hydratedItems: cartItems,
@@ -33,24 +34,28 @@ const ProductDetailsPage = () => {
     setProduct(null);
     setSelectedVariantIdx(0);
     setSelectedImageIdx(0);
+    setRelated([]);
 
     getProductById(productId)
       .then((data) => {
         setProduct(data);
-        if (data.category && (data.category.id || data.category._id)) {
-          getProductsByCategory(data.category.id || data.category._id).then(
-            (rel) => {
-              setRelated(
-                rel
-                  .filter((p) => (p.id || p._id) !== (data.id || data._id))
-                  .slice(0, 10)
-              );
-            }
-          );
-        }
+        // Fetch related products using the new API
+        setLoadingRelated(true);
+        return getRelatedProducts(productId, 5);
       })
-      .catch(() => setError(t("product_not_found")))
-      .finally(() => setLoading(false));
+      .then((relatedProducts) => {
+        setRelated(relatedProducts);
+      })
+      .catch((err) => {
+        console.error('Error fetching related products:', err);
+        // Don't fail the whole page if related products fail
+        setRelated([]);
+      })
+      .finally(() => {
+        setLoading(false);
+        setLoadingRelated(false);
+      })
+      .catch(() => setError(t("product_not_found")));
   }, [productId, t]);
 
   if (loading) {
@@ -149,7 +154,7 @@ const ProductDetailsPage = () => {
           </div>
         </div>
         <ProductDetailsGrid product={product} />
-        <RelatedProducts products={related} />
+        <RelatedProducts products={related} loading={loadingRelated} />
       </div>
     </div>
   );

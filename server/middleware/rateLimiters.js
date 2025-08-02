@@ -1,10 +1,19 @@
 const rateLimit = require('express-rate-limit');
+const logger = require('../config/logger');
 
 // Strict limiter for login/register
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
-  message: { message: 'Too many attempts, please try again later.' }
+  message: { message: 'Too many attempts, please try again later.' },
+  handler: (req, res) => {
+    logger.warn("Rate limit exceeded for auth", {
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      path: req.path
+    });
+    res.status(429).json({ message: 'Too many attempts, please try again later.' });
+  }
 });
 
 // Moderate limiter for sensitive actions (e.g., order, payment)

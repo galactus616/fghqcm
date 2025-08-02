@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { registerStoreOwner, requestOtp } from '../../api/store/storeAuth';
-import useStoreOwner from '../../store/useStoreOwner';
+import { registerStoreOwner, requestOtp } from '../../../api/store/storeAuth';
+import useStoreOwner from '../../../store/useStoreOwner';
 
 const StoreAuthModal = ({ onClose }) => {
   const [step, setStep] = useState(1);

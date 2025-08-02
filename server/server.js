@@ -5,6 +5,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require('path');
 
+// Import logging configurations
+const logger = require("./config/logger");
+const { getMorganConfig } = require("./config/morgan");
+
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/user/authRoutes");
 const productRoutes = require("./routes/user/productRoutes");
@@ -24,6 +28,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 connectDB();
+
+// Setup logging middleware
+app.use(getMorganConfig());
 
 app.use(cookieParser());
 app.use(cors({
@@ -69,7 +76,14 @@ app.get("/", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  logger.error('Unhandled error:', {
+    error: err.message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+    ip: req.ip
+  });
+  
   res.status(err.statusCode || 500).json({
     message: err.message || 'Internal Server Error',
     errors: err.errors || undefined
@@ -77,5 +91,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
+  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 const crypto = require("crypto");
+const logger = require("../../config/logger");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = "30d"; // Long-lived session
@@ -33,7 +34,11 @@ const sendOtp = async (req, res, next) => {
     await user.save();
 
     // TODO: Integrate Twilio here. For now, mock send.
-    console.log(`OTP for ${phone}: ${otp}`);
+    logger.info("OTP generated for user", {
+      phone,
+      otp,
+      environment: process.env.NODE_ENV
+    });
 
     const response = { message: "OTP sent successfully" };
     if (process.env.NODE_ENV !== 'production') {

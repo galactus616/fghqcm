@@ -1,5 +1,6 @@
 const StoreKYC = require('../../models/StoreKYC');
 const StoreOwner = require('../../models/StoreOwner');
+const logger = require('../../config/logger');
 
 //
 // Submit or update KYC for the current store owner
@@ -30,6 +31,13 @@ exports.submitKyc = async (req, res) => {
   await StoreOwner.findByIdAndUpdate(storeOwnerId, {
     kycStatus: 'pending',
     kycId: kyc._id
+  });
+  
+  // Log KYC submission
+  logger.info("KYC submitted", {
+    storeOwnerId: storeOwnerId.toString(),
+    kycId: kyc._id.toString(),
+    status: 'pending'
   });
   
   res.json({ message: 'KYC submitted', kyc });
@@ -67,6 +75,14 @@ exports.approveKyc = async (req, res) => {
   // Update StoreOwner's kycStatus to approved when admin approves
   await StoreOwner.findByIdAndUpdate(kyc.userId, {
     kycStatus: 'approved'
+  });
+  
+  // Log KYC approval
+  logger.info("KYC approved", {
+    kycId: kycId,
+    storeOwnerId: kyc.userId.toString(),
+    status: 'approved',
+    reviewedAt: kyc.reviewedAt
   });
   
   res.json({ message: 'KYC approved', kyc });

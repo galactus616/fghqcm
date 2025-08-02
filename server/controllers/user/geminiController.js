@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const logger = require("../../config/logger");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -46,7 +47,11 @@ const generateRecipe = async (req, res) => {
 
     res.json(recipe);
   } catch (error) {
-    console.error("Error generating recipe with Gemini API:", error);
+    logger.error("Gemini API recipe generation failed", {
+      error: error.message,
+      stack: error.stack,
+      ingredientsList
+    });
     if (error.response && error.response.statusText) {
       return res
         .status(500)

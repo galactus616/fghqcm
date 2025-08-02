@@ -1,7 +1,7 @@
-import Sidebar from "../components/store/Sidebar";
+import Sidebar from "../components/store/storeDashboardComponents/StoreSidebar";
 import { Outlet } from "react-router-dom";
-import StoreNav from "../components/store/StoreNav";
-import StoreFooter from "../components/store/StoreFooter";
+import StoreNav from "../components/store/storeDashboardComponents/StoreNav";
+import StoreFooter from "../components/store/storeDashboardComponents/StoreFooter";
 
 const StoreLayout = () => {
   return (

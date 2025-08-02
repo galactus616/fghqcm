@@ -1,5 +1,6 @@
 const Order = require('../../models/Order');
 const Store = require('../../models/Store');
+const logger = require('../../config/logger');
 
 // Get all orders for the current store owner's store
 // Route: GET /api/store/orders
@@ -42,6 +43,15 @@ exports.updateOrderStatus = async (req, res) => {
 
   order.status = status;
   await order.save();
+
+  // Log order status update
+  logger.info("Order status updated", {
+    orderId: orderId,
+    storeOwnerId: storeOwnerId.toString(),
+    oldStatus: order.status,
+    newStatus: status,
+    storeId: store._id.toString()
+  });
 
   res.json({ message: 'Order status updated', order });
 };

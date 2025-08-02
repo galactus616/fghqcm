@@ -207,10 +207,61 @@ const getProductsByCategoryId = async (req, res, next) => {
   }
 };
 
+const getRelatedProducts = async (req, res, next) => {
+  const { id } = req.params;
+  const { limit = 5 } = req.query;
+  
+  try {
+    // Find the product first
+    const product = await Product.findById(id);
+    if (!product) {
+      const error = new Error("Product not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    // Get related products using the instance method
+    const relatedProducts = await product.getRelatedProducts(parseInt(limit));
+    
+    // Populate category information
+    const populatedProducts = await Product.populate(relatedProducts, [
+      { path: "mainCategory", select: "name displayName slug" },
+      { path: "subCategory", select: "name displayName slug" }
+    ]);
+    
+    const mappedProducts = populatedProducts.map((p) => ({
+      id: p._id,
+      name: p.name,
+      mainCategory: p.mainCategory ? { 
+        id: p.mainCategory._id, 
+        name: p.mainCategory.displayName || p.mainCategory.name,
+        slug: p.mainCategory.slug 
+      } : null,
+      subCategory: p.subCategory ? { 
+        id: p.subCategory._id, 
+        name: p.subCategory.displayName || p.subCategory.name,
+        slug: p.subCategory.slug 
+      } : null,
+      imageUrl: p.imageUrl,
+      images: p.images,
+      description: p.description,
+      isBestSeller: p.isBestSeller,
+      isFeatured: p.isFeatured,
+      variants: p.variants,
+      createdAt: p.createdAt,
+    }));
+    
+    res.json(mappedProducts);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   getMainCategories,
   getSubCategories,
   getProductsByCategoryId,
+  getRelatedProducts,
 };

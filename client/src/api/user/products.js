@@ -30,4 +30,14 @@ export async function getProductsByCategory(categoryId) {
     console.error('Failed to fetch products by category:', error);
     throw error;
   }
+}
+
+export async function getRelatedProducts(productId, limit = 5) {
+  try {
+    const res = await axios.get(`${API_BASE}/${productId}/related?limit=${limit}`, { withCredentials: true });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch related products:', error);
+    throw error;
+  }
 } 

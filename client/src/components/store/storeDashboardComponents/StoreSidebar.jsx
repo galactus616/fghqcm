@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import useStoreOwner from "../../store/useStoreOwner";
+import useStoreOwner from "../../../store/useStoreOwner";
 import {
   LayoutDashboard,
   Package,

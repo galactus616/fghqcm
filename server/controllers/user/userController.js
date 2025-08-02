@@ -1,4 +1,5 @@
 const User = require('../../models/User');
+const logger = require('../../config/logger');
 
 // Get all addresses for the logged-in user
 exports.getAddresses = async (req, res, next) => {
@@ -25,8 +26,20 @@ exports.addAddress = async (req, res, next) => {
     }
     user.addresses.push({ label, flat, floor, area, landmark, isDefault });
     await user.save();
+    
+    // Log address addition
+    logger.info("User address added", {
+      userId: req.user._id.toString(),
+      addressLabel: label,
+      isDefault
+    });
+    
     res.status(201).json(user.addresses);
   } catch (err) {
+    logger.error("Error adding user address", {
+      userId: req.user._id.toString(),
+      error: err.message
+    });
     next(err);
   }
 };

@@ -1,6 +1,7 @@
 const StoreOwner = require('../../models/StoreOwner');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const logger = require('../../config/logger');
 // const nodemailer = require('nodemailer');
 
 // Register a new store owner (email only)
@@ -31,7 +32,11 @@ exports.requestOtp = async (req, res) => {
   await storeOwner.save();
   // TODO: Send OTP via email (use nodemailer here)
   // await sendOtpEmail(email, otp);
-  console.log(`OTP for ${email}: ${otp}`); // For dev/testing
+  logger.info("Store owner OTP generated", {
+    email,
+    otp,
+    environment: process.env.NODE_ENV
+  });
   res.json({ message: 'OTP sent to email' });
 };
 

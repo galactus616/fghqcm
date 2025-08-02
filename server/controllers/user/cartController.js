@@ -1,5 +1,6 @@
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
+const logger = require("../../config/logger");
 
 const getCart = async (req, res, next) => {
   const userId = req.user._id;
@@ -144,7 +145,22 @@ const addToCart = async (req, res, next) => {
       };
     });
     res.status(200).json({ message: "Item added to cart", cart: populatedCart });
+    
+    // Log cart addition
+    logger.info("Item added to cart", {
+      userId: userId.toString(),
+      productId,
+      variantIndex,
+      quantity: existingItem ? existingItem.quantity : quantity,
+      productName: product.name
+    });
   } catch (err) {
+    logger.error("Error adding item to cart", {
+      userId: userId.toString(),
+      productId,
+      variantIndex,
+      error: err.message
+    });
     next(err);
   }
 };

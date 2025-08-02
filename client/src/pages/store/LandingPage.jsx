@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import StoreAuthModal from '../../components/store/StoreAuthModal';
+import StoreAuthModal from '../../components/store/storeDashboardComponents/StoreAuthModal';
 import useStoreOwner from '../../store/useStoreOwner';
 
 const LandingPage = () => {
