@@ -68,7 +68,7 @@ const ProductCard = ({ product }) => {
   };
   return (
     <section>
-      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-37 sm:w-40 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
+      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-371 xs:w-37 sm:w-42 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className=" ">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
@@ -137,7 +137,7 @@ const ProductCard = ({ product }) => {
                     <button
                       key={idx}
                       type="button"
-                      className={`px-3 py-1 rounded-md cursor-pointer border text-[8px] sm:text-[10px] font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                      className={`px-2 md:px-3 py-1 rounded-md cursor-pointer border text-[8px] sm:text-[10px] font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         selectedVariantIdx === idx
                           ? "bg-primary text-white border-primary"
                           : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:border-primary"
@@ -171,11 +171,6 @@ const ProductCard = ({ product }) => {
                       <span>{variant.price}</span>
                     </span>
                   )}
-                  <section className="text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-bold text-primary">
-                    <span>{currencySymbol}</span>
-                    <span>{variant.discountedPrice ?? variant.price}</span>
-                  </section>
-                 
                 </div>
               </div>
               {cartItem ? (

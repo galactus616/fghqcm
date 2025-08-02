@@ -13,7 +13,7 @@ const SubcategoryFilter = ({
         onClick={() => onSubcategorySelect(null)}
         className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-h-[44px] ${
           selectedSubcategory === null
-            ? 'bg-green-600 text-white'
+            ? 'bg-green-100 text-primary border-l-4 border-primary'
             : 'bg-gray-100 text-gray-700 hover:bg-green-50 hover:text-green-700'
         }`}
       >
@@ -26,7 +26,7 @@ const SubcategoryFilter = ({
           onClick={() => onSubcategorySelect(subcategory)}
           className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-h-[44px] ${
             selectedSubcategory && (selectedSubcategory.id || selectedSubcategory._id) === (subcategory.id || subcategory._id)
-              ? 'bg-green-600 text-white'
+              ? 'bg-green-100 text-primary border-l-4 border-primary'
               : 'bg-gray-100 text-gray-700 hover:bg-green-50 hover:text-green-700'
           }`}
         >

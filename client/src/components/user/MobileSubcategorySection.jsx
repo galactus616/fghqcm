@@ -76,7 +76,7 @@ const MobileSubcategorySection = ({
               disabled={!canScrollLeft}
               className={`p-2 sm:p-2.5 rounded-full shadow transition cursor-pointer ${
                 canScrollLeft 
-                  ? 'bg-green-100 hover:bg-green-200 text-primary' 
+                  ? 'bg-primary/10 hover:bg-primary/20 text-primary' 
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
             >
@@ -101,7 +101,7 @@ const MobileSubcategorySection = ({
               disabled={!canScrollRight}
               className={`p-2 sm:p-2.5 rounded-full shadow transition cursor-pointer ${
                 canScrollRight 
-                  ? 'bg-green-100 hover:bg-green-200 text-primary' 
+                  ? 'bg-primary/10 hover:bg-primary/20 text-primary' 
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
             >

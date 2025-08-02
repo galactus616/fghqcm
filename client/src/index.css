@@ -10,6 +10,7 @@
   --color-amber: #f59e42;
   --color-yellow: #facc15;
   --color-pink: #ec4899;
+  --breakpoint-xs: 20rem
 }
 
 body {
