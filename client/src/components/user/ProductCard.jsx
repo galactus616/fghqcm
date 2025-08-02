@@ -68,7 +68,7 @@ const ProductCard = ({ product }) => {
   };
   return (
     <section className="">
-      <div className="rounded-xl relative p-2 sm:p-3 md:p-4 flex flex-col justify-between w-full bg-white group transition-all border border-primary/30 duration-200 hover:shadow-md hover:border-primary">
+      <div className="rounded-xl relative p-2 sm:p-3 md:p-4 flex flex-col justify-between  w-36 sm:w-48 md:w-56  bg-white group transition-all border border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className="">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
