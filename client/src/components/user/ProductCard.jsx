@@ -132,7 +132,7 @@ const ProductCard = ({ product }) => {
               className={hasMultipleVariants ? "mb-1 sm:mb-3" : "mb-1 sm:mb-3"}
             >
               {hasMultipleVariants ? (
-                <div className="flex gap-1 sm:gap-1.5 flex-nowrap overflow-x-auto pb-1">
+                <div className="flex gap-1  sm:gap-1.5 flex-nowrap overflow-x-auto pb-1" style={{ scrollbarWidth: 'thin', scrollbarColor: '#d1d5db transparent' }}>
                   {product.variants.map((v, idx) => (
                     <button
                       key={idx}
@@ -158,19 +158,20 @@ const ProductCard = ({ product }) => {
             </div>
 
             {/* Price and Add Button Section - horizontal layout at the bottom */}
-            <div className="flex items-center justify-between mt-auto pt-1 flex-nowrap gap-2">
-              <div className="flex flex-col min-w-0 flex-1">
+            <div className="flex items-center justify-between mt-auto pt-1 px-1 flex-nowrap gap-2">
+              <div className="flex flex-col">
                 <div className="flex items-center flex-col-reverse">
-                  <section className="text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-bold text-primary">
-                    <span>{currencySymbol}</span>
-                    <span>{variant.discountedPrice ?? variant.price}</span>
-                  </section>
-                  {variant.discountedPrice && (
+                {variant.discountedPrice && (
                     <span className="text-[8px] sm:text-[10px] lg:text-xs flex gap-1 text-gray-400 line-through">
                       <span>{currencySymbol}</span>
                       <span>{variant.price}</span>
                     </span>
                   )}
+                  <section className="text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-bold text-primary">
+                    <span>{currencySymbol}</span>
+                    <span>{variant.discountedPrice ?? variant.price}</span>
+                  </section>
+                 
                 </div>
               </div>
               {cartItem ? (

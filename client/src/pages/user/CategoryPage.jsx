@@ -141,7 +141,7 @@ const CategoryPage = () => {
         <Breadcrumbs items={breadcrumbItems} />
         
         {/* Navigation Header */}
-        <div className="hidden md:flex items-center justify-between mb-4">
+        {/* <div className="hidden md:flex items-center justify-between mb-4">
           <button
             className="hidden md:flex items-center gap-2 cursor-pointer text-green-700 hover:underline font-medium text-base"
             onClick={() => navigate(-1)}
@@ -155,7 +155,7 @@ const CategoryPage = () => {
           >
             {t('continue_shopping')}
           </a>
-        </div>
+        </div> */}
 
         {/* Category Title */}
         <h1 className="md:block hidden text-2xl md:text-3xl font-bold text-green-800 mb-6">

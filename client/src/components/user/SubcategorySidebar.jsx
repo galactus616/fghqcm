@@ -97,7 +97,7 @@ const SubcategorySidebar = ({
 
   return (
     <div className="w-64 bg-white rounded-lg shadow-md p-4 sticky top-24">
-      <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+      <div className="space-y-2 overflow-y-auto custom-scrollbar">
         {/* "All" option to show all products */}
         <button
           onClick={() => onSubcategorySelect(null)}
