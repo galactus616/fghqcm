@@ -35,7 +35,17 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
   useEffect(() => {
     if (isOpen) {
       fetchKycData();
+      // Disable body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Re-enable body scroll when modal is closed
+      document.body.style.overflow = 'unset';
     }
+
+    // Cleanup function to re-enable scroll when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen]);
 
   // Countdown effect for success state
@@ -200,7 +210,7 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Store Name *
+                      Store Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -215,7 +225,7 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Store Type *
+                      Store Type <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="storeType"
@@ -290,7 +300,7 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Owner Name *
+                      Owner Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -305,7 +315,7 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Owner Phone *
+                      Owner Phone <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -320,13 +330,14 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Owner NID *
+                      Owner NID <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="ownerNID"
                       value={formData.ownerNID}
                       onChange={handleInputChange}
+                      readOnly
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter NID number"
@@ -347,11 +358,12 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Account Name *
+                      Account Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="bankAccountName"
+                      readOnly
                       value={formData.bankAccountName}
                       onChange={handleInputChange}
                       required
@@ -362,11 +374,12 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Bank Name *
+                      Bank Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="bankName"
+                      readOnly
                       value={formData.bankName}
                       onChange={handleInputChange}
                       required
@@ -377,7 +390,7 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Account Number *
+                      Account Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -385,6 +398,7 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
                       value={formData.bankAccountNumber}
                       onChange={handleInputChange}
                       required
+                      readOnly
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter bank account number"
                     />
@@ -403,11 +417,12 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Trade License Number *
+                    Trade License Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="tradeLicenseNumber"
+                    readOnly
                     value={formData.tradeLicenseNumber}
                     onChange={handleInputChange}
                     required
@@ -452,14 +467,14 @@ const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className=" px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  className="cursor-pointer px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className=" px-4 py-3 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="cursor-pointer px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {saving ? (
                     <>

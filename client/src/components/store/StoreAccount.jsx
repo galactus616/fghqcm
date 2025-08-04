@@ -3,6 +3,7 @@ import { Download, Edit, User, Store, Shield, Mail, Phone, MapPin, Calendar, Che
 import useStoreOwner from '../../store/useStoreOwner';
 import { getKycStatus } from '../../api/store/storeKyc';
 import EditStoreModal from './EditStoreModal';
+import EditProfileModal from './EditProfileModal';
 import axios from 'axios';
 
 const StoreAccount = () => {
@@ -11,6 +12,7 @@ const StoreAccount = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
   const fetchAccountData = async () => {
     try {
@@ -78,6 +80,19 @@ const StoreAccount = () => {
     fetchAccountData();
   };
 
+  const handleEditProfile = () => {
+    setIsEditProfileModalOpen(true);
+  };
+
+  const handleProfileModalClose = () => {
+    setIsEditProfileModalOpen(false);
+  };
+
+  const handleProfileUpdate = () => {
+    // Refresh account data after update
+    fetchAccountData();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -114,7 +129,10 @@ const StoreAccount = () => {
               <Edit className="w-4 h-4" />
               <span>Edit Store</span>
             </button>
-            <button className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-white text-primary rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium cursor-pointer text-sm md:text-base">
+            <button 
+              onClick={handleEditProfile}
+              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-white text-primary rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium cursor-pointer text-sm md:text-base"
+            >
               <Edit className="w-4 h-4" />
               <span>Edit Profile</span>
             </button>
@@ -440,6 +458,13 @@ const StoreAccount = () => {
         isOpen={isEditModalOpen}
         onClose={handleModalClose}
         onUpdate={handleStoreUpdate}
+      />
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditProfileModalOpen}
+        onClose={handleProfileModalClose}
+        onUpdate={handleProfileUpdate}
       />
     </div>
   );

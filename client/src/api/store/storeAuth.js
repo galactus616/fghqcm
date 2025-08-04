@@ -27,3 +27,17 @@ export const updateStore = async (storeId, storeData) => {
     },
   });
 };
+
+// Profile management functions
+export const getStoreOwnerProfile = async () => {
+  return axios.get(`${API_BASE}/profile`, { withCredentials: true });
+};
+
+export const updateStoreOwnerProfile = async (profileData) => {
+  return axios.put(`${API_BASE}/profile`, profileData, { 
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
