@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Download, Edit, User, Store, Shield, Mail, Phone, MapPin, Calendar, CheckCircle, Clock, AlertCircle, CreditCard, FileText, Settings, Copy, Building, Globe, Award, MapPinIcon } from 'lucide-react';
 import useStoreOwner from '../../store/useStoreOwner';
 import { getKycStatus } from '../../api/store/storeKyc';
+import EditStoreModal from './EditStoreModal';
 import axios from 'axios';
 
 const StoreAccount = () => {
@@ -9,24 +10,25 @@ const StoreAccount = () => {
   const [kycData, setKycData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const fetchAccountData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Fetch KYC data which includes store details
+      const kycResponse = await getKycStatus();
+      setKycData(kycResponse);
+    } catch (error) {
+      console.error('Error fetching account data:', error);
+      setError('Failed to load account data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAccountData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Fetch KYC data which includes store details
-        const kycResponse = await getKycStatus();
-        setKycData(kycResponse);
-      } catch (error) {
-        console.error('Error fetching account data:', error);
-        setError('Failed to load account data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAccountData();
   }, []);
 
@@ -63,6 +65,19 @@ const StoreAccount = () => {
     return (completedSteps / steps.length) * 100;
   };
 
+  const handleEditStore = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleStoreUpdate = () => {
+    // Refresh KYC data after update
+    fetchAccountData();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -92,7 +107,10 @@ const StoreAccount = () => {
             <p className="text-green-100 text-base md:text-lg">Manage your business profile and settings</p>
           </div>
           <div className="flex gap-3 mt-6 lg:mt-0">
-            <button className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 border border-white/30 cursor-pointer text-sm md:text-base">
+            <button 
+              onClick={handleEditStore}
+              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 border border-white/30 cursor-pointer text-sm md:text-base"
+            >
               <Edit className="w-4 h-4" />
               <span>Edit Store</span>
             </button>
@@ -416,6 +434,13 @@ const StoreAccount = () => {
           )}
         </div>
       </div>
+
+      {/* Edit Store Modal */}
+      <EditStoreModal
+        isOpen={isEditModalOpen}
+        onClose={handleModalClose}
+        onUpdate={handleStoreUpdate}
+      />
     </div>
   );
 };
