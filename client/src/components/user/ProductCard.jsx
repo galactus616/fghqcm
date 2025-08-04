@@ -68,7 +68,7 @@ const ProductCard = ({ product }) => {
   };
   return (
     <section>
-      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-371 xs:w-37 sm:w-42 md:w-56 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
+      <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-37 xsa:w-37 xsb:w-42 xsc:w-44 xsd:w-46.5 xse:w-49 sm:w-44 md:w-58 mda:w-60 mdb:w-62 lg:w-42 xl:w-60.5 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className=" ">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
@@ -132,7 +132,7 @@ const ProductCard = ({ product }) => {
               className={hasMultipleVariants ? "mb-1 sm:mb-3" : "mb-1 sm:mb-3"}
             >
               {hasMultipleVariants ? (
-                <div className="flex gap-1 lg:gap-2 flex-nowrap overflow-x-auto">
+                <div className="flex gap-1 lg:gap-1 flex-nowrap overflow-x-auto">
                   {product.variants.map((v, idx) => (
                     <button
                       key={idx}

@@ -32,6 +32,18 @@ exports.requestOtp = async (req, res) => {
   await storeOwner.save();
   // TODO: Send OTP via email (use nodemailer here)
   // await sendOtpEmail(email, otp);
+  
+  // Enhanced OTP logging for development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('\n' + '='.repeat(50));
+    console.log('🔐 STORE OWNER OTP FOR DEVELOPMENT 🔐');
+    console.log('='.repeat(50));
+    console.log(`📧 Email: ${email}`);
+    console.log(`🔢 OTP: ${otp}`);
+    console.log(`⏰ Expires: ${new Date(storeOwner.otpExpires).toLocaleString()}`);
+    console.log('='.repeat(50) + '\n');
+  }
+  
   logger.info("Store owner OTP generated", {
     email,
     otp,

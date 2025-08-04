@@ -10,83 +10,36 @@ const SubcategorySidebar = ({
 }) => {
   const { t } = useTranslation();
 
-  // Default subcategory icons based on common categories
+  // Simplified icon mapping
   const getSubcategoryIcon = (subcategoryName) => {
     const name = subcategoryName.toLowerCase();
     
-    if (name.includes('apple') || name.includes('fruit')) {
-      return '🍎';
-    } else if (name.includes('banana')) {
-      return '🍌';
-    } else if (name.includes('grape')) {
-      return '🍇';
-    } else if (name.includes('potato')) {
-      return '🥔';
-    } else if (name.includes('tomato')) {
-      return '🍅';
-    } else if (name.includes('onion')) {
-      return '🧅';
-    } else if (name.includes('carrot')) {
-      return '🥕';
-    } else if (name.includes('cucumber')) {
-      return '🥒';
-    } else if (name.includes('pepper') || name.includes('capsicum')) {
-      return '🫑';
-    } else if (name.includes('lettuce') || name.includes('leafy')) {
-      return '🥬';
-    } else if (name.includes('broccoli')) {
-      return '🥦';
-    } else if (name.includes('cauliflower')) {
-      return '🥬';
-    } else if (name.includes('mushroom')) {
-      return '🍄';
-    } else if (name.includes('garlic')) {
-      return '🧄';
-    } else if (name.includes('ginger')) {
-      return '🫚';
-    } else if (name.includes('lemon') || name.includes('lime')) {
-      return '🍋';
-    } else if (name.includes('orange')) {
-      return '🍊';
-    } else if (name.includes('mango')) {
-      return '🥭';
-    } else if (name.includes('strawberry')) {
-      return '🍓';
-    } else if (name.includes('blueberry')) {
-      return '🫐';
-    } else if (name.includes('pineapple')) {
-      return '🍍';
-    } else if (name.includes('watermelon')) {
-      return '🍉';
-    } else if (name.includes('melon')) {
-      return '🍈';
-    } else if (name.includes('peach')) {
-      return '🍑';
-    } else if (name.includes('pear')) {
-      return '🍐';
-    } else if (name.includes('cherry')) {
-      return '🍒';
-    } else if (name.includes('kiwi')) {
-      return '🥝';
-    } else if (name.includes('avocado')) {
-      return '🥑';
-    } else if (name.includes('coconut')) {
-      return '🥥';
-    } else {
-      // Default icon for unknown subcategories
-      return '🥬';
+    const iconMap = {
+      apple: '🍎', banana: '🍌', grape: '🍇', potato: '🥔', tomato: '🍅',
+      onion: '🧅', carrot: '🥕', cucumber: '🥒', pepper: '🫑', capsicum: '🫑',
+      lettuce: '🥬', leafy: '🥬', broccoli: '🥦', cauliflower: '🥬',
+      mushroom: '🍄', garlic: '🧄', ginger: '🫚', lemon: '🍋', lime: '🍋',
+      orange: '🍊', mango: '🥭', strawberry: '🍓', blueberry: '🫐',
+      pineapple: '🍍', watermelon: '🍉', melon: '🍈', peach: '🍑',
+      pear: '🍐', cherry: '🍒', kiwi: '🥝', avocado: '🥑', coconut: '🥥'
+    };
+
+    for (const [key, icon] of Object.entries(iconMap)) {
+      if (name.includes(key)) return icon;
     }
+    
+    return '🥬'; // Default icon
   };
 
   if (loading) {
     return (
-      <div className="w-64 bg-white rounded-lg shadow-md p-4">
+      <div className="w-56 bg-white rounded-xl shadow-sm border border-gray-100 p-3">
         <div className="space-y-2">
           {[...Array(6)].map((_, index) => (
             <div key={index} className="animate-pulse">
-              <div className="flex items-center space-x-3 p-3 rounded-lg">
-                <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-24"></div>
+              <div className="flex items-center space-x-3 p-2 rounded-lg">
+                <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
+                <div className="h-3 bg-gray-200 rounded w-20"></div>
               </div>
             </div>
           ))}
@@ -96,21 +49,26 @@ const SubcategorySidebar = ({
   }
 
   return (
-    <div className="w-64 bg-white rounded-lg shadow-md p-4 sticky top-24">
-      <div className="space-y-2 overflow-y-auto custom-scrollbar">
-        {/* "All" option to show all products */}
+    <div className="w-56 bg-white rounded-xl shadow-sm border border-gray-100 p-3 sticky top-24">
+      <div className="space-y-1 overflow-y-auto custom-scrollbar max-h-[calc(100vh-140px)]">
+        {/* "All" option */}
         <button
           onClick={() => onSubcategorySelect(null)}
-          className={`w-full flex items-center space-x-3 p-3 cursor-pointer rounded-lg transition-all duration-200 hover:bg-green-50 ${
+          className={`w-full flex items-center space-x-3 p-2.5 rounded-lg transition-all duration-200 hover:bg-gray-50 group cursor-pointer ${
             selectedSubcategory === null 
-              ? 'bg-green-100 text-primary border-l-4 border-primary' 
-              : 'text-gray-700 hover:text-green-700'
+              ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+              : 'text-gray-600 hover:text-gray-900'
           }`}
+          title={t('all_products')}
         >
-          <span className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full text-primary">
+          <div className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm ${
+            selectedSubcategory === null 
+              ? 'bg-primary/20 text-primary' 
+              : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
+          }`}>
             🛒
-          </span>
-          <span className="font-medium">{t('all_products')}</span>
+          </div>
+          <span className="font-medium text-sm">{t('all_products')}</span>
         </button>
 
         {/* Subcategory options */}
@@ -118,16 +76,37 @@ const SubcategorySidebar = ({
           <button
             key={subcategory.id || subcategory._id}
             onClick={() => onSubcategorySelect(subcategory)}
-            className={`w-full flex items-center space-x-3 p-3 cursor-pointer rounded-lg transition-all duration-200 hover:bg-green-50 ${
+            className={`w-full flex items-center space-x-3 p-2.5 rounded-lg transition-all duration-200 hover:bg-gray-50 group cursor-pointer ${
               selectedSubcategory && (selectedSubcategory.id || selectedSubcategory._id) === (subcategory.id || subcategory._id)
-                ? 'bg-green-100 text-primary border-l-4 border-primary' 
-                : 'text-gray-700 hover:text-green-700'
+                ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                : 'text-gray-600 hover:text-gray-900'
             }`}
+            title={subcategory.name}
           >
-            <span className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full text-green-600">
-              {getSubcategoryIcon(subcategory.name)}
+            <div className={`w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center ${
+              selectedSubcategory && (selectedSubcategory.id || selectedSubcategory._id) === (subcategory.id || subcategory._id)
+                ? 'bg-primary/20' 
+                : 'bg-gray-100 group-hover:bg-gray-200'
+            }`}>
+              {subcategory.imageUrl ? (
+                <img
+                  src={subcategory.imageUrl}
+                  alt={subcategory.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'block';
+                  }}
+                />
+              ) : null}
+              <span className={`text-sm ${subcategory.imageUrl ? 'hidden' : 'block'}`}>
+                {getSubcategoryIcon(subcategory.name)}
+              </span>
+            </div>
+            
+            <span className="font-medium text-sm truncate flex-1 text-left">
+              {subcategory.name}
             </span>
-            <span className="font-medium">{subcategory.name}</span>
           </button>
         ))}
       </div>

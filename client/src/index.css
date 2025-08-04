@@ -10,7 +10,13 @@
   --color-amber: #f59e42;
   --color-yellow: #facc15;
   --color-pink: #ec4899;
-  --breakpoint-xs: 20rem
+  --breakpoint-xsa: 20rem; /* 320 */
+  --breakpoint-xsb: 22rem; /* 360 */
+  --breakpoint-xsc: 23rem; /* 375 */
+  --breakpoint-xsd: 24rem; /* 390 */
+  --breakpoint-xse: 25rem; /* 412 */
+  --breakpoint-mda: 50rem; /* 800 */
+  --breakpoint-mdb: 51rem; /* 820 */
 }
 
 body {

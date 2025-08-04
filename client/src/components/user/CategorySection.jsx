@@ -51,28 +51,28 @@ const CategorySection = ({ categories }) => {
   };
 
   return (
-    <section className="w-full py-8 px-4 sm:px-6 md:px-8 bg-gray-50">
+    <section className="w-full py-5 md:py-8 px-4 sm:px-6 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-bold text-primary pl-8 mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-primary pl-8 mb-4 md:mb-8">
           {t('Shop by Category')}
         </h2>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+        <div className="grid grid-cols-4 md:grid-cols-4 gap-1 md:gap-3">
           {categories.map((cat, idx) => (
             <div
               key={idx}
               className="flex flex-col items-center cursor-pointer group p-0"
               onClick={() => navigate(`/category/${cat.id || cat._id || cat.name}`)}
             >
-              {/* Big Circular Icon Container - Much Larger Overall */}
-              <div className="relative w-60 h-60 md:w-70 md:h-70 mb-2">
+              {/* Circular Icon Container - Smaller on mobile, larger on desktop */}
+              <div className="relative w-16 h-16 md:w-70 md:h-70 mb-1 md:mb-2">
                 {/* Outer Green Ring */}
-                <div className="absolute inset-0 rounded-full border-4 border-primary/70 group-hover:border-primary/90 transition-colors duration-300"></div>
+                <div className="absolute inset-0 rounded-full border-2 md:border-4 border-primary/70 group-hover:border-primary/90 transition-colors duration-300"></div>
                 {/* Inner Orange Ring */}
-                <div className="absolute inset-2 rounded-full border-4 border-bd-red/70 group-hover:border-bd-red/90 transition-colors duration-300"></div>
+                <div className="absolute inset-1 md:inset-2 rounded-full border-2 md:border-4 border-bd-red/70 group-hover:border-bd-red/90 transition-colors duration-300"></div>
                 
-                {/* Icon/Image Container - Much Larger for Bigger Products */}
-                <div className="absolute inset-4 rounded-full bg-white flex items-center justify-center shadow-lg">
+                {/* Icon/Image Container */}
+                <div className="absolute inset-2 md:inset-4 rounded-full bg-white flex items-center justify-center shadow-lg">
                   {cat.imageUrl ? (
                     <img
                       src={cat.imageUrl}
@@ -80,7 +80,7 @@ const CategorySection = ({ categories }) => {
                       className="w-full h-full object-cover rounded-full"
                     />
                   ) : (
-                    <span className="text-[10rem] md:text-[12rem]">
+                    <span className="text-2xl md:text-[12rem]">
                       {getCategoryIcon(cat.name)}
                     </span>
                   )}
@@ -88,7 +88,7 @@ const CategorySection = ({ categories }) => {
               </div>
               
               {/* Category Name */}
-              <h3 className="text-sm md:text-lg font-bold text-gray-800 text-center">
+              <h3 className="text-xs md:text-lg font-bold text-gray-800 text-center">
                 {cat.name}
               </h3>
             </div>

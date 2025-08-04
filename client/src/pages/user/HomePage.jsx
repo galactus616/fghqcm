@@ -72,7 +72,7 @@ const HomePage = () => {
   return (
     <div className="font-sans bg-[#0a614d]/5 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8">
-        <div className="pt-6">
+        <div className="pt-10">
           <PromoBanner />
         </div>
         {/* Category Slide Section */}

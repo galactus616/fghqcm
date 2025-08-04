@@ -159,11 +159,20 @@ const CategoryPage = () => {
 
         {/* Category Title */}
         <h1 className="md:block hidden text-2xl md:text-3xl font-bold text-green-800 mb-6">
-          {category ? category.name : t('category')}
+          {category ? (
+            <>
+              {category.name}
+              <span className="text-primary font-normal">
+                {selectedSubcategory ? ` (${selectedSubcategory.name})` : ` (${t('all_products')})`}
+              </span>
+            </>
+          ) : (
+            t('category')
+          )}
         </h1>
         
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-5 md:gap-6">
+        <div className="flex flex-col lg:flex-row gap-5 md:gap-2">
           {/* Mobile Subcategory Section */}
           <MobileSubcategorySection
             category={category}

@@ -23,9 +23,12 @@ const StoreProducts = () => {
   // Get categories and products from store state
   const { 
     categories, 
+    subCategories,
     loadingCategories, 
+    loadingSubCategories,
     categoriesError, 
     fetchCategories,
+    fetchSubCategories,
     products,
     loadingProducts,
     productsError,
@@ -69,7 +72,7 @@ const StoreProducts = () => {
     return products.map(product => ({
       id: product._id || product.id,
       name: product.name,
-      sku: product._id || product.id,
+      sku: product.sku || "23e1cfdv",
       price: product.price,
       discountedPrice: product.discountedPrice,
       stock: 0,
@@ -315,6 +318,9 @@ const StoreProducts = () => {
             categories={transformedCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
+            subCategories={subCategories}
+            loadingSubCategories={loadingSubCategories}
+            onFetchSubCategories={fetchSubCategories}
           />
         )}
 
@@ -416,7 +422,7 @@ const StoreProducts = () => {
                     />
                   </div>
                 </section>
-                <section className="p-4">
+                <section className="px-4 pb-4">
                   {/* Product Details */}
                   <div className="">
                     <h4 className="font-semibold text-gray-800">{product.name}</h4>
