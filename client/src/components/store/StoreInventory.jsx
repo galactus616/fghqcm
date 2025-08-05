@@ -257,10 +257,17 @@ const Inventory = () => {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((item) => {
         const product = item.productId;
+        const productName = product?.name || '';
+        const productDescription = product?.description || '';
+        const stockLevel = item.stock?.toString() || '';
+        
         return (
-          product.name.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
-          item.stock.toString().includes(query)
+          productName.toLowerCase().includes(query) ||
+          productDescription.toLowerCase().includes(query) ||
+          stockLevel.includes(query) ||
+          product?._id?.toLowerCase().includes(query) ||
+          product?.mainCategory?.name?.toLowerCase().includes(query) ||
+          product?.subCategory?.name?.toLowerCase().includes(query)
         );
       });
     }
@@ -484,11 +491,19 @@ const Inventory = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search inventory by product name, description, or stock level..."
+              placeholder="Search by product name, description, stock level, category, or SKU..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <XCircle className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           {/* Category Select */}
@@ -541,6 +556,27 @@ const Inventory = () => {
           </div>
         </div>
       </section>
+
+      {/* Search Results Info */}
+      {searchQuery.trim() && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-blue-600" />
+              <span className="text-blue-800 text-sm">
+                Found <span className="font-semibold">{filteredInventory.length}</span> item{filteredInventory.length !== 1 ? 's' : ''} 
+                matching "<span className="font-semibold">{searchQuery}</span>"
+              </span>
+            </div>
+            <button
+              onClick={() => setSearchQuery("")}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+            >
+              Clear Search
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Bulk Actions */}
       {selectedItems.length > 0 && (
