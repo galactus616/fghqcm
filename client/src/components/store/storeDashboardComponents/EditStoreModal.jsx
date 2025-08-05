@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Store, MapPin, Phone, User, AlertCircle, CheckCircle, Building, CreditCard, FileText, Clock, Shield } from 'lucide-react';
-import { getKycStatus } from '../../api/store/storeKyc';
+import { getKycStatus } from '../../../api/store/storeKyc';
 
 const EditStoreModal = ({ isOpen, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({

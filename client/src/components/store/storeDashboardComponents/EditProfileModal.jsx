@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, User, Mail, Calendar, AlertCircle, CheckCircle, Shield } from 'lucide-react';
-import { getStoreOwnerProfile, updateStoreOwnerProfile } from '../../api/store/storeAuth';
+import { getStoreOwnerProfile, updateStoreOwnerProfile } from '../../../api/store/storeAuth';
 
 const EditProfileModal = ({ isOpen, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({

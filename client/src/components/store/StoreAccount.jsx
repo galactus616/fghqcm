@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Download, Edit, User, Store, Shield, Mail, Phone, MapPin, Calendar, CheckCircle, Clock, AlertCircle, CreditCard, FileText, Settings, Copy, Building, Globe, Award, MapPinIcon } from 'lucide-react';
 import useStoreOwner from '../../store/useStoreOwner';
 import { getKycStatus } from '../../api/store/storeKyc';
-import EditStoreModal from './EditStoreModal';
-import EditProfileModal from './EditProfileModal';
+import EditStoreModal from './storeDashboardComponents/EditStoreModal';
+import EditProfileModal from './storeDashboardComponents/EditProfileModal';
 import axios from 'axios';
 
 const StoreAccount = () => {
