@@ -27,6 +27,8 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Database,
+  Grid3X3,
+  List,
 } from "lucide-react";
 import useStoreOwner from "../../store/useStoreOwner";
 import axios from "axios";
@@ -48,6 +50,7 @@ const Inventory = () => {
   const [editStockValue, setEditStockValue] = useState("");
   const [showLowStockAlert, setShowLowStockAlert] = useState(false);
   const [useSampleData, setUseSampleData] = useState(true); // Toggle for demo data
+  const [viewMode, setViewMode] = useState("table"); // "table" or "grid"
 
   // Get store data
   const { 
@@ -167,68 +170,7 @@ const Inventory = () => {
     }
   };
 
-  // Bulk operations
-  const handleBulkStockUpdate = async (operation, value) => {
-    if (useSampleData) {
-      // Simulate bulk operations on sample data
-      setInventory(prev => 
-        prev.map(item => {
-          if (selectedItems.includes(item._id)) {
-            let newStock;
-            switch (operation) {
-              case 'add':
-                newStock = item.stock + value;
-                break;
-              case 'subtract':
-                newStock = Math.max(0, item.stock - value);
-                break;
-              case 'set':
-                newStock = value;
-                break;
-              default:
-                return item;
-            }
-            return { ...item, stock: newStock, updatedAt: new Date().toISOString() };
-          }
-          return item;
-        })
-      );
-      setSelectedItems([]);
-      setShowBulkActions(false);
-    } else {
-      const promises = selectedItems.map(item => {
-        const currentStock = item.stock;
-        let newStock;
-        
-        switch (operation) {
-          case 'add':
-            newStock = currentStock + value;
-            break;
-          case 'subtract':
-            newStock = Math.max(0, currentStock - value);
-            break;
-          case 'set':
-            newStock = value;
-            break;
-          default:
-            return Promise.resolve();
-        }
-        
-        return axios.put(`${import.meta.env.VITE_API_BASE_URL}/inventory/${item._id}`, {
-          stock: newStock
-        }, { withCredentials: true });
-      });
 
-      try {
-        await Promise.all(promises);
-        fetchInventory();
-        setSelectedItems([]);
-        setShowBulkActions(false);
-      } catch (err) {
-        console.error("Failed to perform bulk operation:", err);
-      }
-    }
-  };
 
   // Calculate inventory statistics
   const inventoryStats = useMemo(() => {
@@ -409,7 +351,7 @@ const Inventory = () => {
     return "In Stock";
   };
 
-  return (
+      return (
     <div className="space-y-6">
       {/* Header Section */}
       <section className="flex flex-col gap-2">
@@ -418,17 +360,46 @@ const Inventory = () => {
             <h3 className="text-2xl font-bold text-gray-800">Inventory Management</h3>
             <p className="text-gray-500">Track and manage your product stock levels</p>
           </div>
-          <button
-            onClick={() => setUseSampleData(!useSampleData)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-              useSampleData 
-                ? 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200' 
-                : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
-            }`}
-          >
-            <Database className="w-4 h-4" />
-            {useSampleData ? 'Sample Data' : 'Live Data'}
-          </button>
+                     <div className="flex items-center gap-3">
+             {/* View Mode Toggle */}
+             <div className="flex items-center bg-gray-100 rounded-lg p-1">
+               <button
+                 onClick={() => setViewMode("table")}
+                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-colors ${
+                   viewMode === "table"
+                     ? 'bg-white text-gray-700 shadow-sm'
+                     : 'text-gray-500 hover:text-gray-700'
+                 }`}
+               >
+                 <List className="w-4 h-4" />
+                 <span className="text-sm font-medium">Table</span>
+               </button>
+               <button
+                 onClick={() => setViewMode("grid")}
+                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-colors ${
+                   viewMode === "grid"
+                     ? 'bg-white text-gray-700 shadow-sm'
+                     : 'text-gray-500 hover:text-gray-700'
+                 }`}
+               >
+                 <Grid3X3 className="w-4 h-4" />
+                 <span className="text-sm font-medium">Grid</span>
+               </button>
+             </div>
+             
+             {/* Data Source Toggle */}
+             <button
+               onClick={() => setUseSampleData(!useSampleData)}
+               className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                 useSampleData 
+                   ? 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200' 
+                   : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+               }`}
+             >
+               <Database className="w-4 h-4" />
+               {useSampleData ? 'Sample Data' : 'Live Data'}
+             </button>
+           </div>
         </div>
       </section>
 
@@ -588,204 +559,296 @@ const Inventory = () => {
                 {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
               </span>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleBulkStockUpdate('add', 1)}
-                className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Add Stock
-              </button>
-              <button
-                onClick={() => handleBulkStockUpdate('subtract', 1)}
-                className="px-3 py-1.5 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition-colors"
-              >
-                Reduce Stock
-              </button>
-              <button
-                onClick={() => setSelectedItems([])}
-                className="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Clear Selection
-              </button>
-            </div>
+                         <div className="flex gap-2">
+               <button
+                 onClick={() => setSelectedItems([])}
+                 className="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors"
+               >
+                 Clear Selection
+               </button>
+             </div>
           </div>
         </section>
       )}
 
-      {/* Inventory Table */}
-      <section className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center">
-            <RefreshCw className="w-8 h-8 text-gray-400 animate-spin mx-auto mb-4" />
-            <p className="text-gray-500">Loading inventory...</p>
-          </div>
-        ) : error ? (
-          <div className="p-8 text-center">
-            <XCircle className="w-8 h-8 text-red-400 mx-auto mb-4" />
-            <p className="text-red-600 mb-4">{error}</p>
-            <button
-              onClick={fetchInventory}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-4 py-3 text-left">
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.length === filteredInventory.length && filteredInventory.length > 0}
-                      onChange={handleSelectAll}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Product</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Stock</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Last Updated</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredInventory.map((item) => {
-                  const product = item.productId;
-                  const isSelected = selectedItems.includes(item._id);
-                  const isEditing = isEditingStock === item._id;
-                  
-                  return (
-                    <tr key={item._id} className={`hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}`}>
-                      <td className="px-4 py-3">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => handleItemSelect(item._id)}
-                          className="rounded border-gray-300 text-primary focus:ring-primary"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={product.imageUrl}
-                            alt={product.name}
-                            className="w-12 h-12 rounded-lg object-cover"
-                            onError={(e) => {
-                              e.target.src = "https://placehold.co/48x48/F0FDF4/1C6F40?text=P";
-                            }}
-                          />
-                          <div>
-                            <p className="font-medium text-gray-900">{product.name}</p>
-                            <p className="text-sm text-gray-500">SKU: {product._id.slice(-8)}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-sm text-gray-600">
-                          {product.mainCategory?.name || "Uncategorized"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        {isEditing ? (
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="number"
-                              value={editStockValue}
-                              onChange={(e) => setEditStockValue(e.target.value)}
-                              className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
-                              min="0"
-                            />
-                            <button
-                              onClick={handleSaveStock}
-                              className="text-green-600 hover:text-green-700"
-                            >
-                              <CheckCircle className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={handleCancelEdit}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <XCircle className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-900">{item.stock}</span>
-                            <button
-                              onClick={() => handleEditStock(item)}
-                              className="text-gray-400 hover:text-gray-600"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(item.stock, item.isActive)}`}>
-                          {getStatusText(item.stock, item.isActive)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-sm text-gray-500">
-                          {new Date(item.updatedAt).toLocaleDateString()}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => addToInventory(product._id, 1)}
-                            className="p-1 text-green-600 hover:text-green-700 hover:bg-green-50 rounded"
-                            title="Add stock"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => updateInventoryStock(item._id, Math.max(0, item.stock - 1))}
-                            className="p-1 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded"
-                            title="Reduce stock"
-                          >
-                            <Minus className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => removeFromInventory(item._id)}
-                            className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded"
-                            title="Remove from inventory"
-                          >
-                            <XCircle className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+             {/* Inventory View */}
+       <section className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+         {loading ? (
+           <div className="p-8 text-center">
+             <RefreshCw className="w-8 h-8 text-gray-400 animate-spin mx-auto mb-4" />
+             <p className="text-gray-500">Loading inventory...</p>
+           </div>
+         ) : error ? (
+           <div className="p-8 text-center">
+             <XCircle className="w-8 h-8 text-red-400 mx-auto mb-4" />
+             <p className="text-red-600 mb-4">{error}</p>
+             <button
+               onClick={fetchInventory}
+               className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+             >
+               Try Again
+             </button>
+           </div>
+         ) : viewMode === "table" ? (
+           // Table View
+           <div className="overflow-x-auto">
+             <table className="w-full">
+               <thead className="bg-gray-50 border-b border-gray-200">
+                 <tr>
+                   <th className="px-4 py-3 text-left">
+                     <input
+                       type="checkbox"
+                       checked={selectedItems.length === filteredInventory.length && filteredInventory.length > 0}
+                       onChange={handleSelectAll}
+                       className="rounded border-gray-300 text-primary focus:ring-primary"
+                     />
+                   </th>
+                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Product</th>
+                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
+                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Stock</th>
+                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
+                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Last Updated</th>
+                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+                 </tr>
+               </thead>
+               <tbody className="divide-y divide-gray-200">
+                 {filteredInventory.map((item) => {
+                   const product = item.productId;
+                   const isSelected = selectedItems.includes(item._id);
+                   const isEditing = isEditingStock === item._id;
+                   
+                   return (
+                     <tr key={item._id} className={`hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}`}>
+                       <td className="px-4 py-3">
+                         <input
+                           type="checkbox"
+                           checked={isSelected}
+                           onChange={() => handleItemSelect(item._id)}
+                           className="rounded border-gray-300 text-primary focus:ring-primary"
+                         />
+                       </td>
+                       <td className="px-4 py-3">
+                         <div className="flex items-center gap-3">
+                           <img
+                             src={product.imageUrl}
+                             alt={product.name}
+                             className="w-12 h-12 rounded-lg object-cover"
+                             onError={(e) => {
+                               e.target.src = "https://placehold.co/48x48/F0FDF4/1C6F40?text=P";
+                             }}
+                           />
+                           <div>
+                             <p className="font-medium text-gray-900">{product.name}</p>
+                             <p className="text-sm text-gray-500">SKU: {product._id.slice(-8)}</p>
+                           </div>
+                         </div>
+                       </td>
+                       <td className="px-4 py-3">
+                         <span className="text-sm text-gray-600">
+                           {product.mainCategory?.name || "Uncategorized"}
+                         </span>
+                       </td>
+                       <td className="px-4 py-3">
+                         {isEditing ? (
+                           <div className="flex items-center gap-2">
+                             <input
+                               type="number"
+                               value={editStockValue}
+                               onChange={(e) => setEditStockValue(e.target.value)}
+                               className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                               min="0"
+                             />
+                             <button
+                               onClick={handleSaveStock}
+                               className="text-green-600 hover:text-green-700"
+                             >
+                               <CheckCircle className="w-4 h-4" />
+                             </button>
+                             <button
+                               onClick={handleCancelEdit}
+                               className="text-red-600 hover:text-red-700"
+                             >
+                               <XCircle className="w-4 h-4" />
+                             </button>
+                           </div>
+                         ) : (
+                           <div className="flex items-center gap-2">
+                             <span className="font-medium text-gray-900">{item.stock}</span>
+                             <button
+                               onClick={() => handleEditStock(item)}
+                               className="text-gray-400 hover:text-gray-600"
+                             >
+                               <Edit className="w-4 h-4" />
+                             </button>
+                           </div>
+                         )}
+                       </td>
+                       <td className="px-4 py-3">
+                         <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(item.stock, item.isActive)}`}>
+                           {getStatusText(item.stock, item.isActive)}
+                         </span>
+                       </td>
+                       <td className="px-4 py-3">
+                         <span className="text-sm text-gray-500">
+                           {new Date(item.updatedAt).toLocaleDateString()}
+                         </span>
+                       </td>
+                       <td className="px-4 py-3">
+                         <div className="flex items-center gap-2">
+                           <button
+                             onClick={() => removeFromInventory(item._id)}
+                             className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded"
+                             title="Remove from inventory"
+                           >
+                             <XCircle className="w-4 h-4" />
+                           </button>
+                         </div>
+                       </td>
+                     </tr>
+                   );
+                 })}
+               </tbody>
+             </table>
+           </div>
+         ) : (
+           // Grid View
+           <div className="p-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+               {filteredInventory.map((item) => {
+                 const product = item.productId;
+                 const isSelected = selectedItems.includes(item._id);
+                 const isEditing = isEditingStock === item._id;
+                 
+                 return (
+                   <div
+                     key={item._id}
+                     className={`bg-white border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 ${
+                       isSelected ? 'ring-2 ring-blue-500 border-blue-200' : 'border-gray-200'
+                     }`}
+                   >
+                     {/* Card Header */}
+                     <div className="p-4 border-b border-gray-100">
+                       <div className="flex items-start justify-between">
+                         <div className="flex items-center gap-3">
+                           <input
+                             type="checkbox"
+                             checked={isSelected}
+                             onChange={() => handleItemSelect(item._id)}
+                             className="rounded border-gray-300 text-primary focus:ring-primary"
+                           />
+                           <img
+                             src={product.imageUrl}
+                             alt={product.name}
+                             className="w-12 h-12 rounded-lg object-cover"
+                             onError={(e) => {
+                               e.target.src = "https://placehold.co/48x48/F0FDF4/1C6F40?text=P";
+                             }}
+                           />
+                         </div>
+                         <button
+                           onClick={() => removeFromInventory(item._id)}
+                           className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded"
+                           title="Remove from inventory"
+                         >
+                           <XCircle className="w-4 h-4" />
+                         </button>
+                       </div>
+                     </div>
 
-        {/* Empty State */}
-        {!loading && !error && filteredInventory.length === 0 && (
-          <div className="p-8 text-center">
-            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-600 mb-2">No inventory items found</h3>
-            <p className="text-gray-500 mb-4">
-              {searchQuery.trim() 
-                ? `No items match "${searchQuery}". Try adjusting your search.`
-                : "Your inventory is empty. Add products from the Products section."
-              }
-            </p>
-            <button
-              onClick={() => window.location.href = '/store/dashboard/store_products'}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Go to Products
-            </button>
-          </div>
-        )}
-      </section>
+                     {/* Card Body */}
+                     <div className="p-4 space-y-3">
+                       {/* Product Info */}
+                       <div>
+                         <h3 className="font-semibold text-gray-900 text-sm mb-1">{product.name}</h3>
+                         <p className="text-xs text-gray-500">SKU: {product._id.slice(-8)}</p>
+                         <p className="text-xs text-gray-600 mt-1">
+                           {product.mainCategory?.name || "Uncategorized"}
+                         </p>
+                       </div>
+
+                       {/* Stock Section */}
+                       <div className="space-y-2">
+                         <div className="flex items-center justify-between">
+                           <span className="text-sm font-medium text-gray-700">Stock Level</span>
+                           {isEditing ? (
+                             <div className="flex items-center gap-1">
+                               <input
+                                 type="number"
+                                 value={editStockValue}
+                                 onChange={(e) => setEditStockValue(e.target.value)}
+                                 className="w-16 px-2 py-1 border border-gray-300 rounded text-xs"
+                                 min="0"
+                               />
+                               <button
+                                 onClick={handleSaveStock}
+                                 className="text-green-600 hover:text-green-700"
+                               >
+                                 <CheckCircle className="w-3 h-3" />
+                               </button>
+                               <button
+                                 onClick={handleCancelEdit}
+                                 className="text-red-600 hover:text-red-700"
+                               >
+                                 <XCircle className="w-3 h-3" />
+                               </button>
+                             </div>
+                           ) : (
+                             <div className="flex items-center gap-2">
+                               <span className="font-bold text-gray-900">{item.stock}</span>
+                               <button
+                                 onClick={() => handleEditStock(item)}
+                                 className="text-gray-400 hover:text-gray-600"
+                               >
+                                 <Edit className="w-3 h-3" />
+                               </button>
+                             </div>
+                           )}
+                         </div>
+
+                         {/* Status Badge */}
+                         <div className="flex items-center justify-between">
+                           <span className="text-xs text-gray-500">Status</span>
+                           <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(item.stock, item.isActive)}`}>
+                             {getStatusText(item.stock, item.isActive)}
+                           </span>
+                         </div>
+
+                         {/* Last Updated */}
+                         <div className="flex items-center justify-between">
+                           <span className="text-xs text-gray-500">Updated</span>
+                           <span className="text-xs text-gray-600">
+                             {new Date(item.updatedAt).toLocaleDateString()}
+                           </span>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 );
+               })}
+             </div>
+           </div>
+         )}
+
+         {/* Empty State */}
+         {!loading && !error && filteredInventory.length === 0 && (
+           <div className="p-8 text-center">
+             <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+             <h3 className="text-lg font-medium text-gray-600 mb-2">No inventory items found</h3>
+             <p className="text-gray-500 mb-4">
+               {searchQuery.trim() 
+                 ? `No items match "${searchQuery}". Try adjusting your search.`
+                 : "Your inventory is empty. Add products from the Products section."
+               }
+             </p>
+             <button
+               onClick={() => window.location.href = '/store/dashboard/store_products'}
+               className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+             >
+               Go to Products
+             </button>
+           </div>
+         )}
+       </section>
 
       {/* Quick Actions */}
       <section className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
@@ -864,8 +927,8 @@ const Inventory = () => {
           </div>
         </div>
       )}
-    </div>
-  );
+            </div>
+      );
 };
 
 export default Inventory;
