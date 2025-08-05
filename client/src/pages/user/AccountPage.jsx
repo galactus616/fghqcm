@@ -672,14 +672,87 @@ export default function AccountPage() {
           {activeTab === "support" && (
             <section className="bg-white rounded-2xl p-8 border border-primary/30 flex flex-col gap-6 mb-8">
               <h3 className="font-bold text-2xl text-primary mb-4">Support</h3>
-              <form className="bg-white rounded-lg p-6 border border-primary/30 flex flex-col gap-4 max-w-lg mx-auto">
-                <label className="font-semibold text-gray-700">Raise a Support Ticket</label>
-                <textarea className="border border-primary/30 rounded-lg p-3 min-h-[100px] resize-y focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-primary/10 placeholder-gray-400" placeholder="Describe your issue or question..." />
-                <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary/80 transition border border-primary cursor-pointer">Submit Ticket</button>
+              <form className="bg-white rounded-lg p-6 border border-primary/30 flex flex-col gap-4 w-full mx-auto">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <label htmlFor="ticketType" className="block font-semibold text-gray-700 mb-2">
+                      Ticket Type <span className="text-red-500">*</span>
+                    </label>
+                    <select 
+                      name="ticketType" 
+                      id="ticketType" 
+                      className="w-full border border-primary/30 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-white placeholder-gray-400"
+                      required
+                    >
+                      <option value="">Select ticket type</option>
+                      <option value="order-issue">Order Issue</option>
+                      <option value="payment-problem">Payment Problem</option>
+                      <option value="delivery-delay">Delivery Delay</option>
+                      <option value="product-quality">Product Quality Issue</option>
+                      <option value="refund-request">Refund Request</option>
+                      <option value="account-issue">Account Issue</option>
+                      <option value="technical-support">Technical Support</option>
+                      <option value="billing-inquiry">Billing Inquiry</option>
+                      <option value="return-request">Return Request</option>
+                      <option value="general-inquiry">General Inquiry</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="ticketSubject" className="block font-semibold text-gray-700 mb-2">
+                      Subject <span className="text-red-500">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      name="ticketSubject" 
+                      id="ticketSubject" 
+                      placeholder="Brief description of your issue"
+                      className="w-full border border-primary/30 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-white placeholder-gray-400"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="ticketDescription" className="block font-semibold text-gray-700 mb-2">
+                      Description <span className="text-red-500">*</span>
+                    </label>
+                    <textarea 
+                      name="ticketDescription" 
+                      id="ticketDescription"
+                      className="w-full border border-primary/30 rounded-lg p-3 min-h-[120px] resize-y focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-white placeholder-gray-400" 
+                      placeholder="Please provide detailed information about your issue. Include order numbers, dates, and any relevant details to help us assist you better..."
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/80 transition-all duration-200 border border-primary cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  Submit Support Ticket
+                </button>
               </form>
-              <div className="flex flex-col items-center gap-2 mt-6">
-                <span className="text-gray-700 font-medium">Or contact us via Gmail:</span>
-                <a href="mailto:support@example.com" className="text-primary hover:underline flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 48 48"><path fill="#fff" d="M4 12v24h40V12z"/><path fill="#e53935" d="M44 12H4l20 15z"/><path fill="#c62828" d="M44 12v24L24 27z"/><path fill="#fbc02d" d="M4 36V12l20 15z"/></svg> support@example.com</a>
+              
+              <div className="flex flex-col items-center gap-3 mt-6 p-4 bg-gray-50 rounded-lg">
+                <span className="text-gray-700 font-medium">Need immediate assistance?</span>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <a href="mailto:support@example.com" className="text-primary hover:underline flex items-center gap-2 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 48 48">
+                      <path fill="#fff" d="M4 12v24h40V12z"/>
+                      <path fill="#e53935" d="M44 12H4l20 15z"/>
+                      <path fill="#c62828" d="M44 12v24L24 27z"/>
+                      <path fill="#fbc02d" d="M4 36V12l20 15z"/>
+                    </svg> 
+                    support@example.com
+                  </a>
+                  <span className="text-gray-500">|</span>
+                  <span className="text-gray-700 font-medium">Response time: 24-48 hours</span>
+                </div>
               </div>
             </section>
           )}
