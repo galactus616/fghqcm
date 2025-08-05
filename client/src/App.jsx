@@ -96,13 +96,17 @@ function App() {
           }
         />
         {/* All other dashboard routes use StoreLayout and are protected */}
-        <Route path="/store/dashboard" element={<StoreLayout />}>
-          <Route path="dashboard" element={<StoreDashboard />} />
-          <Route path="store_products" element={<StoreProducts />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="store_orders" element={<StoreOrder />} />
-          <Route path="finances" element={<StoreFinances />} />
-          <Route path="store_account" element={<StoreAccount />} />
+        <Route path="/store/dashboard" element={
+          <StoreOwnerProtectedRoute>
+            <StoreLayout />
+          </StoreOwnerProtectedRoute>
+        }>
+          <Route path="dashboard" element={ <StoreOwnerProtectedRoute> <StoreDashboard /> </StoreOwnerProtectedRoute>} />
+          <Route path="store_products" element={ <StoreOwnerProtectedRoute> <StoreProducts /> </StoreOwnerProtectedRoute>} />
+          <Route path="inventory" element={ <StoreOwnerProtectedRoute> <Inventory /> </StoreOwnerProtectedRoute>} />
+          <Route path="store_orders" element={ <StoreOwnerProtectedRoute> <StoreOrder /> </StoreOwnerProtectedRoute>} />
+          <Route path="finances" element={ <StoreOwnerProtectedRoute> <StoreFinances /> </StoreOwnerProtectedRoute>} />
+          <Route path="store_account" element={ <StoreOwnerProtectedRoute> <StoreAccount /> </StoreOwnerProtectedRoute>} />
         </Route>
       </Routes>
     </>

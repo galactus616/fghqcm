@@ -6,6 +6,7 @@ import {
   Edit,
   Eye,
   Plus,
+  Minus,
 } from "lucide-react";
 import StoreCategoriesFilter from "./storeDashboardComponents/StoreCategoriesFilter";
 import StoreProductsModal from "./storeDashboardComponents/StoreProductsModal";
@@ -19,6 +20,9 @@ const StoreProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedVariants, setSelectedVariants] = useState({});
+  const [productQuantities, setProductQuantities] = useState({});
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [addedProductName, setAddedProductName] = useState("");
 
   // Get categories and products from store state
   const { 
@@ -188,6 +192,24 @@ const StoreProducts = () => {
       ...prev,
       [productId]: variantIndex
     }));
+  };
+
+  const handleAddToInventory = (product) => {
+    // Add one product to inventory
+    setProductQuantities(prev => ({
+      ...prev,
+      [product.id]: (prev[product.id] || 0) + 1
+    }));
+    
+    // Show success popup
+    setAddedProductName(product.name);
+    setShowSuccessPopup(true);
+    
+    // Auto-hide popup after 3 seconds
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+      setAddedProductName("");
+    }, 3000);
   };
 
   // Function to get status color based on status value
@@ -490,20 +512,23 @@ const StoreProducts = () => {
 
 
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-2 mt-3">
-                      <button 
-                        onClick={() => handleViewProduct(product)}
-                        className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-primary/50 hover:bg-gray-50 duration-200 cursor-pointer transition-all flex items-center justify-center gap-1.5"
-                      >
-                        <Eye className="size-4" />
-                        View
-                      </button>
-                      <button className="flex-1 px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 group">
-                        <Plus className="size-4 group-hover:scale-110 transition-transform duration-200" />
-                        Add
-                      </button>
-                    </div>
+                                         {/* Action Buttons */}
+                     <div className="flex gap-2 mt-3">
+                       <button 
+                         onClick={() => handleViewProduct(product)}
+                         className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-primary/50 hover:bg-gray-50 duration-200 cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                       >
+                         <Eye className="size-4" />
+                         View
+                       </button>
+                       <button 
+                         onClick={() => handleAddToInventory(product)}
+                         className="flex-1 px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 group"
+                       >
+                         <Plus className="size-4 group-hover:scale-110 transition-transform duration-200" />
+                         Add
+                       </button>
+                     </div>
                   </div>
                 </section>
               </div>
@@ -534,6 +559,33 @@ const StoreProducts = () => {
         onClose={handleCloseModal}
         product={selectedProduct}
       />
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-white/80 bg-opacity-10 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <Plus className="w-6 h-6 text-green-600" />
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 text-center mb-2">
+              Product Added Successfully!
+            </h3>
+            <p className="text-gray-600 text-center mb-4">
+              "{addedProductName}" has been added to your inventory.
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => setShowSuccessPopup(false)}
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

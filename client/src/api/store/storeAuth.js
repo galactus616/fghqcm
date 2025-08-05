@@ -13,3 +13,31 @@ export const requestOtp = async (email) => {
 export const verifyOtp = async (email, otp) => {
   return axios.post(`${API_BASE}/login/verify-otp`, { email, otp }, { withCredentials: true });
 };
+
+// Store management functions
+export const getMyStore = async () => {
+  return axios.get(`${import.meta.env.VITE_API_BASE_URL}/store/my`, { withCredentials: true });
+};
+
+export const updateStore = async (storeId, storeData) => {
+  return axios.put(`${import.meta.env.VITE_API_BASE_URL}/store/${storeId}`, storeData, { 
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
+// Profile management functions
+export const getStoreOwnerProfile = async () => {
+  return axios.get(`${API_BASE}/profile`, { withCredentials: true });
+};
+
+export const updateStoreOwnerProfile = async (profileData) => {
+  return axios.put(`${API_BASE}/profile`, profileData, { 
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};

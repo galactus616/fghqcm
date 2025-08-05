@@ -4,9 +4,10 @@ import { Menu, Bell, Search } from "lucide-react";
 
 const StoreNav = ({ toggleSidebar }) => {
   const { storeOwner } = useStoreOwner();
+  // console.log(storeOwner);
 
   return (
-    <nav className="bg-white border-b border-l border-gray-200 px-6 h-18 flex items-center justify-between">
+    <nav className="sticky top-0 bg-white border-b border-l border-gray-200 px-6 h-18 flex items-center justify-between">
       {/* Left side - Menu toggle only */}
       <div className="flex items-center">
         <button
