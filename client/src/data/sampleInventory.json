@@ -1,0 +1,458 @@
+{
+  "inventory": [
+    {
+      "_id": "inv_001",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_001",
+        "name": "Organic Fresh Tomatoes",
+        "description": "Fresh, juicy organic tomatoes grown locally. Perfect for salads, cooking, or eating raw. Rich in vitamins and antioxidants.",
+        "mainCategory": {
+          "_id": "cat_001",
+          "name": "Vegetables"
+        },
+        "subCategory": {
+          "_id": "subcat_001",
+          "name": "Fresh Vegetables"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "500g",
+            "price": 45.00,
+            "discountedPrice": 40.00
+          },
+          {
+            "quantityLabel": "1kg",
+            "price": 85.00,
+            "discountedPrice": 75.00
+          },
+          {
+            "quantityLabel": "2kg",
+            "price": 160.00,
+            "discountedPrice": 140.00
+          }
+        ],
+        "isBestSeller": true,
+        "isFeatured": true,
+        "isActive": true,
+        "createdAt": "2024-01-15T10:30:00.000Z"
+      },
+      "stock": 150,
+      "isActive": true,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-03-20T14:45:00.000Z"
+    },
+    {
+      "_id": "inv_002",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_002",
+        "name": "Premium Basmati Rice",
+        "description": "Long-grain aromatic basmati rice imported from India. Perfect for biryanis, pulao, and traditional Indian dishes.",
+        "mainCategory": {
+          "_id": "cat_002",
+          "name": "Grains & Pulses"
+        },
+        "subCategory": {
+          "_id": "subcat_002",
+          "name": "Rice"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "1kg",
+            "price": 120.00,
+            "discountedPrice": 110.00
+          },
+          {
+            "quantityLabel": "5kg",
+            "price": 550.00,
+            "discountedPrice": 500.00
+          },
+          {
+            "quantityLabel": "10kg",
+            "price": 1050.00,
+            "discountedPrice": 950.00
+          }
+        ],
+        "isBestSeller": true,
+        "isFeatured": false,
+        "isActive": true,
+        "createdAt": "2024-01-20T09:15:00.000Z"
+      },
+      "stock": 8,
+      "isActive": true,
+      "createdAt": "2024-01-20T09:15:00.000Z",
+      "updatedAt": "2024-03-19T16:20:00.000Z"
+    },
+    {
+      "_id": "inv_003",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_003",
+        "name": "Fresh Milk - Full Cream",
+        "description": "Pure, fresh full cream milk from local dairy farms. Rich in calcium and essential nutrients. Pasteurized for safety.",
+        "mainCategory": {
+          "_id": "cat_003",
+          "name": "Dairy & Eggs"
+        },
+        "subCategory": {
+          "_id": "subcat_003",
+          "name": "Milk"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "500ml",
+            "price": 35.00,
+            "discountedPrice": 32.00
+          },
+          {
+            "quantityLabel": "1L",
+            "price": 65.00,
+            "discountedPrice": 60.00
+          },
+          {
+            "quantityLabel": "2L",
+            "price": 120.00,
+            "discountedPrice": 110.00
+          }
+        ],
+        "isBestSeller": false,
+        "isFeatured": true,
+        "isActive": true,
+        "createdAt": "2024-02-05T11:45:00.000Z"
+      },
+      "stock": 0,
+      "isActive": true,
+      "createdAt": "2024-02-05T11:45:00.000Z",
+      "updatedAt": "2024-03-20T08:30:00.000Z"
+    },
+    {
+      "_id": "inv_004",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_004",
+        "name": "Organic Bananas",
+        "description": "Sweet, ripe organic bananas rich in potassium and fiber. Perfect for smoothies, baking, or as a healthy snack.",
+        "mainCategory": {
+          "_id": "cat_004",
+          "name": "Fruits"
+        },
+        "subCategory": {
+          "_id": "subcat_004",
+          "name": "Fresh Fruits"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "6 pieces",
+            "price": 40.00,
+            "discountedPrice": 35.00
+          },
+          {
+            "quantityLabel": "12 pieces",
+            "price": 75.00,
+            "discountedPrice": 65.00
+          },
+          {
+            "quantityLabel": "1 dozen",
+            "price": 140.00,
+            "discountedPrice": 120.00
+          }
+        ],
+        "isBestSeller": true,
+        "isFeatured": false,
+        "isActive": true,
+        "createdAt": "2024-02-10T14:20:00.000Z"
+      },
+      "stock": 25,
+      "isActive": true,
+      "createdAt": "2024-02-10T14:20:00.000Z",
+      "updatedAt": "2024-03-20T12:15:00.000Z"
+    },
+    {
+      "_id": "inv_005",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_005",
+        "name": "Whole Wheat Bread",
+        "description": "Freshly baked whole wheat bread made with premium flour. High in fiber and nutrients. Perfect for sandwiches and toast.",
+        "mainCategory": {
+          "_id": "cat_005",
+          "name": "Bakery"
+        },
+        "subCategory": {
+          "_id": "subcat_005",
+          "name": "Bread"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "400g",
+            "price": 25.00,
+            "discountedPrice": 22.00
+          },
+          {
+            "quantityLabel": "800g",
+            "price": 45.00,
+            "discountedPrice": 40.00
+          }
+        ],
+        "isBestSeller": false,
+        "isFeatured": true,
+        "isActive": true,
+        "createdAt": "2024-02-15T07:30:00.000Z"
+      },
+      "stock": 5,
+      "isActive": true,
+      "createdAt": "2024-02-15T07:30:00.000Z",
+      "updatedAt": "2024-03-20T09:45:00.000Z"
+    },
+    {
+      "_id": "inv_006",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_006",
+        "name": "Extra Virgin Olive Oil",
+        "description": "Premium extra virgin olive oil imported from Italy. Cold-pressed and unrefined for maximum flavor and health benefits.",
+        "mainCategory": {
+          "_id": "cat_006",
+          "name": "Cooking Essentials"
+        },
+        "subCategory": {
+          "_id": "subcat_006",
+          "name": "Oils"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "250ml",
+            "price": 180.00,
+            "discountedPrice": 160.00
+          },
+          {
+            "quantityLabel": "500ml",
+            "price": 320.00,
+            "discountedPrice": 290.00
+          },
+          {
+            "quantityLabel": "1L",
+            "price": 580.00,
+            "discountedPrice": 520.00
+          }
+        ],
+        "isBestSeller": true,
+        "isFeatured": true,
+        "isActive": true,
+        "createdAt": "2024-02-20T13:15:00.000Z"
+      },
+      "stock": 45,
+      "isActive": true,
+      "createdAt": "2024-02-20T13:15:00.000Z",
+      "updatedAt": "2024-03-19T17:30:00.000Z"
+    },
+    {
+      "_id": "inv_007",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_007",
+        "name": "Fresh Eggs - Farm Raised",
+        "description": "Fresh farm-raised eggs from free-range chickens. Rich in protein and essential nutrients. Perfect for cooking and baking.",
+        "mainCategory": {
+          "_id": "cat_003",
+          "name": "Dairy & Eggs"
+        },
+        "subCategory": {
+          "_id": "subcat_007",
+          "name": "Eggs"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1569288063648-5d2194e4d8c9?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1569288063648-5d2194e4d8c9?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "6 eggs",
+            "price": 60.00,
+            "discountedPrice": 55.00
+          },
+          {
+            "quantityLabel": "12 eggs",
+            "price": 110.00,
+            "discountedPrice": 100.00
+          },
+          {
+            "quantityLabel": "30 eggs",
+            "price": 250.00,
+            "discountedPrice": 220.00
+          }
+        ],
+        "isBestSeller": false,
+        "isFeatured": false,
+        "isActive": true,
+        "createdAt": "2024-02-25T10:45:00.000Z"
+      },
+      "stock": 12,
+      "isActive": true,
+      "createdAt": "2024-02-25T10:45:00.000Z",
+      "updatedAt": "2024-03-20T11:20:00.000Z"
+    },
+    {
+      "_id": "inv_008",
+      "storeId": "store_001",
+      "productId": {
+        "_id": "prod_008",
+        "name": "Dark Chocolate - 70% Cocoa",
+        "description": "Premium dark chocolate with 70% cocoa content. Rich, smooth, and slightly bitter. Perfect for baking or as a treat.",
+        "mainCategory": {
+          "_id": "cat_007",
+          "name": "Snacks & Beverages"
+        },
+        "subCategory": {
+          "_id": "subcat_008",
+          "name": "Chocolates"
+        },
+        "imageUrl": "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&h=400&fit=crop",
+        "images": [
+          "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop"
+        ],
+        "variants": [
+          {
+            "quantityLabel": "100g",
+            "price": 85.00,
+            "discountedPrice": 75.00
+          },
+          {
+            "quantityLabel": "200g",
+            "price": 150.00,
+            "discountedPrice": 135.00
+          },
+          {
+            "quantityLabel": "500g",
+            "price": 320.00,
+            "discountedPrice": 290.00
+          }
+        ],
+        "isBestSeller": true,
+        "isFeatured": false,
+        "isActive": false,
+        "createdAt": "2024-03-01T16:20:00.000Z"
+      },
+      "stock": 0,
+      "isActive": false,
+      "createdAt": "2024-03-01T16:20:00.000Z",
+      "updatedAt": "2024-03-18T14:10:00.000Z"
+    }
+  ],
+  "categories": [
+    {
+      "_id": "cat_001",
+      "name": "Vegetables",
+      "imageUrl": "https://images.unsplash.com/photo-1540420773420-144677c27ad5?w=100&h=100&fit=crop",
+      "level": 1
+    },
+    {
+      "_id": "cat_002",
+      "name": "Grains & Pulses",
+      "imageUrl": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=100&h=100&fit=crop",
+      "level": 1
+    },
+    {
+      "_id": "cat_003",
+      "name": "Dairy & Eggs",
+      "imageUrl": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=100&h=100&fit=crop",
+      "level": 1
+    },
+    {
+      "_id": "cat_004",
+      "name": "Fruits",
+      "imageUrl": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=100&h=100&fit=crop",
+      "level": 1
+    },
+    {
+      "_id": "cat_005",
+      "name": "Bakery",
+      "imageUrl": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop",
+      "level": 1
+    },
+    {
+      "_id": "cat_006",
+      "name": "Cooking Essentials",
+      "imageUrl": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=100&h=100&fit=crop",
+      "level": 1
+    },
+    {
+      "_id": "cat_007",
+      "name": "Snacks & Beverages",
+      "imageUrl": "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=100&h=100&fit=crop",
+      "level": 1
+    }
+  ],
+  "statistics": {
+    "totalItems": 8,
+    "totalStock": 245,
+    "lowStockItems": 3,
+    "outOfStockItems": 2,
+    "activeItems": 7,
+    "averageStock": 30.6,
+    "categories": {
+      "Vegetables": 1,
+      "Grains & Pulses": 1,
+      "Dairy & Eggs": 2,
+      "Fruits": 1,
+      "Bakery": 1,
+      "Cooking Essentials": 1,
+      "Snacks & Beverages": 1
+    },
+    "stockDistribution": {
+      "inStock": 6,
+      "lowStock": 3,
+      "outOfStock": 2,
+      "inactive": 1
+    }
+  }
+} 

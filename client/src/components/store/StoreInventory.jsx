@@ -1,11 +1,835 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  Search,
+  Filter,
+  ChevronDown,
+  Plus,
+  Minus,
+  Edit,
+  Eye,
+  AlertTriangle,
+  TrendingUp,
+  TrendingDown,
+  Package,
+  Download,
+  Upload,
+  RefreshCw,
+  BarChart3,
+  Settings,
+  MoreHorizontal,
+  CheckCircle,
+  XCircle,
+  Clock,
+  DollarSign,
+  ShoppingCart,
+  Users,
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight,
+  Database,
+} from "lucide-react";
+import useStoreOwner from "../../store/useStoreOwner";
+import axios from "axios";
+import sampleData from "../../data/sampleInventory.json";
+
 
 const Inventory = () => {
-      return (
-            <div>
-                  Inventory
-            </div>
+  // State management
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedFilter, setSelectedFilter] = useState("newest");
+  const [inventory, setInventory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [isEditingStock, setIsEditingStock] = useState(null);
+  const [editStockValue, setEditStockValue] = useState("");
+  const [showLowStockAlert, setShowLowStockAlert] = useState(false);
+  const [useSampleData, setUseSampleData] = useState(true); // Toggle for demo data
+
+  // Get store data
+  const { 
+    categories, 
+    products,
+    loadingCategories, 
+    loadingProducts,
+    fetchCategories,
+    fetchProducts
+  } = useStoreOwner();
+
+  // Fetch data on component mount
+  useEffect(() => {
+    if (useSampleData) {
+      // Use sample data
+      setInventory(sampleData.inventory);
+      setLoading(false);
+      setError(null);
+    } else {
+      // Use real API data
+      fetchCategories();
+      fetchProducts();
+      fetchInventory();
+    }
+  }, [fetchCategories, fetchProducts, useSampleData]);
+
+  // Fetch inventory data
+  const fetchInventory = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/inventory/my`, {
+        withCredentials: true
+      });
+      setInventory(response.data.inventory || []);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load inventory");
+      console.error("Failed to fetch inventory:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add product to inventory
+  const addToInventory = async (productId, stock = 1) => {
+    if (useSampleData) {
+      // Simulate adding to sample data
+      const newItem = {
+        _id: `inv_${Date.now()}`,
+        storeId: "store_001",
+        productId: products.find(p => p._id === productId) || {
+          _id: productId,
+          name: "New Product",
+          imageUrl: "https://placehold.co/400x400/F0FDF4/1C6F40?text=New",
+          mainCategory: { name: "Uncategorized" }
+        },
+        stock: stock,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      setInventory(prev => [...prev, newItem]);
+    } else {
+      try {
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/inventory`, {
+          productId,
+          stock
+        }, { withCredentials: true });
+        fetchInventory(); // Refresh inventory
+      } catch (err) {
+        console.error("Failed to add to inventory:", err);
+      }
+    }
+  };
+
+  // Update inventory stock
+  const updateInventoryStock = async (inventoryId, newStock) => {
+    if (useSampleData) {
+      // Simulate updating sample data
+      setInventory(prev => 
+        prev.map(item => 
+          item._id === inventoryId 
+            ? { ...item, stock: newStock, updatedAt: new Date().toISOString() }
+            : item
+        )
       );
+      setIsEditingStock(null);
+      setEditStockValue("");
+    } else {
+      try {
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/inventory/${inventoryId}`, {
+          stock: newStock
+        }, { withCredentials: true });
+        fetchInventory(); // Refresh inventory
+        setIsEditingStock(null);
+        setEditStockValue("");
+      } catch (err) {
+        console.error("Failed to update inventory:", err);
+      }
+    }
+  };
+
+  // Remove from inventory
+  const removeFromInventory = async (inventoryId) => {
+    if (useSampleData) {
+      // Simulate removing from sample data
+      setInventory(prev => prev.filter(item => item._id !== inventoryId));
+    } else {
+      try {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/inventory/${inventoryId}`, {
+          withCredentials: true
+        });
+        fetchInventory(); // Refresh inventory
+      } catch (err) {
+        console.error("Failed to remove from inventory:", err);
+      }
+    }
+  };
+
+  // Bulk operations
+  const handleBulkStockUpdate = async (operation, value) => {
+    if (useSampleData) {
+      // Simulate bulk operations on sample data
+      setInventory(prev => 
+        prev.map(item => {
+          if (selectedItems.includes(item._id)) {
+            let newStock;
+            switch (operation) {
+              case 'add':
+                newStock = item.stock + value;
+                break;
+              case 'subtract':
+                newStock = Math.max(0, item.stock - value);
+                break;
+              case 'set':
+                newStock = value;
+                break;
+              default:
+                return item;
+            }
+            return { ...item, stock: newStock, updatedAt: new Date().toISOString() };
+          }
+          return item;
+        })
+      );
+      setSelectedItems([]);
+      setShowBulkActions(false);
+    } else {
+      const promises = selectedItems.map(item => {
+        const currentStock = item.stock;
+        let newStock;
+        
+        switch (operation) {
+          case 'add':
+            newStock = currentStock + value;
+            break;
+          case 'subtract':
+            newStock = Math.max(0, currentStock - value);
+            break;
+          case 'set':
+            newStock = value;
+            break;
+          default:
+            return Promise.resolve();
+        }
+        
+        return axios.put(`${import.meta.env.VITE_API_BASE_URL}/inventory/${item._id}`, {
+          stock: newStock
+        }, { withCredentials: true });
+      });
+
+      try {
+        await Promise.all(promises);
+        fetchInventory();
+        setSelectedItems([]);
+        setShowBulkActions(false);
+      } catch (err) {
+        console.error("Failed to perform bulk operation:", err);
+      }
+    }
+  };
+
+  // Calculate inventory statistics
+  const inventoryStats = useMemo(() => {
+    const totalItems = inventory.length;
+    const totalStock = inventory.reduce((sum, item) => sum + item.stock, 0);
+    const lowStockItems = inventory.filter(item => item.stock <= 10 && item.stock > 0).length;
+    const outOfStockItems = inventory.filter(item => item.stock === 0).length;
+    const activeItems = inventory.filter(item => item.isActive).length;
+    
+    return {
+      totalItems,
+      totalStock,
+      lowStockItems,
+      outOfStockItems,
+      activeItems,
+      averageStock: totalItems > 0 ? Math.round(totalStock / totalItems) : 0
+    };
+  }, [inventory]);
+
+  // Filter and sort inventory
+  const filteredInventory = useMemo(() => {
+    let filtered = inventory;
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((item) => {
+        const product = item.productId;
+        return (
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          item.stock.toString().includes(query)
+        );
+      });
+    }
+
+    // Category filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter((item) => 
+        item.productId.mainCategory?._id === selectedCategory ||
+        item.productId.mainCategory?.name === selectedCategory
+      );
+    }
+
+    // Status filter
+    if (selectedStatus !== "all") {
+      switch (selectedStatus) {
+        case "in_stock":
+          filtered = filtered.filter(item => item.stock > 0);
+          break;
+        case "low_stock":
+          filtered = filtered.filter(item => item.stock > 0 && item.stock <= 10);
+          break;
+        case "out_of_stock":
+          filtered = filtered.filter(item => item.stock === 0);
+          break;
+        case "active":
+          filtered = filtered.filter(item => item.isActive);
+          break;
+        case "inactive":
+          filtered = filtered.filter(item => !item.isActive);
+          break;
+        default:
+          break;
+      }
+    }
+
+    // Sort filter
+    switch (selectedFilter) {
+      case "newest":
+        filtered = [...filtered].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case "oldest":
+        filtered = [...filtered].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      case "stock_high":
+        filtered = [...filtered].sort((a, b) => b.stock - a.stock);
+        break;
+      case "stock_low":
+        filtered = [...filtered].sort((a, b) => a.stock - b.stock);
+        break;
+      case "name_az":
+        filtered = [...filtered].sort((a, b) => a.productId.name.localeCompare(b.productId.name));
+        break;
+      case "name_za":
+        filtered = [...filtered].sort((a, b) => b.productId.name.localeCompare(a.productId.name));
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [inventory, searchQuery, selectedCategory, selectedStatus, selectedFilter]);
+
+  // Handle stock editing
+  const handleEditStock = (item) => {
+    setIsEditingStock(item._id);
+    setEditStockValue(item.stock.toString());
+  };
+
+  const handleSaveStock = () => {
+    const newStock = parseInt(editStockValue);
+    if (!isNaN(newStock) && newStock >= 0) {
+      updateInventoryStock(isEditingStock, newStock);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingStock(null);
+    setEditStockValue("");
+  };
+
+  // Handle item selection
+  const handleItemSelect = (itemId) => {
+    setSelectedItems(prev => 
+      prev.includes(itemId) 
+        ? prev.filter(id => id !== itemId)
+        : [...prev, itemId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedItems.length === filteredInventory.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(filteredInventory.map(item => item._id));
+    }
+  };
+
+  // Get categories for filtering
+  const availableCategories = useMemo(() => {
+    if (useSampleData) {
+      return sampleData.categories;
+    }
+    return categories;
+  }, [useSampleData, categories]);
+
+  // Status options
+  const statuses = [
+    { value: "all", label: "All Status" },
+    { value: "in_stock", label: "In Stock" },
+    { value: "low_stock", label: "Low Stock" },
+    { value: "out_of_stock", label: "Out of Stock" },
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+
+  // Filter options
+  const filters = [
+    { value: "newest", label: "Newest First" },
+    { value: "oldest", label: "Oldest First" },
+    { value: "stock_high", label: "Stock: High to Low" },
+    { value: "stock_low", label: "Stock: Low to High" },
+    { value: "name_az", label: "Name: A to Z" },
+    { value: "name_za", label: "Name: Z to A" },
+  ];
+
+  // Get status color
+  const getStatusColor = (stock, isActive) => {
+    if (!isActive) return "text-gray-500 bg-gray-50 border-gray-200";
+    if (stock === 0) return "text-red-600 bg-red-50 border-red-200";
+    if (stock <= 10) return "text-yellow-600 bg-yellow-50 border-yellow-200";
+    return "text-green-600 bg-green-50 border-green-200";
+  };
+
+  // Get status text
+  const getStatusText = (stock, isActive) => {
+    if (!isActive) return "Inactive";
+    if (stock === 0) return "Out of Stock";
+    if (stock <= 10) return "Low Stock";
+    return "In Stock";
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header Section */}
+      <section className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-2xl font-bold text-gray-800">Inventory Management</h3>
+            <p className="text-gray-500">Track and manage your product stock levels</p>
+          </div>
+          <button
+            onClick={() => setUseSampleData(!useSampleData)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+              useSampleData 
+                ? 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200' 
+                : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+            }`}
+          >
+            <Database className="w-4 h-4" />
+            {useSampleData ? 'Sample Data' : 'Live Data'}
+          </button>
+        </div>
+      </section>
+
+      {/* Statistics Cards */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Items</p>
+              <p className="text-2xl font-bold text-gray-900">{inventoryStats.totalItems}</p>
+            </div>
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Package className="w-6 h-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Stock</p>
+              <p className="text-2xl font-bold text-gray-900">{inventoryStats.totalStock}</p>
+            </div>
+            <div className="p-2 bg-green-100 rounded-lg">
+              <TrendingUp className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Low Stock Items</p>
+              <p className="text-2xl font-bold text-yellow-600">{inventoryStats.lowStockItems}</p>
+            </div>
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <AlertTriangle className="w-6 h-6 text-yellow-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Out of Stock</p>
+              <p className="text-2xl font-bold text-red-600">{inventoryStats.outOfStockItems}</p>
+            </div>
+            <div className="p-2 bg-red-100 rounded-lg">
+              <XCircle className="w-6 h-6 text-red-600" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Search and Filters */}
+      <section className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+          {/* Search Input */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search inventory by product name, description, or stock level..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            />
+          </div>
+
+          {/* Category Select */}
+          <div className="relative min-w-[180px]">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
+            >
+              <option value="all">All Categories</option>
+              {availableCategories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary w-4 h-4 pointer-events-none" />
+          </div>
+
+          {/* Status Select */}
+          <div className="relative min-w-[160px]">
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
+            >
+              {statuses.map((status) => (
+                <option key={status.value} value={status.value}>
+                  {status.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary w-4 h-4 pointer-events-none" />
+          </div>
+
+          {/* Filter Select */}
+          <div className="relative min-w-[180px]">
+            <select
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)}
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
+            >
+              {filters.map((filter) => (
+                <option key={filter.value} value={filter.value}>
+                  {filter.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary w-4 h-4 pointer-events-none" />
+          </div>
+        </div>
+      </section>
+
+      {/* Bulk Actions */}
+      {selectedItems.length > 0 && (
+        <section className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-blue-600" />
+              <span className="text-blue-800 font-medium">
+                {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleBulkStockUpdate('add', 1)}
+                className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Add Stock
+              </button>
+              <button
+                onClick={() => handleBulkStockUpdate('subtract', 1)}
+                className="px-3 py-1.5 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                Reduce Stock
+              </button>
+              <button
+                onClick={() => setSelectedItems([])}
+                className="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Clear Selection
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Inventory Table */}
+      <section className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        {loading ? (
+          <div className="p-8 text-center">
+            <RefreshCw className="w-8 h-8 text-gray-400 animate-spin mx-auto mb-4" />
+            <p className="text-gray-500">Loading inventory...</p>
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center">
+            <XCircle className="w-8 h-8 text-red-400 mx-auto mb-4" />
+            <p className="text-red-600 mb-4">{error}</p>
+            <button
+              onClick={fetchInventory}
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-4 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.length === filteredInventory.length && filteredInventory.length > 0}
+                      onChange={handleSelectAll}
+                      className="rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Product</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Stock</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Last Updated</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredInventory.map((item) => {
+                  const product = item.productId;
+                  const isSelected = selectedItems.includes(item._id);
+                  const isEditing = isEditingStock === item._id;
+                  
+                  return (
+                    <tr key={item._id} className={`hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}`}>
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleItemSelect(item._id)}
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            className="w-12 h-12 rounded-lg object-cover"
+                            onError={(e) => {
+                              e.target.src = "https://placehold.co/48x48/F0FDF4/1C6F40?text=P";
+                            }}
+                          />
+                          <div>
+                            <p className="font-medium text-gray-900">{product.name}</p>
+                            <p className="text-sm text-gray-500">SKU: {product._id.slice(-8)}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm text-gray-600">
+                          {product.mainCategory?.name || "Uncategorized"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        {isEditing ? (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              value={editStockValue}
+                              onChange={(e) => setEditStockValue(e.target.value)}
+                              className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                              min="0"
+                            />
+                            <button
+                              onClick={handleSaveStock}
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-gray-900">{item.stock}</span>
+                            <button
+                              onClick={() => handleEditStock(item)}
+                              className="text-gray-400 hover:text-gray-600"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(item.stock, item.isActive)}`}>
+                          {getStatusText(item.stock, item.isActive)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm text-gray-500">
+                          {new Date(item.updatedAt).toLocaleDateString()}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => addToInventory(product._id, 1)}
+                            className="p-1 text-green-600 hover:text-green-700 hover:bg-green-50 rounded"
+                            title="Add stock"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => updateInventoryStock(item._id, Math.max(0, item.stock - 1))}
+                            className="p-1 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded"
+                            title="Reduce stock"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => removeFromInventory(item._id)}
+                            className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded"
+                            title="Remove from inventory"
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && filteredInventory.length === 0 && (
+          <div className="p-8 text-center">
+            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-600 mb-2">No inventory items found</h3>
+            <p className="text-gray-500 mb-4">
+              {searchQuery.trim() 
+                ? `No items match "${searchQuery}". Try adjusting your search.`
+                : "Your inventory is empty. Add products from the Products section."
+              }
+            </p>
+            <button
+              onClick={() => window.location.href = '/store/dashboard/store_products'}
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Go to Products
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Quick Actions */}
+      <section className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <h4 className="text-lg font-medium text-gray-800 mb-4">Quick Actions</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+            onClick={() => window.location.href = '/store/dashboard/store_products'}
+            className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-primary/50 hover:bg-gray-50 transition-colors"
+          >
+            <Plus className="w-5 h-5 text-primary" />
+            <div className="text-left">
+              <p className="font-medium text-gray-900">Add Products</p>
+              <p className="text-sm text-gray-500">Add new products to inventory</p>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => setShowLowStockAlert(true)}
+            className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-yellow-500/50 hover:bg-yellow-50 transition-colors"
+          >
+            <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <div className="text-left">
+              <p className="font-medium text-gray-900">Low Stock Alert</p>
+              <p className="text-sm text-gray-500">View items with low stock</p>
+            </div>
+          </button>
+          
+          <button
+            onClick={useSampleData ? () => setInventory(sampleData.inventory) : fetchInventory}
+            className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-blue-500/50 hover:bg-blue-50 transition-colors"
+          >
+            <RefreshCw className="w-5 h-5 text-blue-600" />
+            <div className="text-left">
+              <p className="font-medium text-gray-900">Refresh Data</p>
+              <p className="text-sm text-gray-500">Update inventory information</p>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      {/* Low Stock Alert Modal */}
+      {showLowStockAlert && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md mx-4 w-full">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertTriangle className="w-6 h-6 text-yellow-600" />
+              <h3 className="text-lg font-semibold text-gray-800">Low Stock Alert</h3>
+            </div>
+            <div className="space-y-3 mb-6">
+              {inventory.filter(item => item.stock <= 10 && item.stock > 0).map(item => (
+                <div key={item._id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-900">{item.productId.name}</p>
+                    <p className="text-sm text-gray-600">Current stock: {item.stock}</p>
+                  </div>
+                  <button
+                    onClick={() => handleEditStock(item)}
+                    className="px-3 py-1 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700 transition-colors"
+                  >
+                    Update
+                  </button>
+                </div>
+              ))}
+              {inventory.filter(item => item.stock <= 10 && item.stock > 0).length === 0 && (
+                <p className="text-gray-500 text-center py-4">No low stock items found.</p>
+              )}
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowLowStockAlert(false)}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Inventory;
