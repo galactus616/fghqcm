@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useStoreOwner from "../../../store/useStoreOwner";
-import { Menu, Bell, Search } from "lucide-react";
+import {  Bell, Search, AlignLeft } from "lucide-react";
 
 const StoreNav = ({ toggleSidebar }) => {
   const { storeOwner } = useStoreOwner();
@@ -12,9 +12,9 @@ const StoreNav = ({ toggleSidebar }) => {
       <div className="flex items-center">
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+          className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
         >
-          <Menu className="w-5 h-5" />
+          <AlignLeft className="w-5 h-5" />{" "}
         </button>
       </div>
 
@@ -44,12 +44,14 @@ const StoreNav = ({ toggleSidebar }) => {
         <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 cursor-pointer">
           <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
             <span className="text-green-700 font-semibold text-sm">
-              {storeOwner?.name?.charAt(0) || storeOwner?.email?.charAt(0) || 'S'}
+              {storeOwner?.name?.charAt(0) ||
+                storeOwner?.email?.charAt(0) ||
+                "S"}
             </span>
           </div>
           <div className="hidden md:block">
             <p className="text-sm font-medium text-gray-900">
-              {storeOwner?.name || 'Store Owner'}
+              {storeOwner?.name || "Store Owner"}
             </p>
             <p className="text-xs text-gray-500 truncate max-w-32">
               {storeOwner?.email}
