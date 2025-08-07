@@ -155,7 +155,7 @@ const StoreCategoriesFilter = ({
                 <button
                   key={category.value}
                   onClick={() => handleMainCategoryClick(category)}
-                  className={`flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 transition-all duration-300 cursor-pointer group shrink-0 ${
+                  className={`flex flex-col items-center w-18 h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 transition-all duration-300 cursor-pointer group shrink-0 ${
                     isSelected
                       ? "border-primary bg-primary/10 shadow-md transform scale-105"
                       : "border-gray-200 hover:border-primary/40 hover:bg-gray-50"
@@ -200,7 +200,7 @@ const StoreCategoriesFilter = ({
                 )}
               </span>
               {selectedMainCategory && (
-                <span className="text-sm text-primary bg-primary/10 px-2 py-1 rounded-full">
+                <span className="text-sm w-20 md:w-auto truncate text-primary bg-primary/10 px-2 py-1 rounded-full">
                   {categories.find(cat => cat.value === selectedMainCategory)?.label}
                 </span>
               )}
@@ -231,7 +231,7 @@ const StoreCategoriesFilter = ({
               [...Array(6)].map((_, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 border-gray-200 animate-pulse shrink-0"
+                  className="flex flex-col items-center w-24 h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 border-gray-200 animate-pulse shrink-0"
                 >
                   <div className="w-full h-3/4 bg-gray-200 rounded mb-1"></div>
                   <div className="w-full h-3 bg-gray-200 rounded"></div>
@@ -245,7 +245,7 @@ const StoreCategoriesFilter = ({
                   <button
                     key={subCategory.value}
                     onClick={() => handleSubCategoryClick(subCategory)}
-                    className={`flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 transition-all duration-300 cursor-pointer group shrink-0 ${
+                    className={`flex flex-col items-center w-24 h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 transition-all duration-300 cursor-pointer group shrink-0 ${
                       isSelected
                         ? "border-primary bg-primary/10 shadow-md transform scale-105"
                         : "border-gray-200 hover:border-primary/40 hover:bg-gray-50"
