@@ -7,7 +7,7 @@ const StoreNav = ({ toggleSidebar }) => {
   // console.log(storeOwner);
 
   return (
-    <nav className="sticky z-40 top-0 bg-white border-b border-l border-gray-200 px-6 h-18 flex items-center justify-between">
+    <nav className="sticky z-40 top-0 bg-white border-b border-l border-gray-200 px-3 md:px-6 h-18 flex items-center justify-between">
       {/* Left side - Menu toggle only */}
       <div className="flex items-center">
         <button
@@ -19,19 +19,19 @@ const StoreNav = ({ toggleSidebar }) => {
       </div>
 
       {/* Center - Search bar */}
-      <div className="flex-1 max-w-md mx-8">
+      <div className="flex-1 max-w-md mx-4 md:mx-8">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search orders, products..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            className="w-full pl-10 truncate pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
           />
         </div>
       </div>
 
       {/* Right side - Notifications and user profile */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1 md:gap-3">
         {/* Notifications */}
         <button className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200 cursor-pointer relative">
           <Bell className="w-5 h-5" />
