@@ -408,11 +408,11 @@ const StoreProducts = () => {
             </button>
           </div>
         ) : (
-          <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+          <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 ">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 flex flex-col justify-center items-center"
+                className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 flex flex-col"
               >
                 <section className="p-3 sm:p-4 rounded-t-lg">
                   {/* Product Header */}
@@ -434,7 +434,7 @@ const StoreProducts = () => {
                   </div>
 
                   {/* Product Image */}
-                  <div className="flex-growmx-auto w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-lg flex items-center justify-center">
+                  <div className="mx-auto w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-lg flex items-center justify-center">
                     <img
                       src={product.image}
                       alt={product.name}
