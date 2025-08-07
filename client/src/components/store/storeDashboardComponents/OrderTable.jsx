@@ -60,9 +60,9 @@ const OrderTable = ({
   if (loading) {
     return (
       <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-8 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-gray-500 mt-2">Loading orders...</p>
+        <div className="p-4 sm:p-8 text-center">
+          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-gray-500 mt-2 text-sm sm:text-base">Loading orders...</p>
         </div>
       </section>
     );
@@ -71,8 +71,8 @@ const OrderTable = ({
   if (error) {
     return (
       <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-8 text-center">
-          <p className="text-red-500">{error}</p>
+        <div className="p-4 sm:p-8 text-center">
+          <p className="text-red-500 text-sm sm:text-base">{error}</p>
         </div>
       </section>
     );
@@ -80,76 +80,132 @@ const OrderTable = ({
 
   return (
     <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      {/* Table Header */}
-      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <div className="grid grid-cols-8 gap-4 text-sm font-medium text-gray-700">
-          <div className="flex items-center">
-            <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
-          </div>
-          <div>ORDER ID</div>
-          <div>CUSTOMER</div>
-          <div>DATE</div>
-          <div>STATUS</div>
-          <div>PAYMENT</div>
-          <div>TOTAL</div>
-          <div>ACTION</div>
+      {/* Mobile Card View */}
+      <div className="block lg:hidden">
+        <div className="p-3 sm:p-4">
+          {orders.map((order) => (
+            <div key={order.id} className="bg-gray-50 rounded-lg p-3 sm:p-4 mb-3 last:mb-0">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                    <span className="font-medium text-gray-900 text-sm">{order.orderId}</span>
+                  </div>
+                  <div className="text-sm text-gray-600 mb-1">
+                    <span className="font-medium">{order.customer.name}</span>
+                  </div>
+                  <div className="text-xs text-gray-500">{formatDate(order.date)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-medium text-gray-900 text-sm">
+                    <span className='text-lg font-bold'>৳ </span> {order.total.toFixed(2)}
+                  </div>
+                  <div className="flex items-center justify-end gap-1 mt-1">
+                    {getPaymentIcon(order.paymentMethod)}
+                    <span className="text-xs text-gray-600">{order.paymentMethod}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
+                  {order.status}
+                </span>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={() => onViewOrder?.(order)}
+                    className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    title="View Order"
+                  >
+                    <Eye className="w-4 h-4 text-gray-600" />
+                  </button>
+                  <button 
+                    onClick={() => onEditOrder?.(order)}
+                    className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    title="Edit Order"
+                  >
+                    <SquarePen className="w-4 h-4 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Table Body */}
-      <div className="divide-y divide-gray-200">
-        {orders.map((order) => (
-          <div key={order.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
-            <div className="grid grid-cols-8 gap-4 items-center text-sm">
-              <div className="flex items-center">
-                <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
-              </div>
-              <div className="font-medium text-gray-900">{order.orderId}</div>
-              <div className="flex items-center gap-3">
+      {/* Desktop Table View */}
+      <div className="hidden lg:block">
+        {/* Table Header */}
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <div className="grid grid-cols-8 gap-4 text-sm font-medium text-gray-700">
+            <div className="flex items-center">
+              <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
+            </div>
+            <div>ORDER ID</div>
+            <div>CUSTOMER</div>
+            <div>DATE</div>
+            <div>STATUS</div>
+            <div>PAYMENT</div>
+            <div>TOTAL</div>
+            <div>ACTION</div>
+          </div>
+        </div>
+
+        {/* Table Body */}
+        <div className="divide-y divide-gray-200">
+          {orders.map((order) => (
+            <div key={order.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+              <div className="grid grid-cols-8 gap-4 items-center text-sm">
+                <div className="flex items-center">
+                  <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                </div>
+                <div className="font-medium text-gray-900">{order.orderId}</div>
+                <div className="flex items-center gap-3">
+                  <div>
+                    <div className="font-medium text-gray-900">{order.customer.name}</div>
+                  </div>
+                </div>
+                <div className="text-gray-600">{formatDate(order.date)}</div>
                 <div>
-                  <div className="font-medium text-gray-900">{order.customer.name}</div>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
+                    {order.status}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  {getPaymentIcon(order.paymentMethod)}
+                  {order.paymentMethod}
+                </div>
+                <div className="font-medium text-gray-900">
+                  <span className='text-2xl font-bold'>৳ </span> {order.total.toFixed(2)}
+                </div>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={() => onViewOrder?.(order)}
+                    className="p-1 hover:bg-gray-100 rounded transition-colors"
+                    title="View Order"
+                  >
+                    <Eye className="w-4 h-4 text-gray-600" />
+                  </button>
+                  <button 
+                    onClick={() => onEditOrder?.(order)}
+                    className="p-1 hover:bg-gray-100 rounded transition-colors"
+                    title="Edit Order"
+                  >
+                    <SquarePen className="w-4 h-4 text-gray-600" />
+                  </button>
                 </div>
               </div>
-              <div className="text-gray-600">{formatDate(order.date)}</div>
-              <div>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
-                  {order.status}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                {getPaymentIcon(order.paymentMethod)}
-                {order.paymentMethod}
-              </div>
-              <div className="font-medium text-gray-900">
-                <span className='text-2xl font-bold'>৳ </span> {order.total.toFixed(2)}
-              </div>
-              <div className="flex gap-1">
-                <button 
-                  onClick={() => onViewOrder?.(order)}
-                  className="p-1 hover:bg-gray-100 rounded transition-colors"
-                  title="View Order"
-                >
-                  <Eye className="w-4 h-4 text-gray-600" />
-                </button>
-                <button 
-                  onClick={() => onEditOrder?.(order)}
-                  className="p-1 hover:bg-gray-100 rounded transition-colors"
-                  title="Edit Order"
-                >
-                  <SquarePen className="w-4 h-4 text-gray-600" />
-                </button>
-              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Empty State */}
       {orders.length === 0 && (
-        <div className="p-8 text-center">
-          <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-600 mb-2">No orders found</h3>
-          <p className="text-gray-500">
+        <div className="p-4 sm:p-8 text-center">
+          <Package className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+          <h3 className="text-base sm:text-lg font-medium text-gray-600 mb-2">No orders found</h3>
+          <p className="text-sm sm:text-base text-gray-500">
             {searchQuery.trim() 
               ? `No orders match "${searchQuery}". Try adjusting your search terms.`
               : "No orders match the current filters. Try adjusting your selection."
