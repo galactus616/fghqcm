@@ -281,6 +281,7 @@ const useStore = create((set, get) => ({
 
     console.log('Store: Starting fetch for parent category ID:', parentCategoryId);
     set({
+      loadingSubCategories: true,
       loadingSubCategoriesByParent: {
         ...state.loadingSubCategoriesByParent,
         [parentCategoryId]: true,
@@ -299,6 +300,7 @@ const useStore = create((set, get) => ({
           ...current.loadingSubCategoriesByParent,
           [parentCategoryId]: false,
         },
+        loadingSubCategories: false,
       }));
       return subcategories;
     } catch (err) {
@@ -313,6 +315,7 @@ const useStore = create((set, get) => ({
           ...current.loadingSubCategoriesByParent,
           [parentCategoryId]: false,
         },
+        loadingSubCategories: false,
       }));
       return emptyArray;
     }

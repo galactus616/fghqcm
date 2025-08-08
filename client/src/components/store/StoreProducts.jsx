@@ -74,7 +74,7 @@ const StoreProducts = () => {
     if (!products || !Array.isArray(products)) return [];
     
     return products.map(product => ({
-      id: product._id || product.id,
+      id: product._id,
       name: product.name,
       sku: product.sku || "23e1cfdv",
       price: product.price,
@@ -187,7 +187,6 @@ const StoreProducts = () => {
   };
 
   const handleVariantSelect = (productId, variantIndex) => {
-    // Update visual state immediately for better UX
     setSelectedVariants(prev => ({
       ...prev,
       [productId]: variantIndex

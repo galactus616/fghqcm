@@ -33,7 +33,7 @@ const RelatedProducts = ({ products, loading = false }) => {
       <h2 className="text-2xl font-bold text-primary mb-6">
         {t("You might also like")}
       </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {products.map((product) => (
           <ProductCard key={product.id || product._id} product={product} />
         ))}

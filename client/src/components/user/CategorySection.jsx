@@ -47,22 +47,20 @@ const CategorySection = ({ categories }) => {
               
               {/* Subcategories Grid - Simple images side by side */}
               {loadingSubCategories ? (
-                <div className="grid grid-cols-4 gap-1">
-                  {[...Array(8)].map((_, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center animate-pulse"
-                    >
-                      {/* Image skeleton */}
-                      <div className="w-full h-32 md:h-40 bg-gray-200 rounded-lg mb-2"></div>
-                      {/* Text skeleton - matches the large text styling */}
-                      <div className="text-center px-1 pb-2 w-full">
-                        <div className="h-4 md:h-8 bg-gray-200 rounded mb-1"></div>
-                        <div className="h-3 md:h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {[...Array(8)].map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col items-center animate-pulse space-y-2"
+                  >
+                    {/* Circular image skeleton */}
+                    <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-200 rounded-full"></div>
+                    {/* Text skeletons */}
+                    <div className="w-24 h-4 bg-gray-200 rounded"></div>
+                    <div className="w-16 h-3 bg-gray-200 rounded"></div>
+                  </div>
+                ))}
+              </div>
               ) : (
                 <div className="grid grid-cols-4 gap-1">
                   {currentSubCategories.map((subCat) => {
