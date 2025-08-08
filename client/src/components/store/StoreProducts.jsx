@@ -239,9 +239,9 @@ const StoreProducts = () => {
 
         {/* Search and Filters Section */}
         <section className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+          <div className="flex flex-wrap lg:flex-row gap-4 items-start lg:items-center">
             {/* Search Input */}
-            <div className="flex-1 relative">
+            <div className="flex-1 md:block hidden relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
@@ -253,12 +253,12 @@ const StoreProducts = () => {
             </div>
 
             {/* Category Select */}
-            <div className="relative min-w-[180px]">
+            <div className="relative max-w-[100px] md:min-w-[180px]">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 disabled={loadingCategories}
-                className={`w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                className={`w-full truncate px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
                   loadingCategories ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
                 }`}
               >
@@ -276,11 +276,11 @@ const StoreProducts = () => {
             </div>
 
             {/* Status Select */}
-            <div className="relative min-w-[160px]">
+            <div className="relative max-w-[100px] md:min-w-[160px]">
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
+                className="w-full px-4 truncate py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
               >
                 {statuses.map((status) => (
                   <option key={status.value} value={status.value}>
@@ -292,11 +292,11 @@ const StoreProducts = () => {
             </div>
 
             {/* Filter Select */}
-            <div className="relative min-w-[180px]">
+            <div className="relative max-w-[100px] md:min-w-[180px]">
               <select
                 value={selectedFilter}
                 onChange={(e) => setSelectedFilter(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
+                className="w-full px-4 py-2.5 truncate border border-gray-200 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer"
               >
                 {filters.map((filter) => (
                   <option key={filter.value} value={filter.value}>
@@ -319,7 +319,8 @@ const StoreProducts = () => {
               {[...Array(6)].map((_, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col items-center w-16 h-16 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 border-gray-200 animate-pulse"
+                  className="flex flex-col items-center 
+                  w-18 h-18 md:w-24 md:h-24 lg:w-28 lg:h-28 p-2 rounded-lg border-2 border-gray-200 animate-pulse"
                 >
                   <div className="w-full h-3/4 bg-gray-200 rounded mb-1"></div>
                   <div className="w-full h-3 bg-gray-200 rounded"></div>
@@ -358,34 +359,34 @@ const StoreProducts = () => {
 
         {/* Products Grid */}
         {loadingProducts ? (
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
             {[...Array(8)].map((_, idx) => (
               <div
                 key={idx}
                 className="bg-white border border-gray-200 rounded-lg shadow-sm animate-pulse"
               >
-                <section className=" p-4 rounded-t-lg">
+                <section className="p-3 sm:p-4 rounded-t-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="w-16 h-6 bg-gray-200 rounded-full"></div>
-                    <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+                    <div className="w-12 sm:w-16 h-4 sm:h-6 bg-gray-200 rounded-full"></div>
+                    <div className="w-4 sm:w-6 h-4 sm:h-6 bg-gray-200 rounded-full"></div>
                   </div>
-                  <div className="w-full h-28 bg-gray-200 rounded-lg mb-2"></div>
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 bg-gray-200 rounded-lg mb-2 mx-auto"></div>
                 </section>
-                <section className="p-4">
+                <section className="p-3 sm:p-4">
                   <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-2 sm:h-3 bg-gray-200 rounded w-1/2"></div>
                     <div className="flex justify-between">
-                      <div className="h-6 bg-gray-200 rounded w-16"></div>
-                      <div className="h-4 bg-gray-200 rounded w-20"></div>
+                      <div className="h-4 sm:h-6 bg-gray-200 rounded w-12 sm:w-16"></div>
+                      <div className="h-3 sm:h-4 bg-gray-200 rounded w-16 sm:w-20"></div>
                     </div>
                     <div className="flex gap-1">
-                      <div className="w-12 h-6 bg-gray-200 rounded-full"></div>
-                      <div className="w-16 h-6 bg-gray-200 rounded-full"></div>
+                      <div className="w-8 sm:w-12 h-4 sm:h-6 bg-gray-200 rounded-full"></div>
+                      <div className="w-12 sm:w-16 h-4 sm:h-6 bg-gray-200 rounded-full"></div>
                     </div>
-                    <div className="flex gap-2 mt-3">
-                      <div className="flex-1 h-8 bg-gray-200 rounded-lg"></div>
-                      <div className="flex-1 h-8 bg-gray-200 rounded-lg"></div>
+                    <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+                      <div className="flex-1 h-6 sm:h-8 bg-gray-200 rounded-lg"></div>
+                      <div className="flex-1 h-6 sm:h-8 bg-gray-200 rounded-lg"></div>
                     </div>
                   </div>
                 </section>
@@ -407,25 +408,25 @@ const StoreProducts = () => {
             </button>
           </div>
         ) : (
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 ">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 "
+                className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 flex flex-col"
               >
-                <section className=" p-4 rounded-t-lg">
+                <section className="p-3 sm:p-4 rounded-t-lg">
                   {/* Product Header */}
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 border text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 border text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
                         {product.status}
                       </span>
                       {product.isBestSeller ? (
-                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full border border-yellow-200">
+                        <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full border border-yellow-200">
                           Best Seller
                         </span>
                       ) : product.isFeatured && (
-                        <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full border border-purple-200">
+                        <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full border border-purple-200">
                           Featured
                         </span>
                       )}
@@ -433,7 +434,7 @@ const StoreProducts = () => {
                   </div>
 
                   {/* Product Image */}
-                  <div className=" mx-auto w-40 h-40 rounded-lg  flex items-center justify-center">
+                  <div className="mx-auto w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-lg flex items-center justify-center">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -444,10 +445,10 @@ const StoreProducts = () => {
                     />
                   </div>
                 </section>
-                <section className="px-4 pb-4">
+                <section className="px-3 sm:px-4 pb-3 sm:pb-4">
                   {/* Product Details */}
                   <div className="">
-                    <h4 className="font-semibold text-gray-800">{product.name}</h4>
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base truncate">{product.name}</h4>
                     <p className="text-xs text-gray-500">
                       SKU: {product.sku} 
                     </p>
@@ -456,13 +457,13 @@ const StoreProducts = () => {
                     {(product.variants || []).length > 0 && (
                       <div className="mt-2">
                         <div className="flex flex-wrap gap-1">
-                          {(product.variants || []).slice(0, 3).map((variant, index) => {
+                          {(product.variants || []).slice(0, 2).map((variant, index) => {
                             const isSelected = selectedVariants[product.id] === index;
                             return (
                               <button
                                 key={index}
                                 onClick={() => handleVariantSelect(product.id, index)}
-                                className={`px-2 py-1 text-xs rounded-full transition-all duration-150 ${
+                                className={`px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs rounded-full transition-all duration-150 ${
                                   isSelected
                                     ? 'bg-primary text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -472,9 +473,9 @@ const StoreProducts = () => {
                               </button>
                             );
                           })}
-                          {(product.variants || []).length > 3 && (
-                            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
-                              +{(product.variants || []).length - 3} more
+                          {(product.variants || []).length > 2 && (
+                            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                              +{(product.variants || []).length - 2} more
                             </span>
                           )}
                         </div>
@@ -493,11 +494,11 @@ const StoreProducts = () => {
                           
                           return (
                             <>
-                              <span className="text-lg font-semibold text-gray-800 transition-all duration-150">
+                              <span className="text-sm sm:text-lg font-semibold text-gray-800 transition-all duration-150">
                                 ৳{displayPrice.toFixed(2)}
                               </span>
                               {originalPrice && (
-                                <span className="text-sm text-gray-500 line-through transition-all duration-150">
+                                <span className="text-xs sm:text-sm text-gray-500 line-through transition-all duration-150">
                                   ৳{originalPrice.toFixed(2)}
                                 </span>
                               )}
@@ -505,30 +506,28 @@ const StoreProducts = () => {
                           );
                         })()}
                       </div>
-                      <p className="text-sm text-primary font-medium">
+                      <p className="text-xs sm:text-sm text-primary font-medium">
                         Stock: {product.stock}
                       </p>
                     </div>
 
-
-
-                                         {/* Action Buttons */}
-                     <div className="flex gap-2 mt-3">
-                       <button 
-                         onClick={() => handleViewProduct(product)}
-                         className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:border-primary/50 hover:bg-gray-50 duration-200 cursor-pointer transition-all flex items-center justify-center gap-1.5"
-                       >
-                         <Eye className="size-4" />
-                         View
-                       </button>
-                       <button 
-                         onClick={() => handleAddToInventory(product)}
-                         className="flex-1 px-3 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 group"
-                       >
-                         <Plus className="size-4 group-hover:scale-110 transition-transform duration-200" />
-                         Add
-                       </button>
-                     </div>
+                    {/* Action Buttons */}
+                    <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+                      <button 
+                        onClick={() => handleViewProduct(product)}
+                        className="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 text-gray-700 text-xs sm:text-sm font-medium rounded-lg hover:border-primary/50 hover:bg-gray-50 duration-200 cursor-pointer transition-all flex items-center justify-center gap-1 sm:gap-1.5"
+                      >
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">View</span>
+                      </button>
+                      <button 
+                        onClick={() => handleAddToInventory(product)}
+                        className="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-primary text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 group"
+                      >
+                        <Plus className="w-3 h-3 sm:w-4 sm:h-4 group-hover:scale-110 transition-transform duration-200" />
+                        <span className="hidden sm:inline">Add</span>
+                      </button>
+                    </div>
                   </div>
                 </section>
               </div>

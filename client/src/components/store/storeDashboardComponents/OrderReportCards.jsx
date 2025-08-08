@@ -54,20 +54,20 @@ const OrderReportCards = ({ reportData }) => {
   ];
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       {cards.map((card, index) => {
         const IconComponent = card.icon;
         return (
-          <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 ${card.iconBg} rounded-full flex items-center justify-center`}>
-                <IconComponent className={`w-6 h-6 ${card.iconColor}`} />
+          <div key={index} className="bg-white rounded-xl p-3 sm:p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className={`w-8 h-8 sm:w-12 sm:h-12 ${card.iconBg} rounded-full flex items-center justify-center`}>
+                <IconComponent className={`w-4 h-4 sm:w-6 sm:h-6 ${card.iconColor}`} />
               </div>
               <div className="flex items-center gap-1">
                 {card.trendDirection === 'up' ? (
-                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-red-500" />
+                  <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
                 )}
                 <span className={`text-xs font-medium ${
                   card.trendDirection === 'up' ? 'text-green-600' : 'text-red-600'
@@ -77,10 +77,10 @@ const OrderReportCards = ({ reportData }) => {
               </div>
             </div>
             <div>
-              <p className={`font-bold text-gray-800 ${card.isRevenue ? 'text-2xl' : 'text-2xl'}`}>
+              <p className={`font-bold text-gray-800 ${card.isRevenue ? 'text-lg sm:text-2xl' : 'text-lg sm:text-2xl'}`}>
                 {card.value}
               </p>
-              <p className="text-sm text-gray-500">{card.title}</p>
+              <p className="text-xs sm:text-sm text-gray-500">{card.title}</p>
               <p className="text-xs text-gray-400 mt-1">{card.period}</p>
             </div>
           </div>
