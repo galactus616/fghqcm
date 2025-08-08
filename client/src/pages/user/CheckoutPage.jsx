@@ -1,26 +1,40 @@
-import React, { useState } from 'react';
-import useStore from '../../store/useStore';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ArrowLeft, MapPin, Clock, CreditCard, Truck, Minus, Plus, Trash2, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import useStore from "../../store/useStore";
+
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import { MapPin, CheckCircle, XCircle, Loader2, Trash2, Minus, Plus, ArrowLeft, X } from 'lucide-react';
 import { getAddresses, addAddress, deleteAddress, setDefaultAddress } from '../../api/user/user';
 import LocationModal from '../../components/common/LocationModal';
 import AddressModal from '../../components/common/AddressModal';
-import { useTranslation } from "react-i18next";
-import { useCurrencySymbol } from "../../utils/currencyUtils";
 import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 const CheckoutPage = () => {
-  // Use the currency symbol hook for reactive updates
-  const currencySymbol = useCurrencySymbol();
-  const navigate = useNavigate();
-  const { user, hydratedItems: cartItems, updateCartItem, removeFromCart, clearCart } = useStore();
-  const { currentLocation, setLocationModalOpen, setCurrentLocation, selectedAddressId, setSelectedAddressId } = useStore();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const {
+    hydratedItems: cartItems,
+    totalItems,
+    totalAmount,
+    clearCart,
+    language,
+    setLanguage,
+    user,
+    logout,
+    isAuthenticated,
+    updateCartItem,
+    removeFromCart,
+  } = useStore();
+
+  const currencySymbol = language === 'bn' ? '৳' : 'Tk';
+
+  const { currentLocation, setLocationModalOpen, setCurrentLocation, selectedAddressId, setSelectedAddressId } = useStore();
   const [addresses, setAddresses] = React.useState([]);
   const [selectedAddressIdx, setSelectedAddressIdx] = React.useState(null);
   const [expanded, setExpanded] = React.useState(false);
-  const [newAddress, setNewAddress] = React.useState('');
+  const [newAddress, setNewAddress] = React.useState('Home');
   const [newLabel, setNewLabel] = React.useState('Home');
   const [showNewAddress, setShowNewAddress] = React.useState(false);
   const [showLocationModal, setShowLocationModal] = React.useState(false);
@@ -31,6 +45,12 @@ const CheckoutPage = () => {
   // Local state for AddressModal
   const [showAddressModal, setShowAddressModal] = React.useState(false);
   const [pendingAddress, setPendingAddress] = React.useState(null);
+
+  // Format prices with Bengali numerals if needed
+  const formatPrice = (price) => {
+    return price.toLocaleString('en-IN');
+  };
+
   const handleAddressModalSave = (addressObj) => {
     setPendingAddress(addressObj);
     handleAddAddress(addressObj);
@@ -235,8 +255,12 @@ const CheckoutPage = () => {
                         )}
                       </div>
                       <div className="flex-1 w-full">
-                        <div className="font-semibold text-gray-800 text-base mb-1">{item.name}</div>
-                        <div className="text-xs text-gray-500 mb-1">{item.variantLabel}</div>
+                        <div className="font-semibold text-gray-800 text-base mb-1">
+                          {language === 'bn' && item.nameBn ? item.nameBn : item.name}
+                        </div>
+                        <div className="text-xs text-gray-500 mb-1">
+                          {language === 'bn' && item.variantLabelBn ? item.variantLabelBn : item.variantLabel}
+                        </div>
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => handleQuantityChange(item.productId, item.variantIndex, -1)}
@@ -256,7 +280,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="font-bold text-primary text-lg">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="font-bold text-primary text-lg">{currencySymbol}{formatPrice((item.price * item.quantity))}</div>
                         <button
                           className="flex cursor-pointer items-center gap-1 text-red-500 hover:underline text-xs"
                           onClick={() => removeFromCart(item.productId, item.variantIndex)}
@@ -404,24 +428,24 @@ const CheckoutPage = () => {
               {/* Order Summary */}
               <div className="mb-6">
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
-                  <span>Items ({cartItems.length})</span>
-                  <span>{currencySymbol} {cartTotals.itemsTotal.toFixed(2)}</span>
+                                          <span>Items ({cartItems.length})</span>
+                  <span>{currencySymbol} {formatPrice(cartTotals.itemsTotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Your savings</span>
-                  <span className="text-primary">-{currencySymbol} {cartTotals.totalSavings.toFixed(2)}</span>
+                  <span className="text-primary">-{currencySymbol} {formatPrice(cartTotals.totalSavings)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Delivery</span>
-                  <span>{currencySymbol} {cartTotals.deliveryCharge.toFixed(2)}</span>
+                  <span>{currencySymbol} {formatPrice(cartTotals.deliveryCharge)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 mb-1">
                   <span>Handling Charge</span>
-                  <span>{currencySymbol} {cartTotals.handlingCharge.toFixed(2)}</span>
+                  <span>{currencySymbol} {formatPrice(cartTotals.handlingCharge)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-primary text-lg border-t border-primary/10 pt-2 mt-2">
                   <span>Grand Total</span>
-                  <span>{currencySymbol} {cartTotals.grandTotal.toFixed(2)}</span>
+                  <span>{currencySymbol} {formatPrice(cartTotals.grandTotal)}</span>
                 </div>
               </div>
               {/* Payment Method */}

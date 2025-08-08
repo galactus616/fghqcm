@@ -32,14 +32,14 @@ const ProductImageGallery = ({
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-4">
+    <div className="flex flex-col-reverse md:flex-row gap-3 sm:gap-4">
       {imageList.length > 1 && (
         <div className="flex md:flex-col gap-2 justify-center md:justify-start">
           {imageList.map((img, idx) => (
             <button
               key={idx}
               onClick={() => setSelectedImageIdx(idx)}
-              className={`w-16 h-16 cursor-pointer rounded-lg border p-1 transition-all duration-200 flex-shrink-0 shadow-sm ${
+              className={`w-12 h-12 sm:w-16 sm:h-16 cursor-pointer rounded-lg border p-1 transition-all duration-200 flex-shrink-0 shadow-sm ${
                 selectedImageIdx === idx
                   ? "border-primary ring-1 ring-primary/30"
                   : "border-gray-200 hover:border-primary"
@@ -57,7 +57,7 @@ const ProductImageGallery = ({
         </div>
       )}
       
-      <div className="flex-1 flex gap-4">
+      <div className="flex-1">
         {/* Main Image Container */}
         <div 
           className="relative w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden shadow group cursor-zoom-in"
@@ -69,14 +69,15 @@ const ProductImageGallery = ({
           <img
             src={imageList[selectedImageIdx]}
             alt={productName}
-            className="max-h-full max-w-full object-contain"
+            className="w-full h-full object-contain p-4"
+            style={{ maxWidth: '100%', maxHeight: '100%' }}
           />
         </div>
       </div>
 
       {/* Magnifier Container - Positioned to overlay the ProductInfo area */}
       {showMagnifier && (
-        <div className="fixed lg:absolute lg:left-[calc(50%+1rem)] lg:top-[29%] lg:w-[calc(50%-5rem)] lg:h-[calc(100vh-6rem)] border-2 border-gray-300 rounded-lg overflow-hidden  bg-white">
+        <div className="fixed lg:absolute lg:left-[calc(50%+1rem)] lg:top-[29%] lg:w-[calc(50%-5rem)] lg:h-[calc(100vh-6rem)] border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
           <div 
             className="w-full h-full relative overflow-hidden"
             style={{

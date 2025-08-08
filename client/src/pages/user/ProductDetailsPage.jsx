@@ -132,10 +132,10 @@ const ProductDetailsPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <Breadcrumbs items={breadcrumbItems} />
-        <div className="bg-white p-8 rounded-xl shadow-sm mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-xl shadow-sm mb-8 sm:mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
             <ProductImageGallery
               images={product.images || [product.imageUrl]}
               productName={product.name}

@@ -22,7 +22,9 @@ const getAllProducts = async (req, res, next) => {
         { name: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
         { mainCategory: { $in: categoryIds } },
-        { subCategory: { $in: categoryIds } }
+        { subCategory: { $in: categoryIds } },
+        { subSubCategory: { $in: categoryIds } },
+        { subSubSubCategory: { $in: categoryIds } }
       ],
     };
   }
@@ -30,7 +32,9 @@ const getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find(query)
       .populate("mainCategory", "name displayName slug")
-      .populate("subCategory", "name displayName slug");
+      .populate("subCategory", "name displayName slug")
+      .populate("subSubCategory", "name displayName slug")
+      .populate("subSubSubCategory", "name displayName slug");
     
     const mappedProducts = products.map((p) => ({
       id: p._id,
@@ -44,6 +48,16 @@ const getAllProducts = async (req, res, next) => {
         id: p.subCategory._id, 
         name: p.subCategory.displayName || p.subCategory.name,
         slug: p.subCategory.slug 
+      } : null,
+      subSubCategory: p.subSubCategory ? { 
+        id: p.subSubCategory._id, 
+        name: p.subSubCategory.displayName || p.subSubCategory.name,
+        slug: p.subSubCategory.slug 
+      } : null,
+      subSubSubCategory: p.subSubSubCategory ? { 
+        id: p.subSubSubCategory._id, 
+        name: p.subSubSubCategory.displayName || p.subSubSubCategory.name,
+        slug: p.subSubSubCategory.slug 
       } : null,
       imageUrl: p.imageUrl,
       images: p.images,
@@ -64,7 +78,9 @@ const getProductById = async (req, res, next) => {
   try {
     const product = await Product.findById(id)
       .populate("mainCategory", "name displayName slug")
-      .populate("subCategory", "name displayName slug");
+      .populate("subCategory", "name displayName slug")
+      .populate("subSubCategory", "name displayName slug")
+      .populate("subSubSubCategory", "name displayName slug");
     
     if (!product) {
       const error = new Error("Product not found");
@@ -84,6 +100,16 @@ const getProductById = async (req, res, next) => {
         id: product.subCategory._id, 
         name: product.subCategory.displayName || product.subCategory.name,
         slug: product.subCategory.slug 
+      } : null,
+      subSubCategory: product.subSubCategory ? { 
+        id: product.subSubCategory._id, 
+        name: product.subSubCategory.displayName || product.subSubCategory.name,
+        slug: product.subSubCategory.slug 
+      } : null,
+      subSubSubCategory: product.subSubSubCategory ? { 
+        id: product.subSubSubCategory._id, 
+        name: product.subSubSubCategory.displayName || product.subSubSubCategory.name,
+        slug: product.subSubSubCategory.slug 
       } : null,
       imageUrl: product.imageUrl,
       images: product.images,
@@ -119,29 +145,27 @@ const getMainCategories = async (req, res, next) => {
 };
 
 const getSubCategories = async (req, res, next) => {
-  const { mainCategoryId } = req.params;
-  
+  const { parentCategoryId } = req.params;
   try {
-    // Verify the main category exists
-    const mainCategory = await Category.findById(mainCategoryId);
-    if (!mainCategory || mainCategory.level !== 1) {
-      const error = new Error("Main category not found");
+    // Verify the parent category exists
+    const parentCategory = await Category.findById(parentCategoryId);
+    if (!parentCategory) {
+      const error = new Error("Parent category not found");
       error.statusCode = 404;
       return next(error);
     }
-
-    const subCategories = await Category.find({ 
-      parentCategory: mainCategoryId,
-      level: 2,
-      isActive: true 
+    // Fetch all direct children (subcategories) regardless of level
+    const subCategories = await Category.find({
+      parentCategory: parentCategoryId,
+      isActive: true
     }).sort({ sortOrder: 1, name: 1 });
-    
     const mappedSubCategories = subCategories.map((c) => ({
       id: c._id,
       name: c.displayName || c.name,
       slug: c.slug,
       imageUrl: c.imageUrl,
       parentCategory: c.parentCategory,
+      level: c.level,
       createdAt: c.createdAt,
     }));
     res.json(mappedSubCategories);
@@ -150,9 +174,9 @@ const getSubCategories = async (req, res, next) => {
   }
 };
 
+// Updated getProductsByCategoryId: support all 4 levels
 const getProductsByCategoryId = async (req, res, next) => {
   const { categoryId } = req.params;
-  
   try {
     // Check if the category exists and determine its level
     const category = await Category.findById(categoryId);
@@ -161,37 +185,59 @@ const getProductsByCategoryId = async (req, res, next) => {
       error.statusCode = 404;
       return next(error);
     }
-
     let query = { isActive: true };
-    
     if (category.level === 1) {
-      // Main category - get all products from this main category
       query.mainCategory = categoryId;
     } else if (category.level === 2) {
-      // Sub category - get products from this specific sub category
-      query.subCategory = categoryId;
+      // Find all sub-subcategories and sub-sub-subcategories under this subcategory
+      const subSubCategories = await Category.find({ parentCategory: categoryId, level: 3, isActive: true });
+      const subSubSubCategories = await Category.find({ parentCategory: { $in: subSubCategories.map(c => c._id) }, level: 4, isActive: true });
+      query.$or = [
+        { subCategory: categoryId },
+        { subSubCategory: { $in: subSubCategories.map(c => c._id) } },
+        { subSubSubCategory: { $in: subSubSubCategories.map(c => c._id) } }
+      ];
+    } else if (category.level === 3) {
+      // Find all sub-sub-subcategories under this sub-subcategory
+      const subSubSubCategories = await Category.find({ parentCategory: categoryId, level: 4, isActive: true });
+      query.$or = [
+        { subSubCategory: categoryId },
+        { subSubSubCategory: { $in: subSubSubCategories.map(c => c._id) } }
+      ];
+    } else if (category.level === 4) {
+      query.subSubSubCategory = categoryId;
     } else {
       const error = new Error("Invalid category level");
       error.statusCode = 400;
       return next(error);
     }
-
     const products = await Product.find(query)
       .populate("mainCategory", "name displayName slug")
-      .populate("subCategory", "name displayName slug");
-    
+      .populate("subCategory", "name displayName slug")
+      .populate("subSubCategory", "name displayName slug")
+      .populate("subSubSubCategory", "name displayName slug");
     const mappedProducts = products.map((p) => ({
       id: p._id,
       name: p.name,
-      mainCategory: p.mainCategory ? { 
-        id: p.mainCategory._id, 
+      mainCategory: p.mainCategory ? {
+        id: p.mainCategory._id,
         name: p.mainCategory.displayName || p.mainCategory.name,
-        slug: p.mainCategory.slug 
+        slug: p.mainCategory.slug
       } : null,
-      subCategory: p.subCategory ? { 
-        id: p.subCategory._id, 
+      subCategory: p.subCategory ? {
+        id: p.subCategory._id,
         name: p.subCategory.displayName || p.subCategory.name,
-        slug: p.subCategory.slug 
+        slug: p.subCategory.slug
+      } : null,
+      subSubCategory: p.subSubCategory ? {
+        id: p.subSubCategory._id,
+        name: p.subSubCategory.displayName || p.subSubCategory.name,
+        slug: p.subSubCategory.slug
+      } : null,
+      subSubSubCategory: p.subSubSubCategory ? {
+        id: p.subSubSubCategory._id,
+        name: p.subSubSubCategory.displayName || p.subSubSubCategory.name,
+        slug: p.subSubSubCategory.slug
       } : null,
       imageUrl: p.imageUrl,
       images: p.images,
@@ -226,7 +272,9 @@ const getRelatedProducts = async (req, res, next) => {
     // Populate category information
     const populatedProducts = await Product.populate(relatedProducts, [
       { path: "mainCategory", select: "name displayName slug" },
-      { path: "subCategory", select: "name displayName slug" }
+      { path: "subCategory", select: "name displayName slug" },
+      { path: "subSubCategory", select: "name displayName slug" },
+      { path: "subSubSubCategory", select: "name displayName slug" }
     ]);
     
     const mappedProducts = populatedProducts.map((p) => ({
@@ -241,6 +289,16 @@ const getRelatedProducts = async (req, res, next) => {
         id: p.subCategory._id, 
         name: p.subCategory.displayName || p.subCategory.name,
         slug: p.subCategory.slug 
+      } : null,
+      subSubCategory: p.subSubCategory ? { 
+        id: p.subSubCategory._id, 
+        name: p.subSubCategory.displayName || p.subSubCategory.name,
+        slug: p.subSubCategory.slug 
+      } : null,
+      subSubSubCategory: p.subSubSubCategory ? { 
+        id: p.subSubSubCategory._id, 
+        name: p.subSubSubCategory.displayName || p.subSubSubCategory.name,
+        slug: p.subSubSubCategory.slug 
       } : null,
       imageUrl: p.imageUrl,
       images: p.images,

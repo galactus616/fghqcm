@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useCurrencySymbol } from "../../utils/currencyUtils";
+
 import useStore from '../../store/useStore';
 import { X, ShoppingBag, ArrowRight, Loader2, Truck, CheckCircle2, Clock, Ban, MoveRight } from 'lucide-react';
 import axios from 'axios';
@@ -8,8 +8,8 @@ import { useTranslation } from "react-i18next";
 import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 const OrdersPage = () => {
-  const currencySymbol = useCurrencySymbol();
-  const { isLoggedIn } = useStore();
+  const { isLoggedIn, language } = useStore();
+  const currencySymbol = language === 'bn' ? '৳' : 'Tk';
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

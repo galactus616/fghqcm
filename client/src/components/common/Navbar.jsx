@@ -23,12 +23,10 @@ import toast from "react-hot-toast";
 import useStore from "../../store/useStore";
 import LocationModal from "./LocationModal";
 import { useTranslation } from "react-i18next";
-import { useCurrencySymbol } from "../../utils/currencyUtils";
-
 // Navbar component
 export default function Navbar() {
   // Use the currency symbol hook for reactive updates
-  const currencySymbol = useCurrencySymbol();
+  
   const navigate = useNavigate();
   // Zustand store hooks
   const {
@@ -52,12 +50,19 @@ export default function Navbar() {
   } = useStore();
   const { t, i18n } = useTranslation();
 
+  const currencySymbol = language === 'bn' ? '৳' : 'Tk';
+
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] =
     React.useState(false);
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
   const [authMessage, setAuthMessage] = React.useState("");
   const [loginRedirect, setLoginRedirect] = React.useState(null);
+
+  // Format prices with Bengali numerals if needed
+  const formatPrice = (price) => {
+    return price.toLocaleString('en-IN');
+  };
 
   // Calculate cart totals
   const cartTotals = React.useMemo(() => {
@@ -518,7 +523,7 @@ export default function Navbar() {
                 <>
                   <div className="bg-primary/10 bg-opacity-80 text-primary font-medium p-3 rounded-lg flex justify-between items-center text-sm">
                     <span>{"Your total savings"}</span>
-                    <span>{currencySymbol}{cartTotals.totalSavings.toFixed(2)}</span>
+                    <span>{currencySymbol}{formatPrice(cartTotals.totalSavings)}</span>
                   </div>
 
                   <div className="flex items-center bg-blue-50 bg-opacity-80 text-primary p-3 rounded-lg text-sm">
@@ -542,12 +547,12 @@ export default function Navbar() {
                         />
                         <div className="flex-grow">
                           <h3 className="font-medium text-gray-800">
-                            {item.name || 'Unavailable'}
+                            {language === 'bn' && item.nameBn ? item.nameBn : (item.name || 'Unavailable')}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            {currencySymbol} {(item.price ?? 0).toFixed(2)}{' '}
+                            {currencySymbol} {formatPrice(item.price ?? 0)}{' '}
                             <span className="line-through text-gray-400">
-                              {currencySymbol} {(item.originalPrice ?? 0).toFixed(2)}
+                              {currencySymbol} {formatPrice(item.originalPrice ?? 0)}
                             </span>
                           </p>
                         </div>
@@ -579,12 +584,12 @@ export default function Navbar() {
                     <div className="space-y-2 text-sm text-gray-700">
                       <div className="flex justify-between">
                         <span>{t("items_total")}</span>
-                        <span>{currencySymbol} {cartTotals.itemsTotal.toFixed(2)}</span>
+                        <span>{currencySymbol} {formatPrice(cartTotals.itemsTotal)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t("saved")}</span>
                         <span className="text-primary">
-                          {currencySymbol}{cartTotals.totalSavings.toFixed(2)}
+                          {currencySymbol}{formatPrice(cartTotals.totalSavings)}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -594,7 +599,7 @@ export default function Navbar() {
                       {cartItems.length > 0 && (
                         <div className="flex justify-between">
                           <span>{t("handling_charge")}</span>
-                          <span>{currencySymbol} {cartTotals.handlingCharge.toFixed(2)}</span>
+                          <span>{currencySymbol} {formatPrice(cartTotals.handlingCharge)}</span>
                         </div>
                       )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200 mt-2">
@@ -602,7 +607,7 @@ export default function Navbar() {
                         <span>
                           
                          {currencySymbol} {cartItems.length > 0
-                            ? cartTotals.grandTotal.toFixed(2)
+                            ? formatPrice(cartTotals.grandTotal)
                             : "0.00"}
                         </span>
                       </div>

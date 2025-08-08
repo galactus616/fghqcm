@@ -11,7 +11,7 @@ const router = express.Router();
 
 // Category routes
 router.get("/categories/main", getMainCategories);
-router.get("/categories/:mainCategoryId/subcategories", getSubCategories);
+router.get("/categories/:parentCategoryId/subcategories", getSubCategories);
 router.get("/categories/:categoryId/products", getProductsByCategoryId);
 
 // Product routes

@@ -3,8 +3,7 @@ import { getProfile, logout as apiLogout, sendOtp, verifyOtp } from '../api/user
 import { getCart as apiGetCart, addToCart as apiAddToCart, updateCartItem as apiUpdateCartItem, removeFromCart as apiRemoveFromCart, clearCart as apiClearCart, mergeCart as apiMergeCart } from '../api/user/cart';
 import { getProductById } from '../api/user/products';
 import { getAllLocalCartItems, addToLocalCart, setLocalCart, clearLocalCart } from '../utils/localCart';
-import { getCategories as apiGetCategories } from '../api/user/categories';
-import { getProductsByCategory as apiGetProductsByCategory } from '../api/user/products';
+import { getCategories as apiGetCategories, getSubCategories as apiGetSubCategories } from '../api/user/categories';
 import debounce from 'lodash.debounce';
 import { updateProfile as apiUpdateProfile } from '../api/user/user';
 import i18n from "../i18n";
@@ -250,61 +249,73 @@ const useStore = create((set, get) => ({
   // Product/category slice
   categories: [],
   subCategories: {}, // Store subcategories for each main category
-  categoryProducts: {},
   loadingCategories: false,
   loadingSubCategories: false,
-  loadingProducts: false,
+  // New: track loading per parent id to allow parallel fetches
+  loadingSubCategoriesByParent: {},
   productError: null,
-  async fetchCategories() {
+  async fetchMainCategories() {
     set({ loadingCategories: true, productError: null });
     try {
+      console.log('Store: Fetching main categories...');
       const data = await apiGetCategories();
+      console.log('Store: Main categories fetched:', data);
       set({ categories: Array.isArray(data) ? data : [], loadingCategories: false });
     } catch (err) {
+      console.error('Store: Failed to fetch main categories:', err);
       set({ categories: [], loadingCategories: false, productError: 'Failed to load categories' });
     }
   },
-  async fetchSubCategories(mainCategoryId) {
-    set({ loadingSubCategories: true });
+  async fetchSubCategoriesByParent(parentCategoryId) {
+    const state = get();
+    // If already loading this specific parent, skip
+    if (state.loadingSubCategoriesByParent[parentCategoryId]) {
+      console.log('Store: Skipping fetch for', parentCategoryId, '- already loading');
+      return state.subCategories[parentCategoryId] || [];
+    }
+    // If we already have subcategories for this parent, do nothing
+    if (state.subCategories[parentCategoryId] && state.subCategories[parentCategoryId].length > 0) {
+      console.log('Store: Skipping fetch for', parentCategoryId, '- already have data');
+      return state.subCategories[parentCategoryId];
+    }
+
+    console.log('Store: Starting fetch for parent category ID:', parentCategoryId);
+    set({
+      loadingSubCategoriesByParent: {
+        ...state.loadingSubCategoriesByParent,
+        [parentCategoryId]: true,
+      },
+    });
     try {
-      const { getSubCategories } = await import('../api/user/categories');
-      const data = await getSubCategories(mainCategoryId);
-      set(state => ({
+      const data = await apiGetSubCategories(parentCategoryId);
+      console.log('Store: Successfully fetched subcategories for', parentCategoryId, ':', data.length, 'items');
+      const subcategories = Array.isArray(data) ? data : [];
+      set((current) => ({
         subCategories: {
-          ...state.subCategories,
-          [mainCategoryId]: Array.isArray(data) ? data : []
+          ...current.subCategories,
+          [parentCategoryId]: subcategories,
         },
-        loadingSubCategories: false
+        loadingSubCategoriesByParent: {
+          ...current.loadingSubCategoriesByParent,
+          [parentCategoryId]: false,
+        },
       }));
+      return subcategories;
     } catch (err) {
-      set(state => ({
+      console.error('Store: Failed to fetch subcategories for', parentCategoryId, ':', err);
+      const emptyArray = [];
+      set((current) => ({
         subCategories: {
-          ...state.subCategories,
-          [mainCategoryId]: []
+          ...current.subCategories,
+          [parentCategoryId]: emptyArray,
         },
-        loadingSubCategories: false
+        loadingSubCategoriesByParent: {
+          ...current.loadingSubCategoriesByParent,
+          [parentCategoryId]: false,
+        },
       }));
+      return emptyArray;
     }
-  },
-  async fetchProductsForCategories() {
-    const { categories } = get();
-    if (!categories || categories.length === 0) {
-      set({ loadingProducts: false });
-      return;
-    }
-    set({ loadingProducts: true });
-    const productsMap = {};
-    await Promise.all(
-      categories.map(async (cat) => {
-        try {
-          const data = await apiGetProductsByCategory(cat.id);
-          productsMap[cat.name] = data;
-        } catch {
-          productsMap[cat.name] = [];
-        }
-      })
-    );
-    set({ categoryProducts: productsMap, loadingProducts: false });
   },
   setProductError(error) {
     set({ productError: error });

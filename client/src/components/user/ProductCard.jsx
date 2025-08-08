@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import useStore from "../../store/useStore";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useCurrencySymbol } from "../../utils/currencyUtils";
 
 const ProductCard = ({ product }) => {
   // console.log(product);
@@ -17,9 +16,33 @@ const ProductCard = ({ product }) => {
     hydratedItems: cartItems,
     updateCartItem,
     removeFromCart,
+    language,
   } = useStore();
   const { t } = useTranslation();
-  const currencySymbol = useCurrencySymbol();
+  const currencySymbol = language === 'bn' ? '৳' : 'Tk';
+
+  // Find cart item for this product and selected variant
+  const cartItem = cartItems.find(
+    (item) =>
+      item.productId === (product.id || product._id) &&
+      item.variantIndex === selectedVariantIdx
+  );
+
+  // Get localized product name
+  const getLocalizedName = () => {
+    if (language === 'bn' && product.nameBn) {
+      return product.nameBn;
+    }
+    return product.name;
+  };
+
+  // Get localized variant quantity label
+  const getLocalizedQuantityLabel = (variant) => {
+    if (language === 'bn' && variant.quantityLabelBn) {
+      return variant.quantityLabelBn;
+    }
+    return variant.quantityLabel;
+  };
 
   const handleAddToCart = async () => {
     try {
@@ -33,13 +56,6 @@ const ProductCard = ({ product }) => {
       toast.error(t("failed_to_add_to_cart"));
     }
   };
-
-  // Find cart item for this product and selected variant
-  const cartItem = cartItems.find(
-    (item) =>
-      item.productId === (product.id || product._id) &&
-      item.variantIndex === selectedVariantIdx
-  );
 
   const handleIncrease = async () => {
     if (cartItem) {
@@ -66,65 +82,51 @@ const ProductCard = ({ product }) => {
       }
     }
   };
+
+  // Format prices with Bengali numerals if needed
+  const formatPrice = (price) => {
+    if (language === 'bn') {
+      return price.toLocaleString('en-IN');
+    }
+    return price.toLocaleString('en-IN');
+  };
+
   return (
     <section>
       <div className="relative rounded-xl p-2 sm:p-3 md:p-4 flex flex-col justify-between w-37 xsa:w-37 xsb:w-42 xsc:w-44 xsd:w-46.5 xse:w-49 sm:w-44 md:w-58 mda:w-60 mdb:w-62 lg:w-42 xl:w-60.5 bg-white group transition-all border-1 border-primary/30 duration-200 hover:shadow-md hover:border-primary">
         <div className=" ">
           {variant.discountedPrice &&
             variant.discountedPrice < variant.price && (
-              <div className="absolute top-0 right-2 sm:right-3 z-10">
-                <div className="absolute top-0 right-0 z-10">
-                  <div className="bg-bd-red text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-1 rounded-b-lg">
-                    {Math.round(
-                      ((variant.price - variant.discountedPrice) /
-                        variant.price) *
-                        100
-                    )}
-                    % OFF
-                  </div>
-                </div>
+              <div className="absolute top-2 left-2 z-10">
+                <span className="bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                  {Math.round(
+                    ((variant.price - variant.discountedPrice) / variant.price) *
+                      100
+                  )}
+                  % OFF
+                </span>
               </div>
             )}
 
-          {/* Badges */}
-          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1 z-10">
-            {product.isBestSeller ? (
-              <span className="bg-amber-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
-                {t("bestseller")}
-              </span>
-            ) : product.isFeatured ? (
-              <span className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full ">
-                {t("featured")}
-              </span>
-            ) : null}
-          </div>
-
           {/* Product Image */}
-          <div className="flex justify-center items-center h-24 sm:h-28 md:h-32 lg:h-36 object-fill w-full bg-gray-50 rounded-lg overflow-hidden">
-            <Link to={`/product/${product.id || product._id}`}>
-              <img
-                src={product.images?.[0] || product.imageUrl}
-                alt={product.name}
-                className="h-36 w-full object-contain"
-              />
-            </Link>
-          </div>
+          <Link
+            to={`/product/${product.id || product._id}`}
+            className="block relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-2 sm:mb-3"
+          >
+            <img
+              src={product.imageUrl || product.images?.[0]}
+              alt={getLocalizedName()}
+              className="w-full h-full object-contain"
+            />
+          </Link>
 
-          {/* Product Info */}
-          <div className="mt-2 sm:mt-3 flex flex-col flex-1">
-            {/* Category */}
-            <span className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider">
-              {typeof product.category === "object"
-                ? product.category.name
-                : product.category}
-            </span>
-
+          <div className="flex flex-col flex-grow">
             {/* Product Name */}
              <Link
                to={`/product/${product.id || product._id}`}
                className="text-[11px] sm:text-[14px] md:text-[15px] font-semibold text-gray-800 leading-tight mt-1 mb-1 sm:mb-2 line-clamp-1 sm:line-clamp-2"
              >
-               {product.name}
+               {getLocalizedName()}
              </Link>
 
             {/* Variant Selector - Always rendered but with conditional spacing */}
@@ -144,14 +146,20 @@ const ProductCard = ({ product }) => {
                       }`}
                       onClick={() => setSelectedVariantIdx(idx)}
                     >
-                      {v.quantityLabel?.length > 6 ? v.quantityLabel.substring(0, 6) + '...' : v.quantityLabel}
+                      {(() => {
+                        const label = getLocalizedQuantityLabel(v);
+                        return label?.length > 6 ? label.substring(0, 6) + '...' : label;
+                      })()}
                     </button>
                   ))}
                 </div>
               ) : (
                 product.variants && (
                   <span className="inline-block bg-primary text-white text-[8px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md border border-primary">
-                    {product.variants[0].quantityLabel?.length > 6 ? product.variants[0].quantityLabel.substring(0, 6) + '...' : product.variants[0].quantityLabel}
+                    {(() => {
+                      const label = getLocalizedQuantityLabel(product.variants[0]);
+                      return label?.length > 6 ? label.substring(0, 6) + '...' : label;
+                    })()}
                   </span>
                 )
               )}
@@ -163,12 +171,12 @@ const ProductCard = ({ product }) => {
                 <div className="flex items-center flex-col-reverse">
                   <section className="text-[14px] flex gap-1 sm:text-[16px] md:text-[18px] font-bold text-primary">
                     <span>{currencySymbol}</span>
-                    <span>{variant.discountedPrice ?? variant.price}</span>
+                    <span>{formatPrice(variant.discountedPrice ?? variant.price)}</span>
                   </section>
                   {variant.discountedPrice && (
                     <span className="text-[10px] sm:text-xs flex gap-1 text-gray-400 line-through">
                       <span>{currencySymbol}</span>
-                      <span>{variant.price}</span>
+                      <span>{formatPrice(variant.price)}</span>
                     </span>
                   )}
                 </div>

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import useStore from "../../store/useStore";
-import { getCurrencySymbol, useCurrencySymbol } from "../../utils/currencyUtils";
+
 import {
   getAddresses,
   addAddress,
   updateAddress,
   deleteAddress,
 } from "../../api/user/user";
-import { User, LogOut, Edit2, Plus, Trash2, Star, Package, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, ChevronRight, Mail, Phone } from "lucide-react";
+import { User, LogOut, Edit2, Plus, Trash2, Star, Package, Heart, Settings, Image as ImageIcon, Inbox, MapPin, Bell, Globe, CreditCard, RefreshCcw, ChevronRight, Mail, Phone, Lock } from "lucide-react";
 import axios from "axios";
 import OrderDetailsModal from "../../components/user/OrderDetailsModal";
 import { useTranslation } from 'react-i18next';
@@ -233,9 +233,9 @@ const SIDEBAR_TABS = [
 ];
 
 export default function AccountPage() {
-  const { user, isLoggedIn, logout, updateProfile } = useStore();
+  const { user, isLoggedIn, logout, updateProfile, language } = useStore();
   // Use the currency symbol hook for reactive updates
-  const currencySymbol = useCurrencySymbol();
+  const currencySymbol = language === 'bn' ? '৳' : 'Tk';
   const [addresses, setAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
   const [addressError, setAddressError] = useState("");

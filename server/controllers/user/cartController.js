@@ -10,7 +10,9 @@ const getCart = async (req, res, next) => {
         path: "items.productId",
         populate: [
           { path: "mainCategory", select: "name slug" },
-          { path: "subCategory", select: "name slug" }
+          { path: "subCategory", select: "name slug" },
+          { path: "subSubCategory", select: "name slug" },
+          { path: "subSubSubCategory", select: "name slug" }
         ]
       });
 
@@ -36,11 +38,13 @@ const getCart = async (req, res, next) => {
         productId: product._id,
         variantIndex: item.variantIndex,
         name: product.name,
+        nameBn: product.nameBn,
         imageUrl: product.imageUrl,
         price: variant.discountedPrice || variant.price || 0,
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
+        variantLabelBn: variant.quantityLabelBn || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
           name: product.mainCategory.displayName || product.mainCategory.name,
@@ -50,6 +54,16 @@ const getCart = async (req, res, next) => {
           id: product.subCategory._id,
           name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
+        } : null,
+        subSubCategory: product.subSubCategory ? {
+          id: product.subSubCategory._id,
+          name: product.subSubCategory.displayName || product.subSubCategory.name,
+          slug: product.subSubCategory.slug
+        } : null,
+        subSubSubCategory: product.subSubSubCategory ? {
+          id: product.subSubSubCategory._id,
+          name: product.subSubSubCategory.displayName || product.subSubSubCategory.name,
+          slug: product.subSubSubCategory.slug
         } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
@@ -76,7 +90,9 @@ const addToCart = async (req, res, next) => {
   try {
     const product = await Product.findById(productId)
       .populate("mainCategory", "name slug")
-      .populate("subCategory", "name slug");
+      .populate("subCategory", "name slug")
+      .populate("subSubCategory", "name slug")
+      .populate("subSubSubCategory", "name slug");
     if (!product) {
       const error = new Error("Product not found");
       error.statusCode = 404;
@@ -109,7 +125,9 @@ const addToCart = async (req, res, next) => {
       path: "items.productId",
       populate: [
         { path: "mainCategory", select: "name slug" },
-        { path: "subCategory", select: "name slug" }
+        { path: "subCategory", select: "name slug" },
+        { path: "subSubCategory", select: "name slug" },
+        { path: "subSubSubCategory", select: "name slug" }
       ]
     });
     
@@ -124,11 +142,13 @@ const addToCart = async (req, res, next) => {
         productId: product._id,
         variantIndex: item.variantIndex,
         name: product.name,
+        nameBn: product.nameBn,
         imageUrl: product.imageUrl,
         price: variant.discountedPrice || variant.price || 0,
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
+        variantLabelBn: variant.quantityLabelBn || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
           name: product.mainCategory.displayName || product.mainCategory.name,
@@ -138,6 +158,16 @@ const addToCart = async (req, res, next) => {
           id: product.subCategory._id,
           name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
+        } : null,
+        subSubCategory: product.subSubCategory ? {
+          id: product.subSubCategory._id,
+          name: product.subSubCategory.displayName || product.subSubCategory.name,
+          slug: product.subSubCategory.slug
+        } : null,
+        subSubSubCategory: product.subSubSubCategory ? {
+          id: product.subSubSubCategory._id,
+          name: product.subSubSubCategory.displayName || product.subSubSubCategory.name,
+          slug: product.subSubSubCategory.slug
         } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
@@ -186,7 +216,9 @@ const updateCartItemQuantity = async (req, res, next) => {
         path: "items.productId",
         populate: [
           { path: "mainCategory", select: "name slug" },
-          { path: "subCategory", select: "name slug" }
+          { path: "subCategory", select: "name slug" },
+          { path: "subSubCategory", select: "name slug" },
+          { path: "subSubSubCategory", select: "name slug" }
         ]
       });
 
@@ -217,7 +249,9 @@ const updateCartItemQuantity = async (req, res, next) => {
       path: "items.productId",
       populate: [
         { path: "mainCategory", select: "name slug" },
-        { path: "subCategory", select: "name slug" }
+        { path: "subCategory", select: "name slug" },
+        { path: "subSubCategory", select: "name slug" },
+        { path: "subSubSubCategory", select: "name slug" }
       ]
     });
     
@@ -232,11 +266,13 @@ const updateCartItemQuantity = async (req, res, next) => {
         productId: product._id,
         variantIndex: item.variantIndex,
         name: product.name,
+        nameBn: product.nameBn,
         imageUrl: product.imageUrl,
         price: variant.discountedPrice || variant.price || 0,
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
+        variantLabelBn: variant.quantityLabelBn || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
           name: product.mainCategory.displayName || product.mainCategory.name,
@@ -246,6 +282,16 @@ const updateCartItemQuantity = async (req, res, next) => {
           id: product.subCategory._id,
           name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
+        } : null,
+        subSubCategory: product.subSubCategory ? {
+          id: product.subSubCategory._id,
+          name: product.subSubCategory.displayName || product.subSubCategory.name,
+          slug: product.subSubCategory.slug
+        } : null,
+        subSubSubCategory: product.subSubSubCategory ? {
+          id: product.subSubSubCategory._id,
+          name: product.subSubSubCategory.displayName || product.subSubSubCategory.name,
+          slug: product.subSubSubCategory.slug
         } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
@@ -272,7 +318,9 @@ const removeFromCart = async (req, res, next) => {
         path: "items.productId",
         populate: [
           { path: "mainCategory", select: "name slug" },
-          { path: "subCategory", select: "name slug" }
+          { path: "subCategory", select: "name slug" },
+          { path: "subSubCategory", select: "name slug" },
+          { path: "subSubSubCategory", select: "name slug" }
         ]
       });
 
@@ -298,7 +346,9 @@ const removeFromCart = async (req, res, next) => {
       path: "items.productId",
       populate: [
         { path: "mainCategory", select: "name slug" },
-        { path: "subCategory", select: "name slug" }
+        { path: "subCategory", select: "name slug" },
+        { path: "subSubCategory", select: "name slug" },
+        { path: "subSubSubCategory", select: "name slug" }
       ]
     });
     
@@ -313,11 +363,13 @@ const removeFromCart = async (req, res, next) => {
         productId: product._id,
         variantIndex: item.variantIndex,
         name: product.name,
+        nameBn: product.nameBn,
         imageUrl: product.imageUrl,
         price: variant.discountedPrice || variant.price || 0,
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
+        variantLabelBn: variant.quantityLabelBn || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
           name: product.mainCategory.displayName || product.mainCategory.name,
@@ -327,6 +379,16 @@ const removeFromCart = async (req, res, next) => {
           id: product.subCategory._id,
           name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
+        } : null,
+        subSubCategory: product.subSubCategory ? {
+          id: product.subSubCategory._id,
+          name: product.subSubCategory.displayName || product.subSubCategory.name,
+          slug: product.subSubCategory.slug
+        } : null,
+        subSubSubCategory: product.subSubSubCategory ? {
+          id: product.subSubSubCategory._id,
+          name: product.subSubSubCategory.displayName || product.subSubSubCategory.name,
+          slug: product.subSubSubCategory.slug
         } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,
@@ -389,7 +451,9 @@ const mergeCart = async (req, res, next) => {
       path: "items.productId",
       populate: [
         { path: "mainCategory", select: "name slug" },
-        { path: "subCategory", select: "name slug" }
+        { path: "subCategory", select: "name slug" },
+        { path: "subSubCategory", select: "name slug" },
+        { path: "subSubSubCategory", select: "name slug" }
       ]
     });
 
@@ -404,11 +468,13 @@ const mergeCart = async (req, res, next) => {
         productId: product._id,
         variantIndex: item.variantIndex,
         name: product.name,
+        nameBn: product.nameBn,
         imageUrl: product.imageUrl,
         price: variant.discountedPrice || variant.price || 0,
         originalPrice: variant.price || 0,
         quantity: item.quantity,
         variantLabel: variant.quantityLabel || '',
+        variantLabelBn: variant.quantityLabelBn || '',
         mainCategory: product.mainCategory ? {
           id: product.mainCategory._id,
           name: product.mainCategory.displayName || product.mainCategory.name,
@@ -418,6 +484,16 @@ const mergeCart = async (req, res, next) => {
           id: product.subCategory._id,
           name: product.subCategory.displayName || product.subCategory.name,
           slug: product.subCategory.slug
+        } : null,
+        subSubCategory: product.subSubCategory ? {
+          id: product.subSubCategory._id,
+          name: product.subSubCategory.displayName || product.subSubCategory.name,
+          slug: product.subSubCategory.slug
+        } : null,
+        subSubSubCategory: product.subSubSubCategory ? {
+          id: product.subSubSubCategory._id,
+          name: product.subSubSubCategory.displayName || product.subSubSubCategory.name,
+          slug: product.subSubSubCategory.slug
         } : null,
         description: product.description,
         isBestSeller: product.isBestSeller,

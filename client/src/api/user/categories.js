@@ -14,10 +14,15 @@ export async function getMainCategories() {
 
 export async function getSubCategories(mainCategoryId) {
   try {
+    console.log('API: Fetching subcategories for mainCategoryId:', mainCategoryId);
+    console.log('API: Full URL:', `${API_BASE}/${mainCategoryId}/subcategories`);
     const res = await axios.get(`${API_BASE}/${mainCategoryId}/subcategories`, { withCredentials: true });
+    console.log('API: Successfully fetched subcategories:', res.data.length, 'items');
     return res.data;
   } catch (error) {
-    console.error('Failed to fetch sub categories:', error);
+    console.error('API: Failed to fetch sub categories for', mainCategoryId, ':', error);
+    console.error('API: Error response:', error.response?.data);
+    console.error('API: Error status:', error.response?.status);
     throw error;
   }
 }
