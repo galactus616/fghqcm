@@ -1,0 +1,60 @@
+{
+  "kpis": {
+    "completedOrders": { "value": 128, "trend": 14, "trendDirection": "up" },
+    "pendingOrders": { "value": 23, "trend": 5, "trendDirection": "down" },
+    "totalRevenue": { "value": 385400, "trend": 8, "trendDirection": "up" },
+    "cancelledOrders": { "value": 7, "trend": 2, "trendDirection": "down" }
+  },
+  "salesLast14Days": [
+    12000, 14250, 13500, 16000, 15500, 17200, 18900,
+    17000, 16500, 17800, 19000, 21000, 20500, 22000
+  ],
+  "orderStatusDistribution": [
+    { "label": "Delivered", "value": 62, "color": "#10b981" },
+    { "label": "Processing", "value": 18, "color": "#f59e0b" },
+    { "label": "Pending", "value": 12, "color": "#3b82f6" },
+    { "label": "Cancelled", "value": 8, "color": "#ef4444" }
+  ],
+  "recentOrders": [
+    {
+      "id": "ord_1",
+      "orderId": "QBD-2025-0001",
+      "customer": { "name": "Rahim Uddin", "email": "rahim@example.com" },
+      "date": "2025-08-07T10:12:00Z",
+      "status": "Processing",
+      "paymentMethod": "COD",
+      "total": 1450.5,
+      "items": [
+        { "name": "Rice 5kg", "quantity": 1 },
+        { "name": "Cooking Oil 1L", "quantity": 2 }
+      ]
+    },
+    {
+      "id": "ord_2",
+      "orderId": "QBD-2025-0002",
+      "customer": { "name": "Karim Mia", "email": "karim@example.com" },
+      "date": "2025-08-07T12:20:00Z",
+      "status": "Delivered",
+      "paymentMethod": "Credit Card",
+      "total": 990.0,
+      "items": [
+        { "name": "Shampoo 200ml", "quantity": 1 },
+        { "name": "Soap", "quantity": 3 }
+      ]
+    },
+    {
+      "id": "ord_3",
+      "orderId": "QBD-2025-0003",
+      "customer": { "name": "Ayesha Akter", "email": "ayesha@example.com" },
+      "date": "2025-08-07T13:05:00Z",
+      "status": "Pending",
+      "paymentMethod": "COD",
+      "total": 720.75,
+      "items": [
+        { "name": "Biscuits", "quantity": 5 }
+      ]
+    }
+  ]
+}
+
+

@@ -30,7 +30,7 @@ const StoreLayout = () => {
         fixed lg:sticky top-0 h-screen flex-shrink-0 z-50 lg:z-20
         transform transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        w-64 bg-white shadow-sm
+        w-64 bg-white shadow-sm custom-scrollbar
       `}>
         <Sidebar onCloseSidebar={closeSidebar} />
       </aside>
@@ -38,7 +38,7 @@ const StoreLayout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
         <StoreNav toggleSidebar={toggleSidebar} />
-        <main role="main" className="flex-1 overflow-y-auto p-3 md:p-6">
+        <main role="main" className="flex-1 overflow-y-auto main-content-scrollbar p-3 md:p-6">
           <Outlet />
         </main>
         <StoreFooter />
