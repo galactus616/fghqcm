@@ -73,7 +73,7 @@ const KycStatusPage = () => {
         <p className="text-gray-700 mb-4 text-center max-w-md">Your KYC is under review. You will be notified by email once your account is verified.<br/>If you have questions, please contact support.</p>
         {process.env.NODE_ENV === 'development' && (
           <button
-            className="px-6 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition shadow mb-4"
+            className="px-6 py-2 rounded bg-green-600 cursor-pointer text-white font-semibold hover:bg-green-700 transition shadow mb-4"
             onClick={handleDevApprove}
             disabled={approving}
           >
@@ -81,7 +81,7 @@ const KycStatusPage = () => {
           </button>
         )}
         <button
-          className="px-6 py-2 rounded bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition shadow"
+          className="px-6 py-2 rounded cursor-pointer bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition shadow"
           onClick={handleLogout}
         >
           Log out

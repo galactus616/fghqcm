@@ -11,3 +11,13 @@ export async function getStoreCategories() {
     throw error;
   }
 }
+
+export async function getStoreSubCategories(mainCategoryId) {
+  try {
+    const res = await axios.get(`${API_BASE}/${mainCategoryId}/subcategories`, { withCredentials: true });
+    return res.data;
+  } catch (error) {
+    console.error('Failed to fetch store categories:', error);
+    throw error;
+  }
+}

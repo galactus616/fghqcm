@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { requestOtp, verifyOtp } from '../api/store/storeAuth';
-import { getStoreCategories } from '../api/store/storeCategories';
+import { getStoreCategories, getStoreSubCategories} from '../api/store/storeCategories';
 import { getStoreProducts, getStoreProductsByCategory } from '../api/store/storeProducts';
 import axios from 'axios';
+import { getMyInventory } from '../api/store/storeInventory';
 
 const getProfile = async () => {
   const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/store/auth/profile`, { withCredentials: true });
@@ -18,17 +19,22 @@ const useStoreOwner = create((set, get) => ({
   isStoreOwnerLoggedIn: false,
   isStoreOwnerAuthLoading: true,
 
-  // Categories state
-  categories: [],
-  subCategories: {}, // Store subcategories for each main category
+  // Categories state - Updated for 4 levels
+  categories: [], // Level 1 categories
+  subCategories: {}, // Store subcategories for each parent category (all levels)
   loadingCategories: false,
   loadingSubCategories: false,
+  loadingSubCategoriesByParent: {}, // Track loading per parent id
   categoriesError: null,
 
   // Products state
   products: [],
   loadingProducts: false,
   productsError: null,
+
+  // Inventory state
+  inventory: [],
+  
 
   async fetchStoreOwnerProfile() {
     set({ isStoreOwnerAuthLoading: true });
@@ -72,7 +78,7 @@ const useStoreOwner = create((set, get) => ({
     return requestOtp(email);
   },
 
-  // Categories functions
+  // Categories functions - Updated for 4 levels
   async fetchCategories() {
     set({ loadingCategories: true, categoriesError: null });
     try {
@@ -84,27 +90,58 @@ const useStoreOwner = create((set, get) => ({
     }
   },
 
-  async fetchSubCategories(mainCategoryId) {
-    set({ loadingSubCategories: true });
+  async fetchSubCategories(parentCategoryId) {
+    const state = get();
+    // If already loading this specific parent, skip
+    if (state.loadingSubCategoriesByParent[parentCategoryId]) {
+      console.log('Store: Skipping fetch for', parentCategoryId, '- already loading');
+      return state.subCategories[parentCategoryId] || [];
+    }
+    // If we already have subcategories for this parent, do nothing
+    if (state.subCategories[parentCategoryId] && state.subCategories[parentCategoryId].length > 0) {
+      console.log('Store: Skipping fetch for', parentCategoryId, '- already have data');
+      return state.subCategories[parentCategoryId];
+    }
+
+    console.log('Store: Starting fetch for parent category ID:', parentCategoryId);
+    set({
+      loadingSubCategories: true,
+      loadingSubCategoriesByParent: {
+        ...state.loadingSubCategoriesByParent,
+        [parentCategoryId]: true,
+      },
+    });
     try {
-      const { getSubCategories } = await import('../api/user/categories');
-      const data = await getSubCategories(mainCategoryId);
-      set(state => ({
+      const data = await getStoreSubCategories(parentCategoryId);
+      console.log('Store: Successfully fetched subcategories for', parentCategoryId, ':', data.length, 'items');
+      const subcategories = Array.isArray(data) ? data : [];
+      set((current) => ({
         subCategories: {
-          ...state.subCategories,
-          [mainCategoryId]: Array.isArray(data) ? data : []
+          ...current.subCategories,
+          [parentCategoryId]: subcategories,
         },
-        loadingSubCategories: false
+        loadingSubCategoriesByParent: {
+          ...current.loadingSubCategoriesByParent,
+          [parentCategoryId]: false,
+        },
+        loadingSubCategories: false,
       }));
+      return subcategories;
     } catch (err) {
-      set(state => ({
+      console.error('Store: Failed to fetch subcategories for', parentCategoryId, ':', err);
+      const emptyArray = [];
+      set((current) => ({
         subCategories: {
-          ...state.subCategories,
-          [mainCategoryId]: []
+          ...current.subCategories,
+          [parentCategoryId]: emptyArray,
         },
-        loadingSubCategories: false
+        loadingSubCategoriesByParent: {
+          ...current.loadingSubCategoriesByParent,
+          [parentCategoryId]: false,
+        },
+        loadingSubCategories: false,
       }));
-      console.error('Failed to fetch sub categories:', err);
+      return emptyArray;
     }
   },
 
@@ -134,6 +171,17 @@ const useStoreOwner = create((set, get) => ({
       console.error('Failed to fetch products by category:', err);
     }
   },
+
+  // Inventroy functions
+  async fetchMyInventory(){
+    try {
+      const data = await getMyInventory();
+      set({ inventory: Array.isArray(data) ? data : []})
+    } catch (error) {
+      set({ inventory: []})
+      console.error("Failed to fetch inventory")
+    }
+  }
 }));
 
 export default useStoreOwner; 

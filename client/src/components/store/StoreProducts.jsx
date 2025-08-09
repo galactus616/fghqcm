@@ -11,6 +11,8 @@ import {
 import StoreCategoriesFilter from "./storeDashboardComponents/StoreCategoriesFilter";
 import StoreProductsModal from "./storeDashboardComponents/StoreProductsModal";
 import useStoreOwner from "../../store/useStoreOwner";
+import { addToInventory } from "../../api/store/storeInventory";
+import toast from "react-hot-toast";
 
 const StoreProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,8 +23,9 @@ const StoreProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedVariants, setSelectedVariants] = useState({});
   const [productQuantities, setProductQuantities] = useState({});
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [addedProductName, setAddedProductName] = useState("");
+  const [addedProducts, setAddedProducts] = useState(new Set());
+
 
   // Get categories and products from store state
   const { 
@@ -37,14 +40,17 @@ const StoreProducts = () => {
     loadingProducts,
     productsError,
     fetchProducts,
-    fetchProductsByCategory
+    fetchProductsByCategory,
+    inventory,
+    fetchMyInventory
   } = useStoreOwner();
 
   // Fetch categories and products on component mount
   useEffect(() => {
     fetchCategories();
     fetchProducts();
-  }, [fetchCategories, fetchProducts]);
+    fetchMyInventory();
+  }, [fetchCategories, fetchProducts, fetchMyInventory]);
 
   // Fetch products when category changes
   useEffect(() => {
@@ -74,7 +80,7 @@ const StoreProducts = () => {
     if (!products || !Array.isArray(products)) return [];
     
     return products.map(product => ({
-      id: product._id,
+      id: product.id,
       name: product.name,
       sku: product.sku || "23e1cfdv",
       price: product.price,
@@ -90,7 +96,8 @@ const StoreProducts = () => {
       variants: product.variants,
       isBestSeller: product.isBestSeller,
       isFeatured: product.isFeatured,
-      createdAt: product.createdAt
+      createdAt: product.createdAt,
+      tags: product.tags || [] // Add tags property with fallback to empty array
     }));
   }, [products]);
 
@@ -131,17 +138,17 @@ const StoreProducts = () => {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
-        product.sku.toLowerCase().includes(query) ||
-        product.tags.some(tag => tag.toLowerCase().includes(query))
+        (product.name && product.name.toLowerCase().includes(query)) ||
+        (product.description && product.description.toLowerCase().includes(query)) ||
+        (product.sku && product.sku.toLowerCase().includes(query)) ||
+        (product.tags && Array.isArray(product.tags) && product.tags.some(tag => tag.toLowerCase().includes(query)))
       );
     }
 
     // Status filter
     if (selectedStatus !== "all") {
       filtered = filtered.filter((product) =>
-        product.status.toLowerCase() === selectedStatus.toLowerCase()
+        product.status && product.status.toLowerCase() === selectedStatus.toLowerCase()
       );
     }
 
@@ -193,22 +200,23 @@ const StoreProducts = () => {
     }));
   };
 
-  const handleAddToInventory = (product) => {
-    // Add one product to inventory
-    setProductQuantities(prev => ({
-      ...prev,
-      [product.id]: (prev[product.id] || 0) + 1
-    }));
-    
-    // Show success popup
-    setAddedProductName(product.name);
-    setShowSuccessPopup(true);
-    
-    // Auto-hide popup after 3 seconds
-    setTimeout(() => {
-      setShowSuccessPopup(false);
-      setAddedProductName("");
-    }, 3000);
+  const handleAddToInventory = async (product) => {
+    try {
+      const response = await addToInventory(product.id, 1); // Add 1 quantity
+      toast.success(response.message || `${product.name} added to inventory!`);
+      setAddedProductName(product.name);
+
+      setAddedProducts((prev) => new Set(prev).add(product.id));
+      
+      // Auto-hide popup after 3 seconds
+      setTimeout(() => {
+        setAddedProductName("");
+      }, 3000);
+    } catch (error) {
+      console.error("Error adding to inventory:", error);
+      const errorMessage = error.response?.data?.message || "Failed to add product to inventory.";
+      toast.error(errorMessage);
+    }
   };
 
   // Function to get status color based on status value
@@ -519,13 +527,22 @@ const StoreProducts = () => {
                         <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="hidden sm:inline">View</span>
                       </button>
-                      <button 
-                        onClick={() => handleAddToInventory(product)}
-                        className="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-primary text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 group"
-                      >
-                        <Plus className="w-3 h-3 sm:w-4 sm:h-4 group-hover:scale-110 transition-transform duration-200" />
-                        <span className="hidden sm:inline">Add</span>
-                      </button>
+                      {addedProducts.has(product.id) || inventory.includes(product.id) ? (
+                        <button
+                          disabled
+                          className="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-green-100 text-primary border-2 border-primary text-xs sm:text-sm font-medium rounded-lg cursor-not-allowed flex items-center justify-center gap-1 sm:gap-1.5"
+                        >
+                          ✅ Added
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => handleAddToInventory(product)}
+                          className="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-primary text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-primary/90 hover:shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 group"
+                        >
+                          <Plus className="w-3 h-3 sm:w-4 sm:h-4 group-hover:scale-110 transition-transform duration-200" />
+                          <span className="hidden sm:inline">Add</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </section>
@@ -557,33 +574,6 @@ const StoreProducts = () => {
         onClose={handleCloseModal}
         product={selectedProduct}
       />
-
-      {/* Success Popup */}
-      {showSuccessPopup && (
-        <div className="fixed inset-0 bg-white/80 bg-opacity-10 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <Plus className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-800 text-center mb-2">
-              Product Added Successfully!
-            </h3>
-            <p className="text-gray-600 text-center mb-4">
-              "{addedProductName}" has been added to your inventory.
-            </p>
-            <div className="flex justify-center">
-              <button
-                onClick={() => setShowSuccessPopup(false)}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

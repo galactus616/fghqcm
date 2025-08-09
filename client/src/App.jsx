@@ -36,7 +36,6 @@ function App() {
   useEffect(() => {
     fetchProfile();
     fetchStoreOwnerProfile();
-    // eslint-disable-next-line
   }, []);
   return (
     <>
@@ -45,7 +44,6 @@ function App() {
         {/* User routes */}
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
-          {/* <Route path="cart" element={<CartPage />} /> */}
           <Route
             path="checkout"
             element={

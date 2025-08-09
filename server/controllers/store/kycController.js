@@ -1,5 +1,6 @@
 const StoreKYC = require('../../models/StoreKYC');
 const StoreOwner = require('../../models/StoreOwner');
+const Store = require('../../models/Store');
 const logger = require('../../config/logger');
 
 //
@@ -77,13 +78,40 @@ exports.approveKyc = async (req, res) => {
     kycStatus: 'approved'
   });
   
+  // Check if store already exists for this store owner
+  let store = await Store.findOne({ owner: kyc.userId });
+  
+  // If no store exists, create one automatically using KYC data
+  if (!store) {
+    store = new Store({
+      name: kyc.storeName || 'My Store',
+      owner: kyc.userId,
+      address: kyc.storeAddress || '',
+      contact: kyc.storePhone || ''
+    });
+    await store.save();
+    
+    // Link the store to the KYC
+    kyc.storeId = store._id;
+    await kyc.save();
+    
+    // Log store creation
+    logger.info("Store created automatically after KYC approval", {
+      storeId: store._id.toString(),
+      storeOwnerId: kyc.userId.toString(),
+      storeName: store.name,
+      kycId: kycId
+    });
+  }
+  
   // Log KYC approval
   logger.info("KYC approved", {
     kycId: kycId,
     storeOwnerId: kyc.userId.toString(),
     status: 'approved',
-    reviewedAt: kyc.reviewedAt
+    reviewedAt: kyc.reviewedAt,
+    storeId: store?._id?.toString()
   });
   
-  res.json({ message: 'KYC approved', kyc });
+  res.json({ message: 'KYC approved', kyc, store });
 };
